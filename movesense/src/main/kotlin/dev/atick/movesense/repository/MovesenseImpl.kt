@@ -3,6 +3,8 @@ package dev.atick.movesense.repository
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
 import com.movesense.mds.Mds
+import com.movesense.mds.MdsConnectionListener
+import com.movesense.mds.MdsException
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
@@ -50,5 +52,27 @@ class MovesenseImpl @Inject constructor(
     override fun stopScan() {
         Logger.w("STOPPING SCAN")
         scanDisposable?.dispose()
+        scanDisposable = null
+    }
+
+    override fun connect(address: String, onConnect: () -> Unit) {
+        mds?.connect(address, object : MdsConnectionListener {
+            override fun onConnect(p0: String?) {
+                Logger.i("ON CONNECT!")
+            }
+
+            override fun onConnectionComplete(p0: String?, p1: String?) {
+                Logger.i("CONNECTION SUCCESSFUL")
+                onConnect.invoke()
+            }
+
+            override fun onError(p0: MdsException?) {
+                Logger.e("CONNECTION FAILED!")
+            }
+
+            override fun onDisconnect(p0: String?) {
+                Logger.w("DISCONNECTED!")
+            }
+        })
     }
 }

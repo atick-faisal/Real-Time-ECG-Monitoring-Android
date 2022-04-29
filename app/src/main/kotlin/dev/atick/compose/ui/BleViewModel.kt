@@ -35,4 +35,10 @@ class BleViewModel @Inject constructor(
             }
         }
     }
+
+    fun connect(address: String) {
+        movesense.connect(address) {
+
+        }
+    }
 }

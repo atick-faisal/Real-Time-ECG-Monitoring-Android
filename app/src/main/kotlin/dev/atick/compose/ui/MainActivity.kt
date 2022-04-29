@@ -14,20 +14,16 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var bleUtils: BleUtils
+
     @Inject
     lateinit var movesense: Movesense
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
-        if (bleUtils.isAllPermissionsProvided(this))
-            movesense.startScan {}
-        else {
-            bleUtils.initialize(this) {
-                Logger.i("BLUETOOTH IS READY")
-                movesense.startScan {}
-            }
+
+        bleUtils.initialize(this) {
+            Logger.i("BLUETOOTH IS READY")
         }
     }
 

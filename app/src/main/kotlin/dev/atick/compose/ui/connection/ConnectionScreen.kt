@@ -48,7 +48,7 @@ fun ConnectionScreen(
                 ),
             deviceList = devices,
             onDeviceClick = { address ->
-
+                viewModel.connect(address)
             }
         )
 

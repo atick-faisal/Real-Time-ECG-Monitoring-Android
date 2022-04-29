@@ -1,7 +1,6 @@
 package dev.atick.compose.ui.connection.components
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,59 +16,28 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.atick.movesense.data.BtDevice
 
 @Composable
 @ExperimentalMaterialApi
 @SuppressLint("MissingPermission")
 fun DeviceList(
-    deviceList: List<BluetoothDevice>,
-    onDeviceClick: (BluetoothDevice) -> Unit,
-    onScanToggle: () -> Unit,
-    isScanning: Boolean,
+    deviceList: List<BtDevice>,
+    onDeviceClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier.then(modifier)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-
         LazyColumn {
             items(deviceList) { device ->
-                BluetoothDevice(
-                    bluetoothDevice = device,
+                Spacer(modifier = Modifier.height(12.dp))
+                BtDeviceCard(
+                    btDevice = device,
                     onClick = onDeviceClick
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        AnimatedVisibility(visible = isScanning) {
-            OutlinedButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(16.dp),
-                onClick = { onScanToggle() }
-            ) {
-                Text(text = "Stop Scan")
-            }
-        }
-
-        AnimatedVisibility(visible = !isScanning) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(16.dp),
-                onClick = { onScanToggle() }
-            ) {
-                Text(text = "Start Scan")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }

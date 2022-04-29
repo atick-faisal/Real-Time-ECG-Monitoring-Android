@@ -1,10 +1,10 @@
 package dev.atick.compose.ui
 
-import android.bluetooth.BluetoothDevice
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.ui.BaseViewModel
+import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.repository.Movesense
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class BleViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val isScanning = mutableStateOf(false)
-    val devices = mutableStateListOf<BluetoothDevice>()
+    val devices = mutableStateListOf<BtDevice>()
 
     fun toggleScan() {
         if (isScanning.value) {

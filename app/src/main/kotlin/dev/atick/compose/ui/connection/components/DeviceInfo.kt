@@ -15,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.utils.extensions.getDeviceIcon
 
 @SuppressLint("MissingPermission")
 @Composable
 fun DeviceInfo(
     modifier: Modifier = Modifier,
-    bluetoothDevice: BluetoothDevice,
+    bluetoothDevice: BtDevice,
     isConnected: Boolean
 ) {
     Row(
@@ -33,13 +34,13 @@ fun DeviceInfo(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                imageVector = bluetoothDevice.getDeviceIcon(),
+                imageVector = bluetoothDevice.icon,
                 contentDescription = "Device type",
                 modifier = Modifier
                     .width(32.dp)
                     .height(32.dp),
                 tint = if (
-                    bluetoothDevice.bluetoothClass.majorDeviceClass == COMPUTER) {
+                    bluetoothDevice.type == COMPUTER) {
                     if (isConnected) MaterialTheme.colors.onPrimary
                     else MaterialTheme.colors.primary
                 } else MaterialTheme.colors.onSurface

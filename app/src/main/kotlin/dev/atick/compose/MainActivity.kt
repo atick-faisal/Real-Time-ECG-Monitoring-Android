@@ -1,40 +1,27 @@
 package dev.atick.compose
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.appcompat.app.AppCompatActivity
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atick.compose.ui.theme.JetpackComposeStarterTheme
+import dev.atick.movesense.utils.BleUtils
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var bleUtils: BleUtils
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            JetpackComposeStarterTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
-            }
+        bleUtils.initialize(this) {
+            Logger.i("BLUETOOTH IS READY")
         }
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JetpackComposeStarterTheme {
-        Greeting("Android")
+    override fun onResume() {
+        bleUtils.setupBluetooth(this)
+        super.onResume()
     }
 }

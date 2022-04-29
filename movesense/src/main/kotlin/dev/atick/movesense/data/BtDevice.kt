@@ -11,9 +11,7 @@ data class BtDevice(
     val rssi: Int,
     val type: Int
 ) {
-    val icon = if (name.contains("movesense", true))
-        Icons.Outlined.ViewInAr
-    else when (type) {
+    val icon = when (type) {
         BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Default.BluetoothAudio
         BluetoothClass.Device.Major.HEALTH -> Icons.Default.DirectionsRun
         BluetoothClass.Device.Major.IMAGING -> Icons.Default.Image
@@ -25,4 +23,6 @@ data class BtDevice(
         BluetoothClass.Device.Major.WEARABLE -> Icons.Default.Watch
         else -> Icons.Outlined.ViewInAr
     }
+
+    val movesense = name.contains("movesense", true)
 }

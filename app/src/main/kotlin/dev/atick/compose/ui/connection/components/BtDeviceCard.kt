@@ -31,7 +31,7 @@ fun BtDeviceCard(
         onClick = { onClick.invoke(btDevice.address) }
     ) {
         DeviceInfo(
-            bluetoothDevice = btDevice,
+            btDevice = btDevice,
             isConnected = false
         )
     }

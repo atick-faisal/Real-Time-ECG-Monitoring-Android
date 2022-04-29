@@ -1,5 +1,6 @@
 package dev.atick.movesense.repository
 
+import android.bluetooth.BluetoothDevice
 import com.movesense.mds.Mds
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
@@ -15,7 +16,7 @@ class MovesenseImpl @Inject constructor(
 
     private var scanDisposable: Disposable? = null
 
-    override fun startScan(onDeviceFound: (RxBleDevice) -> Unit) {
+    override fun startScan(onDeviceFound: (BluetoothDevice) -> Unit) {
         Logger.i("SCANNING ... ")
         scanDisposable = rxBleClient?.scanBleDevices(
             ScanSettings.Builder()
@@ -24,7 +25,7 @@ class MovesenseImpl @Inject constructor(
                 .build()
         )?.subscribe(
             { scanResult ->
-                scanResult?.bleDevice?.let {
+                scanResult?.bleDevice?.bluetoothDevice?.let {
                     Logger.w("DEVICE FOUND: $it")
                     onDeviceFound(it)
                 }

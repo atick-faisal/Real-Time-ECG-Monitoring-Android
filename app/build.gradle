@@ -2,6 +2,7 @@ plugins {
     id("kotlin-android")
     id("com.android.application")
     id("dagger.hilt.android.plugin")
+    id("androidx.navigation.safeargs.kotlin")
     id("kotlin-kapt")
 }
 
@@ -68,6 +69,13 @@ android {
 dependencies {
     implementation(project(path: ":core"))
     implementation(project(path: ":movesense"))
+
+    // ... Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    // ... Chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     // ... Dagger Hilt
     implementation("com.google.dagger:hilt-android:$hilt_version")

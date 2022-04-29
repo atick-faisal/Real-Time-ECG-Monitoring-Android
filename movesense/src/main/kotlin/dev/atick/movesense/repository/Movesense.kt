@@ -1,8 +1,8 @@
 package dev.atick.movesense.repository
 
-import com.polidea.rxandroidble2.RxBleDevice
+import android.bluetooth.BluetoothDevice
 
 interface Movesense {
-    fun startScan(onDeviceFound: (RxBleDevice) -> Unit)
+    fun startScan(onDeviceFound: (BluetoothDevice) -> Unit)
     fun stopScan()
 }

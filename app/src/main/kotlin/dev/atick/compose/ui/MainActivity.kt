@@ -1,9 +1,10 @@
-package dev.atick.compose
+package dev.atick.compose.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
+import dev.atick.compose.R
 import dev.atick.movesense.repository.Movesense
 import dev.atick.movesense.utils.BleUtils
 import javax.inject.Inject
@@ -18,12 +19,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        
         if (bleUtils.isAllPermissionsProvided(this))
-            movesense.startScan()
+            movesense.startScan {}
         else {
             bleUtils.initialize(this) {
                 Logger.i("BLUETOOTH IS READY")
-                movesense.startScan()
+                movesense.startScan {}
             }
         }
     }

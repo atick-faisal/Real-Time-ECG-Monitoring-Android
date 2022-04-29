@@ -1,8 +1,7 @@
 package dev.atick.movesense.di
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
 import android.content.Context
+import com.movesense.mds.Mds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,15 +11,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object BleAdapterModule {
+object MdsModule {
 
     @Provides
     @Singleton
-    fun provideBluetoothAdapter(
+    fun provideMds(
         @ApplicationContext appContext: Context
-    ): BluetoothAdapter? {
-        val bluetoothManager = appContext
-            .getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        return bluetoothManager.adapter
+    ): Mds? {
+        return Mds.builder().build(appContext)
     }
 }

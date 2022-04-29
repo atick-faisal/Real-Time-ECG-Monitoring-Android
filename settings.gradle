@@ -17,4 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "Cardiac Zone"
 include(":app")
 include(":core")
+include(":mdslib")
 include(":movesense")

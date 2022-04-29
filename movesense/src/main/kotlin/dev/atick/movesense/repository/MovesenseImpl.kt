@@ -2,11 +2,9 @@ package dev.atick.movesense.repository
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
-import android.bluetooth.BluetoothDevice
 import com.movesense.mds.Mds
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
-import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.scan.ScanSettings
 import dev.atick.movesense.data.BtDevice
 import io.reactivex.disposables.Disposable
@@ -29,13 +27,15 @@ class MovesenseImpl @Inject constructor(
                 .build()
         )?.subscribe(
             { scanResult ->
-                scanResult?.bleDevice?.bluetoothDevice?.let {
-                    Logger.w("DEVICE FOUND: $it")
+                scanResult?.let { result ->
+                    Logger.w("DEVICE FOUND: $result")
                     onDeviceFound(
                         BtDevice(
-                            name = it.name ?: "Unnamed",
-                            address = it.address ?: "Unknown",
-                            type = it.bluetoothClass?.majorDeviceClass
+                            name = result.bleDevice.name ?: "Unnamed",
+                            address = result.bleDevice?.macAddress ?: "Unknown",
+                            rssi = result.rssi,
+                            type = result.bleDevice?.bluetoothDevice
+                                ?.bluetoothClass?.majorDeviceClass
                                 ?: BluetoothClass.Device.Major.COMPUTER
                         )
                     )

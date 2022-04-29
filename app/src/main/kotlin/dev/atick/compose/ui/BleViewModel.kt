@@ -22,8 +22,16 @@ class BleViewModel @Inject constructor(
             movesense.stopScan()
         } else {
             isScanning.value = true
-            movesense.startScan { device ->
-                devices.add(device)
+            movesense.startScan { btDevice ->
+                // ... Required for RSSI update
+                val indexQuery = devices.indexOfFirst { device ->
+                    device.address == btDevice.address
+                }
+                if (indexQuery != -1) {
+                    devices[indexQuery] = btDevice
+                } else {
+                    devices.add(btDevice)
+                }
             }
         }
     }

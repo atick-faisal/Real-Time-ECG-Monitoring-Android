@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.ViewInAr
 data class BtDevice(
     val name: String,
     val address: String,
+    val rssi: Int,
     val type: Int
 ) {
     val icon = if (name.contains("movesense", true))

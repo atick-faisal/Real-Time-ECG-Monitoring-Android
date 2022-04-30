@@ -29,23 +29,26 @@ fun LinePlot(
                 description.text = ""
                 axisLeft.setDrawLabels(false)
                 axisLeft.isEnabled = true
-                axisLeft.setDrawGridLines(false)
+                axisLeft.setDrawGridLines(true)
                 axisLeft.axisLineWidth = 2.0F
-                axisLeft.setDrawLabels(true)
-                axisLeft.labelCount = 3
+                axisLeft.setDrawLabels(false)
+                axisLeft.labelCount = 5
                 axisRight.setDrawLabels(false)
-                axisRight.isEnabled = false
-                xAxis.setDrawLabels(true)
+                axisRight.isEnabled = true
+                axisRight.axisLineWidth = 2.0F
                 xAxis.isEnabled = true
-                xAxis.position = XAxis.XAxisPosition.BOTTOM
-                xAxis.setDrawGridLines(false)
+                xAxis.position = XAxis.XAxisPosition.BOTH_SIDED
+                xAxis.setDrawLabels(false)
+                xAxis.setDrawGridLines(true)
+                xAxis.labelCount = 8
                 xAxis.axisLineWidth = 2.0F
                 legend.isEnabled = false
                 setTouchEnabled(false)
             }
         },
         update = { lineChart ->
-            lineChart.xAxis.labelCount = 3
+            lineChart.axisLeft.labelCount = 5
+            lineChart.xAxis.labelCount = 8
             lineChart.axisLeft.textColor = if (isDarkThemeEnabled) {
                 Color.LTGRAY
             } else {

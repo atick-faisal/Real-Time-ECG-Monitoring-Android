@@ -2,14 +2,18 @@ package dev.atick.movesense.repository
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.movesense.mds.*
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
+import dev.atick.core.utils.Event
 import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.data.EcgInfoResponse
+import dev.atick.movesense.data.HrResponse
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -29,6 +33,17 @@ class MovesenseImpl @Inject constructor(
     }
 
     private var scanDisposable: Disposable? = null
+    private var hrSubscription: MdsSubscription? = null
+
+    private val _connectionStatus = MutableLiveData<Event<String?>>(
+        Event(null)
+    )
+    override val connectionStatus: LiveData<Event<String?>>
+        get() = _connectionStatus
+
+    private val _averageHeartRate = MutableLiveData(0.0F)
+    override val averageHeartRate: LiveData<Float>
+        get() = _averageHeartRate
 
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
@@ -67,22 +82,26 @@ class MovesenseImpl @Inject constructor(
 
     override fun connect(address: String, onConnect: () -> Unit) {
         mds?.connect(address, object : MdsConnectionListener {
-            override fun onConnect(p0: String?) {
-                Logger.i("ON CONNECT!")
+            override fun onConnect(address: String?) {
+                _connectionStatus.postValue(Event("Connecting ... "))
+                Logger.i("CONNECTION TO $address")
             }
 
-            override fun onConnectionComplete(p0: String?, p1: String?) {
-                Logger.i("CONNECTION SUCCESSFUL")
+            override fun onConnectionComplete(address: String?, serial: String?) {
+                _connectionStatus.postValue(Event("Connected"))
+                Logger.i("CONNECTED TO: $address")
+                fetchEcgInfo(serial)
                 onConnect.invoke()
-                fetchEcgInfo(p1)
             }
 
-            override fun onError(p0: MdsException?) {
-                Logger.e("CONNECTION FAILED!")
+            override fun onError(e: MdsException?) {
+                _connectionStatus.postValue(Event("Connection Error"))
+                Logger.e("CONNECTION ERROR: $e")
             }
 
-            override fun onDisconnect(p0: String?) {
-                Logger.w("DISCONNECTED!")
+            override fun onDisconnect(address: String?) {
+                _connectionStatus.postValue(Event("Disconnected"))
+                Logger.w("DISCONNECTED FROM $address")
             }
         })
     }
@@ -96,19 +115,57 @@ class MovesenseImpl @Inject constructor(
                         data, EcgInfoResponse::class.java
                     )
                     Logger.w("ECG INFO: $ecgInfo")
+                    subscribeToHRService(connectedSerial)
                 } catch (e: JsonSyntaxException) {
-                    Logger.e("PARSING FAILED! ERROR: $e")
+                    Logger.e("ECG INFO PARSING ERROR: $e")
                 }
                 super.onSuccess(data, header)
             }
 
-            override fun onError(p0: MdsException?) {
-                Logger.e("ECG INFO READ FAILED!")
+            override fun onError(e: MdsException?) {
+                Logger.e("ECG INFO READ ERROR: $e")
             }
         })
     }
 
-    private fun subscribeToHRService() {
+    private fun subscribeToHRService(connectedSerial: String?) {
+        val sb = StringBuilder()
+        val contract = sb
+            .append("{\"Uri\": \"")
+            .append(connectedSerial)
+            .append(URI_MEAS_HR)
+            .append("\"}")
+            .toString()
 
+        Logger.i("HR CONTRACT: $contract")
+
+        unsubscribeHr()
+        hrSubscription = mds?.subscribe(
+            URI_EVENT_LISTENER, contract, object : MdsNotificationListener {
+                override fun onNotification(data: String?) {
+                    try {
+                        val hrResponse = Gson().fromJson(
+                            data, HrResponse::class.java
+                        )
+                        hrResponse?.body?.average?.let {
+                            _averageHeartRate.postValue(it)
+                            Logger.i("RR: $it")
+                        }
+                        Logger.i("HR: ${hrResponse?.body?.rrData}")
+                    } catch (e: JsonSyntaxException) {
+                        Logger.e("HR PARSING ERROR: $e")
+                    }
+                }
+
+                override fun onError(e: MdsException?) {
+                    Logger.e("HR SUBSCRIPTION ERROR: $e")
+                }
+
+            })
+    }
+
+    private fun unsubscribeHr() {
+        hrSubscription?.unsubscribe()
+        hrSubscription = null
     }
 }

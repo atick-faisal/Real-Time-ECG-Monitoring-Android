@@ -13,6 +13,8 @@ class BleViewModel @Inject constructor(
     private val movesense: Movesense
 ) : BaseViewModel() {
 
+    val connectionStatus = movesense.connectionStatus
+    val averageHeartRate = movesense.averageHeartRate
     val isScanning = mutableStateOf(false)
     val devices = mutableStateListOf<BtDevice>()
 

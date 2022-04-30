@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothClass
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.ViewInAr
+import com.google.gson.annotations.SerializedName
 
 data class BtDevice(
     val name: String,

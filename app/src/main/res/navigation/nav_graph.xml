@@ -7,5 +7,17 @@
     <fragment
         android:id="@+id/connectionFragment"
         android:name="dev.atick.compose.ui.connection.ConnectionFragment"
-        android:label="ConnectionFragment" />
+        android:label="ConnectionFragment" >
+        <action
+            android:id="@+id/action_connectionFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="dev.atick.compose.ui.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_connectionFragment"
+            app:destination="@id/connectionFragment" />
+    </fragment>
 </navigation>

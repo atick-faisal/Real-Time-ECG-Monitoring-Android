@@ -32,7 +32,7 @@ fun ConnectionScreen(
     ) {
         TopBar(
             modifier = Modifier.align(Alignment.TopCenter),
-            title = "Paired Devices",
+            title = "Available Devices",
             onSearchClick = {},
             onMenuClick = {}
         )
@@ -63,7 +63,7 @@ fun ConnectionScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(16.dp),
-                    onClick = { viewModel.toggleScan() }
+                    onClick = { viewModel.stopScan() }
                 ) {
                     Text(text = "Stop Scan")
                 }
@@ -75,7 +75,7 @@ fun ConnectionScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(16.dp),
-                    onClick = { viewModel.toggleScan() }
+                    onClick = { viewModel.startScan() }
                 ) {
                     Text(text = "Start Scan")
                 }

@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 data class HrResponse(
     @SerializedName("Body")
-    val body: Body
+    val body: HrBody
 )
 
-data class Body(
+data class HrBody(
     @SerializedName("average")
     val average: Float,
 

@@ -43,4 +43,9 @@ class BleViewModel @Inject constructor(
 
         }
     }
+
+    override fun onCleared() {
+        movesense.clear()
+        super.onCleared()
+    }
 }

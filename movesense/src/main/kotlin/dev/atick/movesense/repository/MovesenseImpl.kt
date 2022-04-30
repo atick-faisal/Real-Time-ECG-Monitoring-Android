@@ -13,6 +13,7 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import dev.atick.core.utils.Event
 import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.data.EcgInfoResponse
+import dev.atick.movesense.data.EcgResponse
 import dev.atick.movesense.data.HrResponse
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -30,10 +31,19 @@ class MovesenseImpl @Inject constructor(
         const val URI_ECG_INFO = "/Meas/ECG/Info"
         const val URI_ECG_ROOT = "/Meas/ECG/"
         const val URI_MEAS_HR = "/Meas/HR"
+
+        const val ECG_SEGMENT_LEN = 1024
+        const val DEFAULT_ECG_BUFFER_LEN = 16
+        const val DEFAULT_ECG_SAMPLE_RATE = 128
     }
 
+    private var connectedMac: String? = null
     private var scanDisposable: Disposable? = null
     private var hrSubscription: MdsSubscription? = null
+    private var ecgSubscription: MdsSubscription? = null
+
+    private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
+    private val ecgData = MutableList(ECG_SEGMENT_LEN) { 0 }
 
     private val _connectionStatus = MutableLiveData<Event<String?>>(
         Event(null)
@@ -74,12 +84,6 @@ class MovesenseImpl @Inject constructor(
         )
     }
 
-    override fun stopScan() {
-        Logger.w("STOPPING SCAN")
-        scanDisposable?.dispose()
-        scanDisposable = null
-    }
-
     override fun connect(address: String, onConnect: () -> Unit) {
         mds?.connect(address, object : MdsConnectionListener {
             override fun onConnect(address: String?) {
@@ -88,6 +92,7 @@ class MovesenseImpl @Inject constructor(
             }
 
             override fun onConnectionComplete(address: String?, serial: String?) {
+                connectedMac = address
                 _connectionStatus.postValue(Event("Connected"))
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
@@ -100,7 +105,7 @@ class MovesenseImpl @Inject constructor(
             }
 
             override fun onDisconnect(address: String?) {
-                _connectionStatus.postValue(Event("Disconnected"))
+                // _connectionStatus.postValue(Event("Disconnected"))
                 Logger.w("DISCONNECTED FROM $address")
             }
         })
@@ -114,8 +119,11 @@ class MovesenseImpl @Inject constructor(
                     val ecgInfo = Gson().fromJson(
                         data, EcgInfoResponse::class.java
                     )
-                    Logger.w("ECG INFO: $ecgInfo")
+                    bufferLen = ecgInfo?.content?.arraySize
+                        ?: DEFAULT_ECG_BUFFER_LEN
                     subscribeToHRService(connectedSerial)
+                    subscribeToEcgService(connectedSerial)
+                    Logger.w("ECG INFO: $ecgInfo")
                 } catch (e: JsonSyntaxException) {
                     Logger.e("ECG INFO PARSING ERROR: $e")
                 }
@@ -148,10 +156,10 @@ class MovesenseImpl @Inject constructor(
                             data, HrResponse::class.java
                         )
                         hrResponse?.body?.average?.let {
-                            _averageHeartRate.postValue(it)
-                            Logger.i("RR: $it")
+                            // _averageHeartRate.postValue(it)
+                            // Logger.i("RR: $it")
                         }
-                        Logger.i("HR: ${hrResponse?.body?.rrData}")
+                        // Logger.i("HR: ${hrResponse?.body?.rrData}")
                     } catch (e: JsonSyntaxException) {
                         Logger.e("HR PARSING ERROR: $e")
                     }
@@ -164,8 +172,74 @@ class MovesenseImpl @Inject constructor(
             })
     }
 
+    private fun subscribeToEcgService(connectedSerial: String?) {
+        val sb = StringBuilder()
+        val contract = sb
+            .append("{\"Uri\": \"")
+            .append(connectedSerial)
+            .append(URI_ECG_ROOT)
+            .append(DEFAULT_ECG_SAMPLE_RATE)
+            .append("\"}")
+            .toString()
+
+        Logger.i("HR CONTRACT: $contract")
+
+        unsubscribeEcg()
+        ecgSubscription = mds?.subscribe(
+            URI_EVENT_LISTENER, contract, object : MdsNotificationListener {
+                override fun onNotification(data: String?) {
+                    try {
+                        val ecgResponse = Gson().fromJson(
+                            data, EcgResponse::class.java
+                        )
+                        ecgResponse?.body?.samples?.let {
+                            ecgData.subList(0, bufferLen).clear()
+                            ecgData.addAll(it)
+                            // Logger.i("ECG LEN: ${ecgData.size}")
+                        }
+                    } catch (e: JsonSyntaxException) {
+                        Logger.e("ECG PARSING ERROR: $e")
+                    }
+                }
+
+                override fun onError(e: MdsException?) {
+                    Logger.e("ECG SUBSCRIPTION ERROR: $e")
+                }
+
+            }
+        )
+    }
+
+    private fun disconnect() {
+        Logger.w("DISCONNECTING ... ")
+        connectedMac?.let {
+            mds?.disconnect(it)
+            connectedMac = null
+        }
+    }
+
     private fun unsubscribeHr() {
+        Logger.w("UNSUBSCRIBING HR ... ")
         hrSubscription?.unsubscribe()
         hrSubscription = null
+    }
+
+    private fun unsubscribeEcg() {
+        Logger.w("UNSUBSCRIBING ECG ... ")
+        ecgSubscription?.unsubscribe()
+        ecgSubscription = null
+    }
+
+    override fun stopScan() {
+        Logger.w("STOPPING SCAN ... ")
+        scanDisposable?.dispose()
+        scanDisposable = null
+    }
+
+    override fun clear() {
+        stopScan()
+        disconnect()
+        unsubscribeHr()
+        unsubscribeEcg()
     }
 }

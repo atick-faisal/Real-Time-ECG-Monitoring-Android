@@ -10,4 +10,5 @@ interface Movesense {
     fun startScan(onDeviceFound: (BtDevice) -> Unit)
     fun connect(address: String, onConnect: () -> Unit)
     fun stopScan()
+    fun clear()
 }

@@ -43,7 +43,7 @@ class MovesenseImpl @Inject constructor(
     private var ecgSubscription: MdsSubscription? = null
 
     private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
-    private val ecgData = MutableList(ECG_SEGMENT_LEN) { 0 }
+    private val ecgBuffer = MutableList(ECG_SEGMENT_LEN) { 0 }
 
     private val _connectionStatus = MutableLiveData<Event<String?>>(
         Event(null)
@@ -58,6 +58,10 @@ class MovesenseImpl @Inject constructor(
     private val _rrInterval = MutableLiveData(0)
     override val rrInterval: LiveData<Int>
         get() = _rrInterval
+
+    private val _ecgData = MutableLiveData<List<Int>>(ecgBuffer)
+    override val ecgData: LiveData<List<Int>>
+        get() = _ecgData
 
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
@@ -207,8 +211,9 @@ class MovesenseImpl @Inject constructor(
                             data, EcgResponse::class.java
                         )
                         ecgResponse?.body?.samples?.let {
-                            ecgData.subList(0, bufferLen).clear()
-                            ecgData.addAll(it)
+                            ecgBuffer.subList(0, bufferLen).clear()
+                            ecgBuffer.addAll(it)
+                            _ecgData.postValue(ecgBuffer)
                             // Logger.i("ECG LEN: ${ecgData.size}")
                         }
                     } catch (e: JsonSyntaxException) {

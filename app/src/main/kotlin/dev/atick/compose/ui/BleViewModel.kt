@@ -1,8 +1,13 @@
 package dev.atick.compose.ui
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineDataSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.core.utils.Event
@@ -20,6 +25,14 @@ class BleViewModel @Inject constructor(
     val connectionStatus = movesense.connectionStatus
     val averageHeartRate = movesense.averageHeartRate
     val rrInterval = movesense.rrInterval
+    var ecgDataset = movesense.ecgData.map { ecgBuffer ->
+        LineDataSet(
+            ecgBuffer.mapIndexed { index, value ->
+                Entry(index.toFloat(), value.toFloat())
+            },
+            "ECG"
+        )
+    }
 
     val isScanning = mutableStateOf(false)
     val devices = mutableStateListOf<BtDevice>()

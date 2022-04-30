@@ -1,10 +1,7 @@
 package dev.atick.compose.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,7 +12,10 @@ import androidx.compose.ui.unit.dp
 import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.common.components.TopBar
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.mikephil.charting.data.LineDataSet
+import dev.atick.compose.ui.home.components.EcgCard
 import dev.atick.compose.ui.home.components.HrCard
+import dev.atick.compose.ui.home.components.LinePlot
 
 @Composable
 fun HomeScreen(
@@ -24,6 +24,9 @@ fun HomeScreen(
 ) {
     val averageHeartRate by viewModel.averageHeartRate.observeAsState(0.0F)
     val rrInterval by viewModel.rrInterval.observeAsState(initial = 0)
+    val ecgDataset by viewModel.ecgDataset.observeAsState(
+        LineDataSet(listOf(), "ECG")
+    )
 
     return Box(
         Modifier
@@ -52,6 +55,10 @@ fun HomeScreen(
                 averageHeartRate = averageHeartRate,
                 rrInterval = rrInterval
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            EcgCard(ecgDataset = ecgDataset)
         }
     }
 }

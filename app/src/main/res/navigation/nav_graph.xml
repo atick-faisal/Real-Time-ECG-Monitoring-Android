@@ -10,7 +10,8 @@
         android:label="ConnectionFragment" >
         <action
             android:id="@+id/action_connectionFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -18,6 +19,8 @@
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_connectionFragment"
-            app:destination="@id/connectionFragment" />
+            app:destination="@id/connectionFragment"
+            app:popUpTo="@id/connectionFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -1,7 +1,7 @@
 package dev.atick.compose.ui.connection.components
 
+import ai.atick.material.MaterialColor
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothClass.Device.Major.COMPUTER
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -16,8 +16,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.atick.movesense.data.BtDevice
 import dev.atick.compose.R
+import dev.atick.movesense.data.BtDevice
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -43,7 +43,7 @@ fun DeviceInfo(
                     .width(32.dp)
                     .height(32.dp),
                 tint = if (btDevice.movesense) {
-                    MaterialTheme.colors.primary
+                    MaterialColor.Red700
                 } else MaterialTheme.colors.onSurface
             )
 

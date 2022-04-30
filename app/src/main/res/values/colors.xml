@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#E74424</color>
-    <color name="primaryVariant">#F86E51</color>
+    <color name="primary">#3F51B5</color>
+    <color name="primaryVariant">#5C6BC0</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>

@@ -55,6 +55,10 @@ class MovesenseImpl @Inject constructor(
     override val averageHeartRate: LiveData<Float>
         get() = _averageHeartRate
 
+    private val _rrInterval = MutableLiveData(0)
+    override val rrInterval: LiveData<Int>
+        get() = _rrInterval
+
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
         scanDisposable = rxBleClient?.scanBleDevices(
@@ -156,12 +160,22 @@ class MovesenseImpl @Inject constructor(
                             data, HrResponse::class.java
                         )
                         hrResponse?.body?.average?.let {
-                            // _averageHeartRate.postValue(it)
+                            _averageHeartRate.postValue(it)
                             // Logger.i("RR: $it")
+                        }
+                        hrResponse?.body?.let { body->
+                            body.average.let { hr ->
+                                _averageHeartRate.postValue(hr)
+                            }
+                            body.rrData.let { rrIntervals ->
+                                _rrInterval.postValue(rrIntervals[0])
+                            }
                         }
                         // Logger.i("HR: ${hrResponse?.body?.rrData}")
                     } catch (e: JsonSyntaxException) {
                         Logger.e("HR PARSING ERROR: $e")
+                    } catch (e: ArrayIndexOutOfBoundsException) {
+                        Logger.e("RR INTERVAL ERROR: $e")
                     }
                 }
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="persistent_notification_title">Cardiac Zone is Running</string>
+    <string name="persistent_notification_warning_title">Cardiac Zone is Not working</string>
+</resources>

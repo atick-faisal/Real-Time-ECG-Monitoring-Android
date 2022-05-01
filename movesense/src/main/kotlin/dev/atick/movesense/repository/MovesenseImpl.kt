@@ -45,6 +45,10 @@ class MovesenseImpl @Inject constructor(
     private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
     private val ecgBuffer = MutableList(ECG_SEGMENT_LEN) { 0 }
 
+    private val _isConnected = MutableLiveData(false)
+    override val isConnected: LiveData<Boolean>
+        get() = _isConnected
+
     private val _connectionStatus = MutableLiveData<Event<String?>>(
         Event(null)
     )
@@ -101,6 +105,7 @@ class MovesenseImpl @Inject constructor(
 
             override fun onConnectionComplete(address: String?, serial: String?) {
                 connectedMac = address
+                _isConnected.postValue(true)
                 _connectionStatus.postValue(Event("Connected"))
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
@@ -108,11 +113,13 @@ class MovesenseImpl @Inject constructor(
             }
 
             override fun onError(e: MdsException?) {
+                _isConnected.postValue(false)
                 _connectionStatus.postValue(Event("Connection Error"))
                 Logger.e("CONNECTION ERROR: $e")
             }
 
             override fun onDisconnect(address: String?) {
+                _isConnected.postValue(false)
                 // _connectionStatus.postValue(Event("Disconnected"))
                 Logger.w("DISCONNECTED FROM $address")
             }
@@ -234,6 +241,7 @@ class MovesenseImpl @Inject constructor(
         connectedMac?.let {
             mds?.disconnect(it)
             connectedMac = null
+            _isConnected.postValue(false)
         }
     }
 

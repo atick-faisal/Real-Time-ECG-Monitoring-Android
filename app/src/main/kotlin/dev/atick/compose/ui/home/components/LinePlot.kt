@@ -60,16 +60,11 @@ fun LinePlot(
                 Color.DKGRAY
             }
             dataset.apply {
-                color = context.getColor(R.color.primary)
-                if (isDarkThemeEnabled) {
-                    this.fillColor = context.getColor(R.color.primary)
-                    this.fillAlpha = 40
-                } else {
-                    this.fillColor = context.getColor(R.color.primary)
-                    this.fillAlpha = 40
-                }
+                color = if (isDarkThemeEnabled)
+                    context.getColor(R.color.primaryVariant)
+                else context.getColor(R.color.primary)
                 setDrawValues(false)
-                setDrawFilled(true)
+                setDrawFilled(false)
                 setDrawCircleHole(false)
                 setDrawCircles(false)
                 lineWidth = 2.0F

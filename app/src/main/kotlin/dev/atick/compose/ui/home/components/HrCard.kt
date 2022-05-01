@@ -1,7 +1,10 @@
 package dev.atick.compose.ui.home.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,9 +20,12 @@ fun HrCard(
     modifier: Modifier = Modifier
 ) {
     return Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
+        modifier = modifier.then(
+            Modifier.fillMaxWidth()
+        ),
+        elevation = if (isSystemInDarkTheme()) 0.dp else 2.dp,
+        shape = RoundedCornerShape(16.dp),
+        backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
             Modifier

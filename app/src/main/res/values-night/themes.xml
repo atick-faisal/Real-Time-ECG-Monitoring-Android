@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.JetpackComposeStarter" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primaryVariant</item>
+        <item name="colorPrimary">@color/primaryVariant</item>
+        <item name="colorPrimaryVariant">@color/primary</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -20,7 +20,7 @@
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowBackground">@drawable/splash_background_night</item>
         <item name="android:statusBarColor">@color/darker_blue_gray</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@color/darker_blue_gray</item>

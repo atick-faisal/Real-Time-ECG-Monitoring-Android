@@ -1,10 +1,11 @@
 package dev.atick.core.service
 
 import android.app.Notification
-import android.app.Service
 import android.content.Intent
+import android.os.Build
+import androidx.lifecycle.LifecycleService
 
-abstract class BaseService : Service() {
+abstract class BaseService : LifecycleService() {
 
     companion object {
         const val PERSISTENT_NOTIFICATION_ID = 101
@@ -26,11 +27,20 @@ abstract class BaseService : Service() {
         onStartService(intent)
         persistentNotification = setupNotification()
         startForeground(PERSISTENT_NOTIFICATION_ID, persistentNotification)
-        return START_STICKY
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
         collectGarbage()
         super.onDestroy()
+    }
+
+    open fun stopService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            stopForeground(true)
+        }
+        stopSelf()
     }
 }

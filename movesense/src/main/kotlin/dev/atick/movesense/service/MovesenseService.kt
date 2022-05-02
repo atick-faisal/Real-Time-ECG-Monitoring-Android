@@ -3,10 +3,10 @@ package dev.atick.movesense.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
-import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.orhanobut.logger.Logger
 import dev.atick.core.service.BaseService
+import dev.atick.core.utils.extensions.observe
 import dev.atick.movesense.R
 import dev.atick.movesense.repository.Movesense
 import javax.inject.Inject
@@ -31,6 +31,9 @@ class MovesenseService : BaseService() {
 
     override fun onStartService(intent: Intent?) {
         STARTED = true
+        observe(movesense.averageHeartRate) {
+
+        }
     }
 
     override fun setupNotification(): Notification {
@@ -42,9 +45,7 @@ class MovesenseService : BaseService() {
             Logger.i("MAIN ACTIVITY NOT FOUND!")
             e.printStackTrace()
         }
-        val notification = if (
-            true
-        ) {
+        val notification = if (movesense.isConnected.value == true) {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_connected)
                 .setContentTitle(getString(R.string.persistent_notification_title))
@@ -76,9 +77,5 @@ class MovesenseService : BaseService() {
     override fun collectGarbage() {
         movesense.clear()
         STARTED = false
-    }
-
-    override fun onBind(p0: Intent?): IBinder? {
-        TODO("Not yet implemented")
     }
 }

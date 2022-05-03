@@ -23,8 +23,7 @@ import dev.atick.movesense.data.BtDevice
 @Composable
 fun DeviceInfo(
     modifier: Modifier = Modifier,
-    btDevice: BtDevice,
-    isConnected: Boolean
+    btDevice: BtDevice
 ) {
     Row(
         modifier
@@ -52,8 +51,6 @@ fun DeviceInfo(
             Column {
                 Text(
                     text = btDevice.name,
-                    color = if (isConnected) MaterialTheme.colors.onPrimary
-                    else MaterialTheme.colors.onSurface,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -62,8 +59,6 @@ fun DeviceInfo(
 
                 Text(
                     text = btDevice.address,
-                    color = if (isConnected) MaterialTheme.colors.onPrimary
-                    else MaterialTheme.colors.onSurface,
                     fontSize = 14.sp,
                 )
             }
@@ -71,9 +66,7 @@ fun DeviceInfo(
 
         Icon(
             imageVector = Icons.Default.NavigateNext,
-            contentDescription = "Connect",
-            tint = if (isConnected) MaterialTheme.colors.onPrimary
-            else MaterialTheme.colors.onSurface
+            contentDescription = "Connect"
         )
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="persistent_notification_title">Cardiac Zone is Running</string>
+    <string name="persistent_notification_warning_title">Cardiac Zone is Not working</string>
+    <string name="persistent_notification_text">Current Heart Rate: %.2f BPM</string>
+    <string name="persistent_notification_warning_text">Please check your network connection</string>
+    <string name="persistent_notification_connecting_text">Please Wait for the Connection to Establish</string>
+    <string name="connecting">Connecting …</string>
+    <string name="connected">Cardiac Zone is Connected</string>
+    <string name="movesense_connected">Movesense is Connected</string>
+    <string name="connection_failed">Connection Failed</string>
+    <string name="persistent_notification_connection_failed">Restart Bluetooth and Try to Connect Again.</string>
+    <string name="disconnected">Movesense is Not Connected</string>
+    <string name="persistent_notification_disconnected">Please Check If Bluetooth is Turned On and Try Reconnecting.</string>
+    <string name="not_connected">Movesense is Not Connected</string>
+    <string name="persistent_notification_not_connected_text">Please Connect to Your Movesense Sensor</string>
+</resources>

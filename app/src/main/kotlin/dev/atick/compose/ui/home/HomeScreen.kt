@@ -9,17 +9,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.atick.compose.ui.BleViewModel
-import dev.atick.compose.ui.common.components.TopBar
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.mikephil.charting.data.LineDataSet
+import dev.atick.compose.ui.BleViewModel
+import dev.atick.compose.ui.common.components.TopBar
 import dev.atick.compose.ui.home.components.EcgCard
 import dev.atick.compose.ui.home.components.HrCard
-import dev.atick.compose.ui.home.components.LinePlot
 
 @Composable
 fun HomeScreen(
-    onDisconnect: () -> Unit,
+    onExitClick: () -> Unit,
     viewModel: BleViewModel = viewModel()
 ) {
     val averageHeartRate by viewModel.averageHeartRate.observeAsState(0.0F)
@@ -36,10 +35,7 @@ fun HomeScreen(
         TopBar(
             modifier = Modifier.align(Alignment.TopCenter),
             title = "Dashboard",
-            onExitClick = {
-                viewModel.disconnect()
-                onDisconnect.invoke()
-            }
+            onExitClick = onExitClick
         )
 
         Column(
@@ -57,7 +53,7 @@ fun HomeScreen(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             EcgCard(ecgDataset = ecgDataset)
         }
     }

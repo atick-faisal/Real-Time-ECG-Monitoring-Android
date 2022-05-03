@@ -10,11 +10,7 @@ import com.movesense.mds.*
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
-import dev.atick.core.utils.Event
-import dev.atick.movesense.data.BtDevice
-import dev.atick.movesense.data.EcgInfoResponse
-import dev.atick.movesense.data.EcgResponse
-import dev.atick.movesense.data.HrResponse
+import dev.atick.movesense.data.*
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -45,10 +41,12 @@ class MovesenseImpl @Inject constructor(
     private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
     private val ecgBuffer = MutableList(ECG_SEGMENT_LEN) { 0 }
 
-    private val _connectionStatus = MutableLiveData<Event<String?>>(
-        Event(null)
-    )
-    override val connectionStatus: LiveData<Event<String?>>
+    private val _isConnected = MutableLiveData(false)
+    override val isConnected: LiveData<Boolean>
+        get() = _isConnected
+
+    private val _connectionStatus = MutableLiveData(ConnectionStatus.NOT_CONNECTED)
+    override val connectionStatus: LiveData<ConnectionStatus>
         get() = _connectionStatus
 
     private val _averageHeartRate = MutableLiveData(0.0F)
@@ -73,7 +71,7 @@ class MovesenseImpl @Inject constructor(
         )?.subscribe(
             { scanResult ->
                 scanResult?.let { result ->
-                    Logger.w("DEVICE FOUND: $result")
+                    Logger.i("DEVICE FOUND: $result")
                     onDeviceFound(
                         BtDevice(
                             name = result.bleDevice.name ?: "Unnamed",
@@ -95,25 +93,28 @@ class MovesenseImpl @Inject constructor(
     override fun connect(address: String, onConnect: () -> Unit) {
         mds?.connect(address, object : MdsConnectionListener {
             override fun onConnect(address: String?) {
-                _connectionStatus.postValue(Event("Connecting ... "))
+                _connectionStatus.postValue(ConnectionStatus.CONNECTING)
                 Logger.i("CONNECTION TO $address")
             }
 
             override fun onConnectionComplete(address: String?, serial: String?) {
                 connectedMac = address
-                _connectionStatus.postValue(Event("Connected"))
+                _isConnected.postValue(true)
+                _connectionStatus.postValue(ConnectionStatus.CONNECTED)
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
                 onConnect.invoke()
             }
 
             override fun onError(e: MdsException?) {
-                _connectionStatus.postValue(Event("Connection Error"))
+                _isConnected.postValue(false)
+                _connectionStatus.postValue(ConnectionStatus.CONNECTION_FAILED)
                 Logger.e("CONNECTION ERROR: $e")
             }
 
             override fun onDisconnect(address: String?) {
-                // _connectionStatus.postValue(Event("Disconnected"))
+                _isConnected.postValue(false)
+                _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
                 Logger.w("DISCONNECTED FROM $address")
             }
         })
@@ -167,7 +168,7 @@ class MovesenseImpl @Inject constructor(
                             _averageHeartRate.postValue(it)
                             // Logger.i("RR: $it")
                         }
-                        hrResponse?.body?.let { body->
+                        hrResponse?.body?.let { body ->
                             body.average.let { hr ->
                                 _averageHeartRate.postValue(hr)
                             }
@@ -234,6 +235,8 @@ class MovesenseImpl @Inject constructor(
         connectedMac?.let {
             mds?.disconnect(it)
             connectedMac = null
+            _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
+            _isConnected.postValue(false)
         }
     }
 

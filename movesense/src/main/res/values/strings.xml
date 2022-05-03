@@ -2,4 +2,6 @@
 <resources>
     <string name="persistent_notification_title">Cardiac Zone is Running</string>
     <string name="persistent_notification_warning_title">Cardiac Zone is Not working</string>
+    <string name="persistent_notification_text">Current Heart Rate: %.2f BPM</string>
+    <string name="persistent_notification_warning_text">Please check your network connection</string>
 </resources>

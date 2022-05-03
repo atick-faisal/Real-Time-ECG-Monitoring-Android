@@ -5,19 +5,26 @@ import android.app.PendingIntent
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.orhanobut.logger.Logger
-import dev.atick.core.service.BaseService
+import dagger.hilt.android.AndroidEntryPoint
+import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.utils.extensions.observe
+import dev.atick.core.utils.extensions.observeEvent
+import dev.atick.core.utils.extensions.showNotification
 import dev.atick.movesense.R
 import dev.atick.movesense.repository.Movesense
 import javax.inject.Inject
 
-class MovesenseService : BaseService() {
+@AndroidEntryPoint
+class MovesenseService : BaseLifecycleService() {
 
     companion object {
         var STARTED = false
         const val PERSISTENT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.persistent"
+
         // const val ALERT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.alert"
         // const val ALERT_NOTIFICATION_ID = 1011
+        const val BT_DEVICE_ADDRESS_KEY = "dev.atick.c.zone.device.key"
+        const val PERSISTENT_NOTIFICATION_REQUEST_CODE = 1101
     }
 
     @Inject
@@ -29,20 +36,66 @@ class MovesenseService : BaseService() {
 
     private var notificationIntent: Intent? = null
 
-    override fun onStartService(intent: Intent?) {
-        STARTED = true
+    override fun onCreateService() {
+        super.onCreateService()
         observe(movesense.averageHeartRate) {
+            persistentNotificationBuilder.setContentText(
+                getString(R.string.persistent_notification_text, it),
+            )
+            if (STARTED) {
+                showNotification(
+                    PERSISTENT_NOTIFICATION_ID,
+                    persistentNotificationBuilder.build()
+                )
+            }
+        }
+        observeEvent(movesense.isConnected) {
+            if (it) {
+                persistentNotificationBuilder.setSmallIcon(
+                    R.drawable.ic_connected
+                )
+            }
+            if (STARTED) {
+                showNotification(
+                    PERSISTENT_NOTIFICATION_ID,
+                    persistentNotificationBuilder.build()
+                )
+            }
+//            persistentNotificationBuilder.apply {
+//                if (it) {
+//                    setSmallIcon(R.drawable.ic_connected)
+//                    setContentText(
+//                        getString(
+//                            R.string.persistent_notification_text, 0.0F
+//                        )
+//                    )
+//                } else {
+//                    setSmallIcon(R.drawable.ic_warning)
+//                    setContentText(
+//                        getString(
+//                            R.string.persistent_notification_warning_text
+//                        )
+//                    )
+//                }
+//            }
 
         }
+    }
+
+    override fun onStartService(intent: Intent?) {
+        val address = intent?.getStringExtra(BT_DEVICE_ADDRESS_KEY)
+        address?.let { connect(it) }
+        STARTED = true
     }
 
     override fun setupNotification(): Notification {
         try {
             notificationIntent = Intent(
-                this, Class.forName("dev.atick.compose.MainActivity")
+                this,
+                Class.forName("dev.atick.compose.MainActivity")
             )
         } catch (e: ClassNotFoundException) {
-            Logger.i("MAIN ACTIVITY NOT FOUND!")
+            Logger.e("MAIN ACTIVITY NOT FOUND!")
             e.printStackTrace()
         }
         val notification = if (
@@ -50,14 +103,30 @@ class MovesenseService : BaseService() {
         ) {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_connected)
-                .setContentTitle(getString(R.string.persistent_notification_title))
-                // .setContentText(getString(R.string.persistent_notification_description))
+                .setContentTitle(
+                    getString(
+                        R.string.persistent_notification_title
+                    )
+                )
+                .setContentText(
+                    getString(
+                        R.string.persistent_notification_text, 0.0F
+                    )
+                )
                 .setPriority(NotificationCompat.PRIORITY_LOW)
         } else {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_warning)
-                .setContentTitle(getString(R.string.persistent_notification_warning_title))
-                // .setContentText(getString(R.string.persistent_notification_warning_description))
+                .setContentTitle(
+                    getString(
+                        R.string.persistent_notification_warning_title
+                    )
+                )
+                .setContentText(
+                    getString(
+                        R.string.persistent_notification_warning_text
+                    )
+                )
                 .setPriority(NotificationCompat.PRIORITY_LOW)
         }
 
@@ -65,9 +134,10 @@ class MovesenseService : BaseService() {
             notification.apply {
                 val pendingIntent = PendingIntent.getActivity(
                     this@MovesenseService,
-                    1011,
+                    PERSISTENT_NOTIFICATION_REQUEST_CODE,
                     notificationIntent,
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_IMMUTABLE
+                        or PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 setContentIntent(pendingIntent)
             }
@@ -76,14 +146,10 @@ class MovesenseService : BaseService() {
         return notification.build()
     }
 
-    fun connect(address: String) {
+    private fun connect(address: String) {
         movesense.connect(address) {
             movesense.stopScan()
         }
-    }
-
-    fun disconnect() {
-        movesense.clear()
     }
 
     override fun collectGarbage() {

@@ -5,10 +5,12 @@ import android.content.Intent
 import android.os.Build
 import androidx.lifecycle.LifecycleService
 
-abstract class BaseService : LifecycleService() {
+abstract class BaseLifecycleService : LifecycleService() {
 
     companion object {
         const val PERSISTENT_NOTIFICATION_ID = 101
+        const val ACTION_START_SERVICE = "START_SERVICE"
+        const val ACTION_STOP_SERVICE = "STOP_SERVICE"
     }
 
     private lateinit var persistentNotification: Notification
@@ -24,9 +26,17 @@ abstract class BaseService : LifecycleService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        onStartService(intent)
-        persistentNotification = setupNotification()
-        startForeground(PERSISTENT_NOTIFICATION_ID, persistentNotification)
+        when (intent?.action) {
+            ACTION_START_SERVICE -> {
+                onStartService(intent)
+                persistentNotification = setupNotification()
+                startForeground(
+                    PERSISTENT_NOTIFICATION_ID,
+                    persistentNotification
+                )
+            }
+            ACTION_STOP_SERVICE -> stopService()
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 

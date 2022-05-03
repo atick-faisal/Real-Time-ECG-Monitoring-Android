@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.repository.Movesense
+import dev.atick.movesense.service.MovesenseService
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,18 +57,14 @@ class BleViewModel @Inject constructor(
         }
     }
 
-    fun connect(address: String) {
-        movesense.connect(address) {
-            stopScan()
-        }
-    }
-
     fun disconnect() {
-        movesense.clear()
+        // TODO(IMPLEMENT THIS)
     }
 
     override fun onCleared() {
-        movesense.clear()
+        if (!MovesenseService.STARTED) {
+            movesense.clear()
+        }
         super.onCleared()
     }
 }

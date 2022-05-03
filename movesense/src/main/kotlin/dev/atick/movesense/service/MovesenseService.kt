@@ -8,9 +8,9 @@ import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.utils.extensions.observe
-import dev.atick.core.utils.extensions.observeEvent
 import dev.atick.core.utils.extensions.showNotification
 import dev.atick.movesense.R
+import dev.atick.movesense.data.ConnectionStatus
 import dev.atick.movesense.repository.Movesense
 import javax.inject.Inject
 
@@ -49,36 +49,75 @@ class MovesenseService : BaseLifecycleService() {
                 )
             }
         }
-        observeEvent(movesense.isConnected) {
-            if (it) {
-                persistentNotificationBuilder.setSmallIcon(
-                    R.drawable.ic_connected
-                )
+        observe(movesense.connectionStatus) { connectionStatus ->
+            persistentNotificationBuilder.apply {
+                when (connectionStatus) {
+                    ConnectionStatus.NOT_CONNECTED -> {
+                        setSmallIcon(R.drawable.ic_warning)
+                        setContentTitle(getString(R.string.not_connected))
+                        setContentText(
+                            getString(
+                                R.string.persistent_notification_not_connected_text
+                            )
+                        )
+                    }
+                    ConnectionStatus.CONNECTING -> {
+                        setSmallIcon(R.drawable.ic_connecting)
+                        setContentTitle(getString(R.string.connecting))
+                        setContentText(
+                            getString(
+                                R.string.persistent_notification_connecting_text
+                            )
+                        )
+                    }
+                    ConnectionStatus.CONNECTED -> {
+                        setSmallIcon(R.drawable.ic_connected)
+                        setContentTitle(
+                            getString(
+                                R.string.movesense_connected
+                            )
+                        )
+                        setContentText(
+                            getString(
+                                R.string.persistent_notification_text, 0.0F
+                            )
+                        )
+                    }
+                    ConnectionStatus.CONNECTION_FAILED -> {
+                        setSmallIcon(R.drawable.ic_connection_failed)
+                        setContentTitle(
+                            getString(
+                                R.string.connection_failed
+                            )
+                        )
+                        setContentText(
+                            getString(
+                                R.string.persistent_notification_connection_failed
+                            )
+                        )
+                    }
+                    ConnectionStatus.DISCONNECTED -> {
+                        setSmallIcon(R.drawable.ic_warning)
+                        setContentTitle(
+                            getString(
+                                R.string.disconnected
+                            )
+                        )
+                        setContentText(
+                            getString(
+                                R.string.persistent_notification_disconnected
+                            )
+                        )
+                    }
+                }
             }
+
             if (STARTED) {
                 showNotification(
                     PERSISTENT_NOTIFICATION_ID,
                     persistentNotificationBuilder.build()
                 )
             }
-//            persistentNotificationBuilder.apply {
-//                if (it) {
-//                    setSmallIcon(R.drawable.ic_connected)
-//                    setContentText(
-//                        getString(
-//                            R.string.persistent_notification_text, 0.0F
-//                        )
-//                    )
-//                } else {
-//                    setSmallIcon(R.drawable.ic_warning)
-//                    setContentText(
-//                        getString(
-//                            R.string.persistent_notification_warning_text
-//                        )
-//                    )
-//                }
-//            }
-
         }
     }
 
@@ -105,7 +144,7 @@ class MovesenseService : BaseLifecycleService() {
                 .setSmallIcon(R.drawable.ic_connected)
                 .setContentTitle(
                     getString(
-                        R.string.persistent_notification_title
+                        R.string.connected
                     )
                 )
                 .setContentText(

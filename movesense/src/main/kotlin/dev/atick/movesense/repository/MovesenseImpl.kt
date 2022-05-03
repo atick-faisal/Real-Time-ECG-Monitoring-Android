@@ -236,6 +236,7 @@ class MovesenseImpl @Inject constructor(
         connectedMac?.let {
             mds?.disconnect(it)
             connectedMac = null
+            _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
             _isConnected.postValue(Event(false))
         }
     }

@@ -58,6 +58,7 @@ class BleViewModel @Inject constructor(
     }
 
     fun disconnect() {
+        movesense.clear()
         // TODO(IMPLEMENT THIS)
     }
 

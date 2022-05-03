@@ -5,7 +5,7 @@
     <string name="persistent_notification_text">Current Heart Rate: %.2f BPM</string>
     <string name="persistent_notification_warning_text">Please check your network connection</string>
     <string name="persistent_notification_connecting_text">Please Wait for the Connection to Establish</string>
-    <string name="connecting">\"Connecting … \"</string>
+    <string name="connecting">Connecting …</string>
     <string name="connected">Cardiac Zone is Connected</string>
     <string name="movesense_connected">Movesense is Connected</string>
     <string name="connection_failed">Connection Failed</string>

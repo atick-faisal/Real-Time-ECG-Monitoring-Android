@@ -3,6 +3,7 @@ package dev.atick.movesense.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
+import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,6 +14,7 @@ import dev.atick.movesense.R
 import dev.atick.movesense.data.ConnectionStatus
 import dev.atick.movesense.repository.Movesense
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MovesenseService : BaseLifecycleService() {
@@ -39,9 +41,13 @@ class MovesenseService : BaseLifecycleService() {
     override fun onCreateService() {
         super.onCreateService()
         observe(movesense.averageHeartRate) {
-            persistentNotificationBuilder.setContentText(
-                getString(R.string.persistent_notification_text, it),
-            )
+            persistentNotificationBuilder.apply {
+                setContentText(
+                    getString(
+                        R.string.persistent_notification_text, it
+                    )
+                )
+            }
             if (STARTED) {
                 showNotification(
                     PERSISTENT_NOTIFICATION_ID,
@@ -150,7 +156,6 @@ class MovesenseService : BaseLifecycleService() {
                         R.string.persistent_notification_text, 0.0F
                     )
                 )
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         } else {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_warning)
@@ -164,7 +169,6 @@ class MovesenseService : BaseLifecycleService() {
                         R.string.persistent_notification_warning_text
                     )
                 )
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         }
 
         notificationIntent?.let {
@@ -176,6 +180,7 @@ class MovesenseService : BaseLifecycleService() {
                     PendingIntent.FLAG_IMMUTABLE
                         or PendingIntent.FLAG_UPDATE_CURRENT
                 )
+                priority = NotificationCompat.PRIORITY_DEFAULT
                 setContentIntent(pendingIntent)
             }
         }

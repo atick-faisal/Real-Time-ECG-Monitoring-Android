@@ -71,7 +71,7 @@ class MovesenseImpl @Inject constructor(
         )?.subscribe(
             { scanResult ->
                 scanResult?.let { result ->
-                    Logger.w("DEVICE FOUND: $result")
+                    Logger.i("DEVICE FOUND: $result")
                     onDeviceFound(
                         BtDevice(
                             name = result.bleDevice.name ?: "Unnamed",

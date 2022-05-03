@@ -45,7 +45,9 @@ class MovesenseService : BaseService() {
             Logger.i("MAIN ACTIVITY NOT FOUND!")
             e.printStackTrace()
         }
-        val notification = if (movesense.isConnected.value == true) {
+        val notification = if (
+            movesense.isConnected.value?.peekContent() == true
+        ) {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_connected)
                 .setContentTitle(getString(R.string.persistent_notification_title))
@@ -72,6 +74,16 @@ class MovesenseService : BaseService() {
         }
 
         return notification.build()
+    }
+
+    fun connect(address: String) {
+        movesense.connect(address) {
+            movesense.stopScan()
+        }
+    }
+
+    fun disconnect() {
+        movesense.clear()
     }
 
     override fun collectGarbage() {

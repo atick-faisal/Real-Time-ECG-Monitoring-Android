@@ -5,7 +5,7 @@ import dev.atick.core.utils.Event
 import dev.atick.movesense.data.BtDevice
 
 interface Movesense {
-    val isConnected: LiveData<Boolean>
+    val isConnected: LiveData<Event<Boolean>>
     val connectionStatus: LiveData<Event<String?>>
     val averageHeartRate: LiveData<Float>
     val rrInterval: LiveData<Int>

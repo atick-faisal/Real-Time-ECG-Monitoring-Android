@@ -9,9 +9,9 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.theme.ComposeTheme
-import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.service.BaseLifecycleService.Companion.ACTION_START_SERVICE
 import dev.atick.core.ui.BaseComposeFragment
+import dev.atick.core.utils.extensions.observe
 import dev.atick.core.utils.extensions.observeEvent
 import dev.atick.core.utils.extensions.showToast
 import dev.atick.movesense.service.MovesenseService
@@ -31,10 +31,8 @@ class ConnectionFragment : BaseComposeFragment() {
 
     override fun observeStates() {
         super.observeStates()
-        observeEvent(viewModel.connectionStatus) { status ->
-            status?.let {
-                requireContext().showToast(it)
-            }
+        observe(viewModel.connectionStatus) { status ->
+            requireContext().showToast(status.name)
         }
 
         observeEvent(viewModel.isConnected) {

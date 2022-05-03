@@ -11,10 +11,7 @@ import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
 import dev.atick.core.utils.Event
-import dev.atick.movesense.data.BtDevice
-import dev.atick.movesense.data.EcgInfoResponse
-import dev.atick.movesense.data.EcgResponse
-import dev.atick.movesense.data.HrResponse
+import dev.atick.movesense.data.*
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -49,10 +46,8 @@ class MovesenseImpl @Inject constructor(
     override val isConnected: LiveData<Event<Boolean>>
         get() = _isConnected
 
-    private val _connectionStatus = MutableLiveData<Event<String?>>(
-        Event(null)
-    )
-    override val connectionStatus: LiveData<Event<String?>>
+    private val _connectionStatus = MutableLiveData(ConnectionStatus.NOT_CONNECTED)
+    override val connectionStatus: LiveData<ConnectionStatus>
         get() = _connectionStatus
 
     private val _averageHeartRate = MutableLiveData(0.0F)
@@ -99,14 +94,14 @@ class MovesenseImpl @Inject constructor(
     override fun connect(address: String, onConnect: () -> Unit) {
         mds?.connect(address, object : MdsConnectionListener {
             override fun onConnect(address: String?) {
-                _connectionStatus.postValue(Event("Connecting ... "))
+                _connectionStatus.postValue(ConnectionStatus.CONNECTING)
                 Logger.i("CONNECTION TO $address")
             }
 
             override fun onConnectionComplete(address: String?, serial: String?) {
                 connectedMac = address
                 _isConnected.postValue(Event(true))
-                _connectionStatus.postValue(Event("Connected"))
+                _connectionStatus.postValue(ConnectionStatus.CONNECTED)
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
                 onConnect.invoke()
@@ -114,13 +109,13 @@ class MovesenseImpl @Inject constructor(
 
             override fun onError(e: MdsException?) {
                 _isConnected.postValue(Event(false))
-                _connectionStatus.postValue(Event("Connection Error"))
+                _connectionStatus.postValue(ConnectionStatus.CONNECTION_FAILED)
                 Logger.e("CONNECTION ERROR: $e")
             }
 
             override fun onDisconnect(address: String?) {
                 _isConnected.postValue(Event(false))
-                // _connectionStatus.postValue(Event("Disconnected"))
+                 _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
                 Logger.w("DISCONNECTED FROM $address")
             }
         })

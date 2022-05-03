@@ -150,7 +150,7 @@ class MovesenseService : BaseLifecycleService() {
                         R.string.persistent_notification_text, 0.0F
                     )
                 )
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         } else {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_warning)
@@ -164,7 +164,7 @@ class MovesenseService : BaseLifecycleService() {
                         R.string.persistent_notification_warning_text
                     )
                 )
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         }
 
         notificationIntent?.let {

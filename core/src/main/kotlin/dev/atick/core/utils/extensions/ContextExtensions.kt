@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dev.atick.core.BuildConfig
 
 fun Context.showToast(message: String) {
@@ -27,18 +28,20 @@ fun Context.hasPermission(permissionType: String): Boolean {
 fun Context.showAlertDialog(
     title: String,
     message: String,
+    positiveText: String = "OK",
+    negativeText: String = "CANCEL",
     onApprove: () -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
-    val builder = AlertDialog.Builder(this)
+    val builder = MaterialAlertDialogBuilder(this)
     builder.setTitle(title)
     builder.setMessage(message)
 
-    builder.setPositiveButton("OK") { _, _ ->
+    builder.setPositiveButton(positiveText) { _, _ ->
         onApprove.invoke()
     }
 
-    builder.setNegativeButton("CANCEL") { _, _ ->
+    builder.setNegativeButton(negativeText) { _, _ ->
         onCancel.invoke()
     }
 

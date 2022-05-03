@@ -131,15 +131,13 @@ class MovesenseService : BaseLifecycleService() {
         try {
             notificationIntent = Intent(
                 this,
-                Class.forName("dev.atick.compose.MainActivity")
+                Class.forName("dev.atick.compose.ui.MainActivity")
             )
         } catch (e: ClassNotFoundException) {
             Logger.e("MAIN ACTIVITY NOT FOUND!")
             e.printStackTrace()
         }
-        val notification = if (
-            movesense.isConnected.value?.peekContent() == true
-        ) {
+        val notification = if (movesense.isConnected.value == true) {
             persistentNotificationBuilder
                 .setSmallIcon(R.drawable.ic_connected)
                 .setContentTitle(

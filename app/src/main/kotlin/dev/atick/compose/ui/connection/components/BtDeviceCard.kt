@@ -21,18 +21,18 @@ fun BtDeviceCard(
 ) {
     return Card(
         modifier = modifier.then(
-            Modifier.fillMaxWidth().clickable {
-                onClick.invoke(btDevice.address)
-            }
+            Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onClick.invoke(btDevice.address)
+                }
         ),
         elevation = if (isSystemInDarkTheme()) 0.dp else 2.dp,
         shape = RoundedCornerShape(16.dp),
         backgroundColor = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onSurface,
         onClick = { onClick.invoke(btDevice.address) }
     ) {
-        DeviceInfo(
-            btDevice = btDevice,
-            isConnected = false
-        )
+        DeviceInfo(btDevice = btDevice)
     }
 }

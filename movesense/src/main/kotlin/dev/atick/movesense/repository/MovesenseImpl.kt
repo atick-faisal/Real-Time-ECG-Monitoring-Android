@@ -10,7 +10,6 @@ import com.movesense.mds.*
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
-import dev.atick.core.utils.Event
 import dev.atick.movesense.data.*
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -42,8 +41,8 @@ class MovesenseImpl @Inject constructor(
     private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
     private val ecgBuffer = MutableList(ECG_SEGMENT_LEN) { 0 }
 
-    private val _isConnected = MutableLiveData(Event(false))
-    override val isConnected: LiveData<Event<Boolean>>
+    private val _isConnected = MutableLiveData(false)
+    override val isConnected: LiveData<Boolean>
         get() = _isConnected
 
     private val _connectionStatus = MutableLiveData(ConnectionStatus.NOT_CONNECTED)
@@ -100,7 +99,7 @@ class MovesenseImpl @Inject constructor(
 
             override fun onConnectionComplete(address: String?, serial: String?) {
                 connectedMac = address
-                _isConnected.postValue(Event(true))
+                _isConnected.postValue(true)
                 _connectionStatus.postValue(ConnectionStatus.CONNECTED)
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
@@ -108,14 +107,14 @@ class MovesenseImpl @Inject constructor(
             }
 
             override fun onError(e: MdsException?) {
-                _isConnected.postValue(Event(false))
+                _isConnected.postValue(false)
                 _connectionStatus.postValue(ConnectionStatus.CONNECTION_FAILED)
                 Logger.e("CONNECTION ERROR: $e")
             }
 
             override fun onDisconnect(address: String?) {
-                _isConnected.postValue(Event(false))
-                 _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
+                _isConnected.postValue(false)
+                _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
                 Logger.w("DISCONNECTED FROM $address")
             }
         })
@@ -169,7 +168,7 @@ class MovesenseImpl @Inject constructor(
                             _averageHeartRate.postValue(it)
                             // Logger.i("RR: $it")
                         }
-                        hrResponse?.body?.let { body->
+                        hrResponse?.body?.let { body ->
                             body.average.let { hr ->
                                 _averageHeartRate.postValue(hr)
                             }
@@ -237,7 +236,7 @@ class MovesenseImpl @Inject constructor(
             mds?.disconnect(it)
             connectedMac = null
             _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
-            _isConnected.postValue(Event(false))
+            _isConnected.postValue(false)
         }
     }
 

@@ -1,12 +1,11 @@
 package dev.atick.movesense.repository
 
 import androidx.lifecycle.LiveData
-import dev.atick.core.utils.Event
 import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.data.ConnectionStatus
 
 interface Movesense {
-    val isConnected: LiveData<Event<Boolean>>
+    val isConnected: LiveData<Boolean>
     val connectionStatus: LiveData<ConnectionStatus>
     val averageHeartRate: LiveData<Float>
     val rrInterval: LiveData<Int>

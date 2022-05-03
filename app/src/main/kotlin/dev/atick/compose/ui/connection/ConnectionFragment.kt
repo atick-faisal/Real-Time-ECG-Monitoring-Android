@@ -12,7 +12,6 @@ import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.service.BaseLifecycleService.Companion.ACTION_START_SERVICE
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.observe
-import dev.atick.core.utils.extensions.observeEvent
 import dev.atick.core.utils.extensions.showToast
 import dev.atick.movesense.service.MovesenseService
 
@@ -32,10 +31,10 @@ class ConnectionFragment : BaseComposeFragment() {
     override fun observeStates() {
         super.observeStates()
         observe(viewModel.connectionStatus) { status ->
-            requireContext().showToast(status.name)
+            requireContext().showToast(status.description)
         }
 
-        observeEvent(viewModel.isConnected) {
+        observe(viewModel.isConnected) {
             if (it) navigateToHomeFragment()
         }
     }

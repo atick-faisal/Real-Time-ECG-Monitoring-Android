@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Cardiac Zone</string>
+    <string name="notification_channel_name">Cardiac Zone Status Notification</string>
+    <string name="notification_channel_description">Always display connection status and heart rate information</string>
 </resources>

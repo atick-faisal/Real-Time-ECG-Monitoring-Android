@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation project(path: ":core")
+    implementation project(path: ":network")
     implementation project(path: ":mdslib")
 
     // ... RxJava & RxAndroid

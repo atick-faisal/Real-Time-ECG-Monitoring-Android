@@ -31,7 +31,7 @@ class ConnectionFragment : BaseComposeFragment() {
     override fun observeStates() {
         super.observeStates()
         observe(viewModel.connectionStatus) { status ->
-            requireContext().showToast(status.description)
+            requireContext().showToast(getString(status.description))
         }
 
         observe(viewModel.isConnected) {

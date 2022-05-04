@@ -3,6 +3,8 @@ package dev.atick.movesense.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,11 +27,10 @@ class MovesenseService : BaseLifecycleService() {
     companion object {
         var STARTED = false
         const val PERSISTENT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.persistent"
-
-        // const val ALERT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.alert"
-        // const val ALERT_NOTIFICATION_ID = 1011
+        const val ALERT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.alert"
         const val BT_DEVICE_ADDRESS_KEY = "dev.atick.c.zone.device.key"
-        const val PERSISTENT_NOTIFICATION_REQUEST_CODE = 1101
+        const val NOTIFICATION_INTENT_REQUEST_CODE = 1101
+        const val ALERT_NOTIFICATION_ID = 121
     }
 
     @Inject
@@ -41,15 +42,30 @@ class MovesenseService : BaseLifecycleService() {
     private val persistentNotificationBuilder = NotificationCompat.Builder(
         this, PERSISTENT_NOTIFICATION_CHANNEL_ID
     )
+    private val alertNotificationBuilder = NotificationCompat.Builder(
+        this, ALERT_NOTIFICATION_CHANNEL_ID
+    )
 
     private var notificationIntent: Intent? = null
     private var connectionStatus = ConnectionStatus.NOT_CONNECTED
     private var networkState = NetworkState.UNAVAILABLE
 
+    @DrawableRes
+    private var smallIcon = R.drawable.ic_alert
+
+    @StringRes
+    private var contentText = R.string.persistent_notification_not_connected_text
+
     override fun onCreateService() {
         super.onCreateService()
         observe(movesense.averageHeartRate) {
             persistentNotificationBuilder.apply {
+                setContentTitle(
+                    getNotificationTitle(
+                        connectionStatus = connectionStatus,
+                        networkState = networkState
+                    )
+                )
                 setContentText(
                     getString(
                         R.string.persistent_notification_text, it
@@ -65,106 +81,111 @@ class MovesenseService : BaseLifecycleService() {
         }
 
         observe(movesense.connectionStatus) { status ->
-            persistentNotificationBuilder.apply {
-                when (status) {
-                    ConnectionStatus.NOT_CONNECTED -> {
-                        connectionStatus = ConnectionStatus.NOT_CONNECTED
-                        setSmallIcon(R.drawable.ic_alert)
-                        setContentText(
-                            getString(
-                                R.string.persistent_notification_not_connected_text
-                            )
-                        )
-                    }
-                    ConnectionStatus.CONNECTING -> {
-                        setSmallIcon(R.drawable.ic_connecting)
-                        setContentText(
-                            getString(
-                                R.string.persistent_notification_connecting_text
-                            )
-                        )
-                        connectionStatus = ConnectionStatus.CONNECTING
-                    }
-                    ConnectionStatus.CONNECTED -> {
-                        if (networkState == NetworkState.CONNECTED)
-                            setSmallIcon(R.drawable.ic_connected)
-                        setContentText(
-                            getString(
-                                R.string.persistent_notification_text, 0.0F
-                            )
-                        )
-                        connectionStatus = ConnectionStatus.CONNECTED
-                    }
-                    ConnectionStatus.CONNECTION_FAILED -> {
-                        setSmallIcon(R.drawable.ic_alert)
-                        setContentText(
-                            getString(
-                                R.string.persistent_notification_connection_failed
-                            )
-                        )
-                        connectionStatus = ConnectionStatus.CONNECTION_FAILED
-                    }
-                    ConnectionStatus.DISCONNECTED -> {
-                        setSmallIcon(R.drawable.ic_alert)
-                        setContentText(
-                            getString(
-                                R.string.persistent_notification_disconnected
-                            )
-                        )
-                        connectionStatus = ConnectionStatus.DISCONNECTED
-                    }
+            when (status) {
+                ConnectionStatus.NOT_CONNECTED -> {
+                    smallIcon = R.drawable.ic_alert
+                    contentText = R.string.persistent_notification_not_connected_text
+                    connectionStatus = ConnectionStatus.NOT_CONNECTED
                 }
+                ConnectionStatus.CONNECTING -> {
+                    smallIcon = R.drawable.ic_connecting
+                    contentText = R.string.persistent_notification_connecting_text
+                    connectionStatus = ConnectionStatus.CONNECTING
+                }
+                ConnectionStatus.CONNECTED -> {
+                    if (networkState == NetworkState.CONNECTED)
+                        smallIcon = R.drawable.ic_connected
+                    contentText = R.string.persistent_notification_connected_text
+                    connectionStatus = ConnectionStatus.CONNECTED
+                }
+                ConnectionStatus.CONNECTION_FAILED -> {
+                    smallIcon = R.drawable.ic_alert
+                    contentText = R.string.persistent_notification_connection_failed
+                    connectionStatus = ConnectionStatus.CONNECTION_FAILED
+                }
+                ConnectionStatus.DISCONNECTED -> {
+                    smallIcon = R.drawable.ic_alert
+                    contentText = R.string.persistent_notification_disconnected
+                    connectionStatus = ConnectionStatus.DISCONNECTED
+                }
+            }
 
-                setContentTitle(
-                    getNotificationTitle(
-                        connectionStatus = connectionStatus,
-                        networkState = networkState
-                    )
-                )
+            persistentNotificationBuilder.apply {
+                setContentTitle(getString(status.description))
+                setContentText(getString(contentText))
+                setSmallIcon(smallIcon)
+            }
+
+            alertNotificationBuilder.apply {
+                setContentTitle(getString(status.description))
+                setContentText(getString(contentText))
+                setSmallIcon(smallIcon)
             }
 
             if (STARTED) {
                 showNotification(
                     PERSISTENT_NOTIFICATION_ID,
                     persistentNotificationBuilder.build()
+                )
+
+                showNotification(
+                    ALERT_NOTIFICATION_ID,
+                    alertNotificationBuilder.build()
                 )
             }
         }
 
         collectWithLifecycle(networkUtils.currentState) { state ->
-            persistentNotificationBuilder.apply {
-                when (state) {
-                    NetworkState.CONNECTED -> {
-                        networkState = NetworkState.CONNECTED
-                        if (connectionStatus == ConnectionStatus.CONNECTED)
-                            setSmallIcon(R.drawable.ic_connected)
-                    }
-                    NetworkState.LOSING -> {
-                        networkState = NetworkState.LOSING
-                        setSmallIcon(R.drawable.ic_connecting)
-                    }
-                    NetworkState.LOST -> {
-                        networkState = NetworkState.LOST
-                        setSmallIcon(R.drawable.ic_no_internet)
-                    }
-                    NetworkState.UNAVAILABLE -> {
-                        networkState = NetworkState.UNAVAILABLE
-                        setSmallIcon(R.drawable.ic_no_internet)
-                    }
+            when (state) {
+                NetworkState.CONNECTED -> {
+                    networkState = NetworkState.CONNECTED
+                    if (connectionStatus == ConnectionStatus.CONNECTED)
+                        smallIcon = R.drawable.ic_connected
+                    contentText = R.string.network_established
                 }
+                NetworkState.LOSING -> {
+                    networkState = NetworkState.LOSING
+                    smallIcon = R.drawable.ic_connecting
+                    contentText = R.string.network_unavailable
+                }
+                NetworkState.LOST -> {
+                    networkState = NetworkState.LOST
+                    smallIcon = R.drawable.ic_no_internet
+                    contentText = R.string.network_unavailable
+                }
+                NetworkState.UNAVAILABLE -> {
+                    networkState = NetworkState.UNAVAILABLE
+                    smallIcon = R.drawable.ic_no_internet
+                    contentText = R.string.network_unavailable
+                }
+            }
 
+            persistentNotificationBuilder.apply {
                 setContentTitle(
                     getNotificationTitle(
                         connectionStatus = connectionStatus,
                         networkState = networkState
                     )
                 )
+                setContentText(getString(contentText))
+                setSmallIcon(smallIcon)
+            }
+
+            alertNotificationBuilder.apply {
+                setContentTitle(getString(state.description))
+                setContentText(getString(contentText))
+                setSmallIcon(smallIcon)
             }
 
             if (STARTED) {
                 showNotification(
                     PERSISTENT_NOTIFICATION_ID,
                     persistentNotificationBuilder.build()
+                )
+
+                showNotification(
+                    ALERT_NOTIFICATION_ID,
+                    alertNotificationBuilder.build()
                 )
             }
         }
@@ -178,6 +199,50 @@ class MovesenseService : BaseLifecycleService() {
     }
 
     override fun setupNotification(): Notification {
+        persistentNotificationBuilder.apply {
+            if (movesense.isConnected.value == true) {
+                setSmallIcon(R.drawable.ic_connected)
+                setContentTitle(
+                    getString(
+                        R.string.movesense_connected
+                    )
+                )
+                setContentText(
+                    getString(
+                        R.string.persistent_notification_text, 0.0F
+                    )
+                )
+            } else {
+                setSmallIcon(R.drawable.ic_warning)
+                setContentTitle(
+                    getString(
+                        R.string.persistent_notification_warning_title
+                    )
+                )
+                setContentText(
+                    getString(
+                        R.string.persistent_notification_warning_text
+                    )
+                )
+            }
+        }
+
+        val pendingIntent = getMainActivityPendingIntent()
+
+        persistentNotificationBuilder.apply {
+            priority = NotificationCompat.PRIORITY_LOW
+            pendingIntent?.let { setContentIntent(it) }
+        }
+
+        alertNotificationBuilder.apply {
+            priority = NotificationCompat.PRIORITY_HIGH
+            pendingIntent?.let { setContentIntent(pendingIntent) }
+        }
+
+        return persistentNotificationBuilder.build()
+    }
+
+    private fun getMainActivityPendingIntent(): PendingIntent? {
         try {
             notificationIntent = Intent(
                 this,
@@ -187,49 +252,14 @@ class MovesenseService : BaseLifecycleService() {
             Logger.e("MAIN ACTIVITY NOT FOUND!")
             e.printStackTrace()
         }
-        val notification = if (movesense.isConnected.value == true) {
-            persistentNotificationBuilder
-                .setSmallIcon(R.drawable.ic_connected)
-                .setContentTitle(
-                    getString(
-                        R.string.connected
-                    )
-                )
-                .setContentText(
-                    getString(
-                        R.string.persistent_notification_text, 0.0F
-                    )
-                )
-        } else {
-            persistentNotificationBuilder
-                .setSmallIcon(R.drawable.ic_warning)
-                .setContentTitle(
-                    getString(
-                        R.string.persistent_notification_warning_title
-                    )
-                )
-                .setContentText(
-                    getString(
-                        R.string.persistent_notification_warning_text
-                    )
-                )
-        }
 
-        notificationIntent?.let {
-            notification.apply {
-                val pendingIntent = PendingIntent.getActivity(
-                    this@MovesenseService,
-                    PERSISTENT_NOTIFICATION_REQUEST_CODE,
-                    notificationIntent,
-                    PendingIntent.FLAG_IMMUTABLE
-                        or PendingIntent.FLAG_UPDATE_CURRENT
-                )
-                priority = NotificationCompat.PRIORITY_DEFAULT
-                setContentIntent(pendingIntent)
-            }
-        }
-
-        return notification.build()
+        return PendingIntent.getActivity(
+            this@MovesenseService,
+            NOTIFICATION_INTENT_REQUEST_CODE,
+            notificationIntent,
+            PendingIntent.FLAG_IMMUTABLE
+                or PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     private fun connect(address: String) {

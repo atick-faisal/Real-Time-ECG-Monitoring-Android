@@ -25,6 +25,7 @@ import dev.atick.compose.ui.connection.components.DeviceList
 @ExperimentalMaterialApi
 @SuppressLint("MissingPermission")
 fun ConnectionScreen(
+    onDeviceClick: (String) -> Unit,
     viewModel: BleViewModel = viewModel()
 ) {
     val isScanning by viewModel.isScanning
@@ -55,9 +56,7 @@ fun ConnectionScreen(
                         bottom = 80.dp
                     ),
                 deviceList = devices,
-                onDeviceClick = { address ->
-                    viewModel.connect(address)
-                }
+                onDeviceClick = onDeviceClick
             )
         }
 

@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Cardiac Zone</string>
+    <string name="notification_channel_name">Cardiac Zone Status Notification</string>
+    <string name="notification_channel_description">Always display connection status and heart rate information</string>
+    <string name="warning">Warning</string>
+    <string name="exit_alert_text">Cardiac Zone service is running in the background. Do you want to stop the service and EXIT or do you want to KEEP (Recommended) it running?</string>
+    <string name="exit">STOP</string>
+    <string name="keep">KEEP</string>
+    <string name="alert_notification_channel_name">Cardiac Zone Alert Notification</string>
+    <string name="alert_notification_channel_description">Provide Alerts for Critical Situations</string>
 </resources>

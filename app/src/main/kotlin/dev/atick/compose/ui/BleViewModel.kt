@@ -17,13 +17,20 @@ class BleViewModel @Inject constructor(
     private val movesense: Movesense
 ) : BaseViewModel() {
 
+    companion object {
+        const val N_DATA_POINTS = 1024
+    }
+
     val isConnected = movesense.isConnected
     val connectionStatus = movesense.connectionStatus
     val averageHeartRate = movesense.averageHeartRate
     val rrInterval = movesense.rrInterval
     var ecgDataset = movesense.ecgData.map { ecgBuffer ->
         LineDataSet(
-            ecgBuffer.mapIndexed { index, value ->
+            ecgBuffer.subList(
+                ecgBuffer.size - N_DATA_POINTS,
+                ecgBuffer.size
+            ).mapIndexed { index, value ->
                 Entry(index.toFloat(), value.toFloat())
             },
             "ECG"

@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.lifecycleScope
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.core.service.BaseLifecycleService
@@ -13,11 +14,16 @@ import dev.atick.core.utils.extensions.collectWithLifecycle
 import dev.atick.core.utils.extensions.observe
 import dev.atick.core.utils.extensions.showNotification
 import dev.atick.movesense.R
+import dev.atick.movesense.config.MovesenseConfig.NETWORK_UPDATE_CYCLE
 import dev.atick.movesense.data.ConnectionStatus
 import dev.atick.movesense.repository.Movesense
 import dev.atick.movesense.utils.getNotificationTitle
+import dev.atick.network.data.Request
+import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.network.utils.NetworkState
 import dev.atick.network.utils.NetworkUtils
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -39,6 +45,14 @@ class MovesenseService : BaseLifecycleService() {
     @Inject
     lateinit var networkUtils: NetworkUtils
 
+    @Inject
+    lateinit var cardiacZoneRepository: CardiacZoneRepository
+
+    private val dataFormatter = SimpleDateFormat(
+        "yyyy-MM-dd kk:mm:ss",
+        Locale.getDefault()
+    )
+
     private val persistentNotificationBuilder = NotificationCompat.Builder(
         this, PERSISTENT_NOTIFICATION_CHANNEL_ID
     )
@@ -49,6 +63,8 @@ class MovesenseService : BaseLifecycleService() {
     private var notificationIntent: Intent? = null
     private var connectionStatus = ConnectionStatus.NOT_CONNECTED
     private var networkState = NetworkState.UNAVAILABLE
+
+    private var ecgUpdateCount = 0
 
     @DrawableRes
     private var smallIcon = R.drawable.ic_alert
@@ -77,6 +93,27 @@ class MovesenseService : BaseLifecycleService() {
                     PERSISTENT_NOTIFICATION_ID,
                     persistentNotificationBuilder.build()
                 )
+            }
+        }
+
+        observe(movesense.ecgData) {
+            ecgUpdateCount += 1
+            if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
+                val time = dataFormatter.format(Date())
+                val requestBody = Request(
+                    ecgData = it,
+                    time = listOf(time),
+                    userId = 23
+                )
+                Logger.w("SENDING ECG DATA TO SERVER: $time ")
+                try {
+                    lifecycleScope.launchWhenStarted {
+                        cardiacZoneRepository.pushEcg(requestBody)
+                    }
+                } catch (e: Exception) {
+                    Logger.e("ECG DATA NOT SENT!: ${e.message}")
+                }
+                ecgUpdateCount = 0
             }
         }
 

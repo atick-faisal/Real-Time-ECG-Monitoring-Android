@@ -10,6 +10,14 @@ import com.movesense.mds.*
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
+import dev.atick.movesense.config.MovesenseConfig.DEFAULT_ECG_BUFFER_LEN
+import dev.atick.movesense.config.MovesenseConfig.DEFAULT_ECG_SAMPLE_RATE
+import dev.atick.movesense.config.MovesenseConfig.ECG_SEGMENT_LEN
+import dev.atick.movesense.config.MovesenseConfig.SCHEME_PREFIX
+import dev.atick.movesense.config.MovesenseConfig.URI_ECG_INFO
+import dev.atick.movesense.config.MovesenseConfig.URI_ECG_ROOT
+import dev.atick.movesense.config.MovesenseConfig.URI_EVENT_LISTENER
+import dev.atick.movesense.config.MovesenseConfig.URI_MEAS_HR
 import dev.atick.movesense.data.*
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -19,20 +27,6 @@ class MovesenseImpl @Inject constructor(
     private val mds: Mds?,
     private val rxBleClient: RxBleClient?
 ) : Movesense {
-
-    companion object {
-        const val URI_EVENT_LISTENER = "suunto://MDS/EventListener"
-        const val SCHEME_PREFIX = "suunto://"
-
-        const val URI_ECG_INFO = "/Meas/ECG/Info"
-        const val URI_ECG_ROOT = "/Meas/ECG/"
-        const val URI_MEAS_HR = "/Meas/HR"
-
-        const val DEFAULT_ECG_BUFFER_LEN = 16
-        const val DEFAULT_ECG_SAMPLE_RATE = 128
-        const val ECG_SEGMENT_LEN = (DEFAULT_ECG_SAMPLE_RATE * 15)
-    }
-
     private var connectedMac: String? = null
     private var scanDisposable: Disposable? = null
     private var hrSubscription: MdsSubscription? = null

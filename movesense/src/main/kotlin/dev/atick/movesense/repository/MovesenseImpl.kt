@@ -28,9 +28,9 @@ class MovesenseImpl @Inject constructor(
         const val URI_ECG_ROOT = "/Meas/ECG/"
         const val URI_MEAS_HR = "/Meas/HR"
 
-        const val ECG_SEGMENT_LEN = 1024
         const val DEFAULT_ECG_BUFFER_LEN = 16
         const val DEFAULT_ECG_SAMPLE_RATE = 128
+        const val ECG_SEGMENT_LEN = (DEFAULT_ECG_SAMPLE_RATE * 15)
     }
 
     private var connectedMac: String? = null

@@ -103,7 +103,7 @@ class MovesenseService : BaseLifecycleService() {
                 val requestBody = Request(
                     ecgData = it,
                     time = listOf(time),
-                    userId = 23
+                    userId = 2
                 )
                 Logger.w("SENDING ECG DATA TO SERVER: $time ")
                 lifecycleScope.launchWhenStarted {

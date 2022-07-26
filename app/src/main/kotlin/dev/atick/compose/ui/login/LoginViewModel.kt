@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.ui.BaseViewModel
+import dev.atick.core.utils.Property
 import dev.atick.network.data.LoginRequest
 import dev.atick.network.repository.CardiacZoneRepository
 import kotlinx.coroutines.launch
@@ -14,14 +15,14 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val cardiacZoneRepository: CardiacZoneRepository
 ): BaseViewModel() {
-    val username = mutableStateOf("")
+    val username = Property(mutableStateOf(""))
     val password = mutableStateOf("")
 
     fun login() {
         viewModelScope.launch {
             val response = cardiacZoneRepository.login(
                 LoginRequest(
-                    username = username.value,
+                    username = username.value.value,
                     password = password.value
                 )
             )

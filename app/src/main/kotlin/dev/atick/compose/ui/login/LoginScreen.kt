@@ -30,7 +30,7 @@ fun LoginScreen(
             Text(text = "Login", fontSize = 24.sp)
             TextField(value = username, onValueChange = { username = it })
             TextField(value = password, onValueChange = {password = it})
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { viewModel.login()}) {
                 Text(text = "Login")
             }
         }

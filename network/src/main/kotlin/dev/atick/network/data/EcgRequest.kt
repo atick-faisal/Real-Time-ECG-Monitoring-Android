@@ -2,7 +2,7 @@ package dev.atick.network.data
 
 import com.google.gson.annotations.SerializedName
 
-data class Request(
+data class EcgRequest(
     @SerializedName("EcgData")
     val ecgData: List<Int>,
     @SerializedName("Time")

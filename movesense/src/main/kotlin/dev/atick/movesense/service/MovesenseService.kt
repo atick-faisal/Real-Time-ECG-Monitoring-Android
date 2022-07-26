@@ -106,12 +106,8 @@ class MovesenseService : BaseLifecycleService() {
                     userId = 23
                 )
                 Logger.w("SENDING ECG DATA TO SERVER: $time ")
-                try {
-                    lifecycleScope.launchWhenStarted {
-                        cardiacZoneRepository.pushEcg(requestBody)
-                    }
-                } catch (e: Exception) {
-                    Logger.e("ECG DATA NOT SENT!: ${e.message}")
+                lifecycleScope.launchWhenStarted {
+                    cardiacZoneRepository.pushEcg(requestBody)
                 }
                 ecgUpdateCount = 0
             }

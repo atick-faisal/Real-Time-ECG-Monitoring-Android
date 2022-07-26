@@ -18,7 +18,7 @@ class BleViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     companion object {
-        const val N_DATA_POINTS = 1024
+        const val N_DATA_POINTS = 300
     }
 
     val isConnected = movesense.isConnected

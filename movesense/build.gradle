@@ -28,19 +28,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
-        useIR = true
-    }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-    }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
+        jvmTarget = "1.8"
     }
 }
 
@@ -51,13 +39,13 @@ dependencies {
 
     // ... RxJava & RxAndroid
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.19")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
 
     // ... RxBLE
-    implementation("com.polidea.rxandroidble2:rxandroidble:1.10.2")
+    implementation("com.polidea.rxandroidble2:rxandroidble:1.14.1-SNAPSHOT")
 
     // ... Gson
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.9.0")
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")

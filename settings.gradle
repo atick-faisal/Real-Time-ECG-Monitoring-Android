@@ -12,6 +12,8 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        // TODO: CHANGE THIS IN PRODUCTION
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 rootProject.name = "Cardiac Zone"

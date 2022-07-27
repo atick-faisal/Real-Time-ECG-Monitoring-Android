@@ -12,7 +12,7 @@ class LoginFragment : BaseComposeFragment() {
     @Composable
     override fun ComposeUi() {
         ComposeTheme {
-            LoginScreen()
+            LoginScreen(::navigateToConnectionFragment)
         }
     }
 

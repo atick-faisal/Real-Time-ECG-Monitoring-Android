@@ -2,7 +2,7 @@
 <resources>
     <color name="primary">#A9514C</color>
     <color name="primaryVariant">#D5A6A3</color>
-    <color name="surface">#F6EDEC</color>
+    <color name="surface">#F2E4E3</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>

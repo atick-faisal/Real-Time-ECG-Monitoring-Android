@@ -25,6 +25,7 @@ import dev.atick.core.ui.components.InputField
 
 @Composable
 fun LoginScreen(
+    onLoginClick: () -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
     return Box(
@@ -87,7 +88,7 @@ fun LoginScreen(
                     )
                 }
             ) {
-
+                onLoginClick.invoke()
             }
         }
     }

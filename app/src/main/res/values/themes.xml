@@ -13,10 +13,10 @@
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/dark_blue_gray</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/surface</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- Navigation bar color. -->
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/surface</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
         <!-- Customize your theme here. -->
         <item name="materialAlertDialogTheme">
@@ -35,8 +35,12 @@
 
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:statusBarColor">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/surface</item>
         <item name="android:windowLightStatusBar">true</item>
+        <!-- Navigation bar color. -->
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
     </style>
 
 

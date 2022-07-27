@@ -23,13 +23,28 @@ private val DarkColorPalette = darkColors(
     onError = MaterialColor.White
 )
 
+//private val LightColorPalette = lightColors(
+//    primary = Primary,
+//    primaryVariant = PrimaryVariant,
+//    secondary = Primary,
+//    secondaryVariant = PrimaryVariant,
+//    background = MaterialColor.BlueGray50,
+//    surface = MaterialColor.White,
+//    error = MaterialColor.Red700,
+//    onPrimary = MaterialColor.White,
+//    onSecondary = MaterialColor.White,
+//    onBackground = MaterialColor.BlueGray800,
+//    onSurface = MaterialColor.BlueGray800,
+//    onError = MaterialColor.White
+//)
+
 private val LightColorPalette = lightColors(
-    primary = Primary,
+    primary = Color(0xFF_A9514C),
     primaryVariant = PrimaryVariant,
     secondary = Primary,
     secondaryVariant = PrimaryVariant,
-    background = MaterialColor.BlueGray50,
-    surface = MaterialColor.White,
+    background = Color(0xFF_FAF5F5),
+    surface = Color(0xFF_F6EDEC),
     error = MaterialColor.Red700,
     onPrimary = MaterialColor.White,
     onSecondary = MaterialColor.White,

@@ -14,19 +14,17 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val cardiacZoneRepository: CardiacZoneRepository
-): BaseViewModel() {
+) : BaseViewModel() {
     val username = Property(mutableStateOf(""))
-    val password = mutableStateOf("")
+    val password = Property(mutableStateOf(""))
 
     fun login() {
         viewModelScope.launch {
-            val response = cardiacZoneRepository.login(
-                LoginRequest(
-                    username = username.value.value,
-                    password = password.value
-                )
+            val request = LoginRequest(
+                username = username.state.value,
+                password = password.state.value
             )
-
+            val response = cardiacZoneRepository.login(request)
             Logger.w("LOGIN: $response")
         }
     }

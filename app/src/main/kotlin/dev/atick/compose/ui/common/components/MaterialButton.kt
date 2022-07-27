@@ -20,9 +20,9 @@ fun MaterialButton(
     onClick: (() -> Unit)
 ) {
     return Button(
-        modifier = modifier.then(Modifier.height(40.dp)),
+        modifier = modifier.then(Modifier.height(48.dp)),
         onClick = onClick,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(24.dp)
     ) {
         Row(
             Modifier.padding(start = 8.dp, end = 8.dp),

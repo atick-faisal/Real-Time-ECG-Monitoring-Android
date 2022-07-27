@@ -49,12 +49,12 @@ val Typography = Typography(
         letterSpacing = 0.1.sp
     ),
     body1 = TextStyle(
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
     ),
     body2 = TextStyle(
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         letterSpacing = 0.25.sp
     ),
@@ -64,7 +64,7 @@ val Typography = Typography(
         letterSpacing = 1.25.sp
     ),
     caption = TextStyle(
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         letterSpacing = 0.4.sp
     ),

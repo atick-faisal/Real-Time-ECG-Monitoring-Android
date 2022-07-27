@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.R
 import dev.atick.compose.ui.BleViewModel
-import dev.atick.compose.ui.theme.ComposeTheme
+import dev.atick.core.ui.theme.ComposeTheme
 import dev.atick.core.service.BaseLifecycleService.Companion.ACTION_STOP_SERVICE
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.showAlertDialog

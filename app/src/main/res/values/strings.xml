@@ -8,4 +8,7 @@
     <string name="keep">KEEP</string>
     <string name="alert_notification_channel_name">Cardiac Zone Alert Notification</string>
     <string name="alert_notification_channel_description">Provide Alerts for Critical Situations</string>
+    <string name="password_toggle">Toggle Visibility</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
 </resources>

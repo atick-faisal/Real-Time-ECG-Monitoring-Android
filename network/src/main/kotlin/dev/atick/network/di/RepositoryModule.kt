@@ -14,7 +14,7 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindGlucoseRepository(
+    abstract fun bindCardiacZoneRepository(
         glucoseRepositoryImpl: CardiacZoneRepositoryImpl
     ): CardiacZoneRepository
 }

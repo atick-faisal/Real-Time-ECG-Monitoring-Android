@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,14 @@ fun LoginScreen(
     ) {
         var username by viewModel.username.state
         var password by viewModel.password.state
+        val loginState by viewModel.loginState.observeAsState()
+
+        val buttonText = when (loginState?.peekContent()) {
+            LoginState.LOGGED_OUT -> LoginState.LOGGED_OUT.name
+            LoginState.LOGGING_IN -> LoginState.LOGGING_IN.name
+            LoginState.LOGIN_SUCCESSFUL -> LoginState.LOGIN_SUCCESSFUL.name
+            else -> LoginState.LOGGED_OUT.name
+        }
 
         Column(
             Modifier.align(Alignment.Center),
@@ -80,9 +89,9 @@ fun LoginScreen(
                     .fillMaxWidth(0.8F)
                     .height(48.dp),
                 shape = RoundedCornerShape(16.dp),
-                onClick = { onLoginClick.invoke() }
+                onClick = { viewModel.login() }
             ) {
-                Text(text = "Login")
+                Text(text = buttonText)
             }
         }
     }

@@ -70,6 +70,7 @@ dependencies {
     implementation(project(path: ":core"))
     implementation(project(path: ":network"))
     implementation(project(path: ":movesense"))
+    implementation(project(path: ":storage"))
 
     // ... Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")

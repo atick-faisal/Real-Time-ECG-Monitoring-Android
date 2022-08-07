@@ -34,6 +34,9 @@ android {
 dependencies {
     implementation(project(":core"))
 
+    // ... Preferences Datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")

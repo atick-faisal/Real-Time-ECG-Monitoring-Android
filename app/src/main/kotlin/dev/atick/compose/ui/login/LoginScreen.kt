@@ -37,10 +37,10 @@ fun LoginScreen(
         val loginState by viewModel.loginState.observeAsState()
 
         val buttonText = when (loginState?.peekContent()) {
-            LoginState.LOGGED_OUT -> LoginState.LOGGED_OUT.name
-            LoginState.LOGGING_IN -> LoginState.LOGGING_IN.name
-            LoginState.LOGIN_SUCCESSFUL -> LoginState.LOGIN_SUCCESSFUL.name
-            else -> LoginState.LOGGED_OUT.name
+            LoginState.LOGGED_OUT -> LoginState.LOGGED_OUT.text
+            LoginState.LOGGING_IN -> LoginState.LOGGING_IN.text
+            LoginState.LOGIN_SUCCESSFUL -> LoginState.LOGIN_SUCCESSFUL.text
+            else -> LoginState.LOGGED_OUT.text
         }
 
         Column(

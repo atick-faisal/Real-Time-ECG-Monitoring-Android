@@ -28,7 +28,7 @@ class UserPreferencesImpl @Inject constructor(
                 throw exception
             }
         }.map { preferences ->
-            preferences[stringPreferencesKey(key)]?.toInt() ?: -1
+            preferences[stringPreferencesKey(key)]?.toInt() ?: 0
         }
     }
 }

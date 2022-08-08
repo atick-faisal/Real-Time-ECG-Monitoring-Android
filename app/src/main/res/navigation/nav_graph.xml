@@ -13,6 +13,10 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -30,6 +34,8 @@
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_connectionFragment"
-            app:destination="@id/connectionFragment" />
+            app:destination="@id/connectionFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

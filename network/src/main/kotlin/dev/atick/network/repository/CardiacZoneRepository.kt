@@ -5,6 +5,6 @@ import dev.atick.network.data.LoginRequest
 import dev.atick.network.data.LoginResponse
 
 interface CardiacZoneRepository {
-    suspend fun login(request: LoginRequest): LoginResponse?
+    suspend fun login(request: LoginRequest): LoginResponse
     suspend fun pushEcg(request: EcgRequest)
 }

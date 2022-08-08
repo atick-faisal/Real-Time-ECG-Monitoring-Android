@@ -10,12 +10,16 @@ import javax.inject.Inject
 class CardiacZoneRepositoryImpl @Inject constructor(
     private val cardiacZoneAPi: CardiacZoneApi
 ) : CardiacZoneRepository {
-    override suspend fun login(request: LoginRequest): LoginResponse? {
+    override suspend fun login(request: LoginRequest): LoginResponse {
         return try {
             cardiacZoneAPi.login(request)
         } catch (e: Exception) {
             Logger.e("LOGIN ATTEMPT UNSUCCESSFUL! ${e.message}")
-            null
+            LoginResponse(
+                success = false,
+                patientId = 0,
+                patientName = "Unknown"
+            )
         }
     }
 

@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import dev.atick.compose.ui.common.components.InputField
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
     return Box(
@@ -34,13 +32,12 @@ fun LoginScreen(
     ) {
         var username by viewModel.username.state
         var password by viewModel.password.state
-        val loginState by viewModel.loginState.observeAsState()
+        val loginState by viewModel.loginState
 
-        val buttonText = when (loginState?.peekContent()) {
+        val buttonText = when (loginState) {
             LoginState.LOGGED_OUT -> LoginState.LOGGED_OUT.text
             LoginState.LOGGING_IN -> LoginState.LOGGING_IN.text
             LoginState.LOGIN_SUCCESSFUL -> LoginState.LOGIN_SUCCESSFUL.text
-            else -> LoginState.LOGGED_OUT.text
         }
 
         Column(

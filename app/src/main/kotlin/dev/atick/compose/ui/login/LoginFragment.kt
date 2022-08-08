@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.observeEvent
+import dev.atick.core.utils.extensions.showToast
 
 @AndroidEntryPoint
 class LoginFragment : BaseComposeFragment() {
@@ -16,22 +17,20 @@ class LoginFragment : BaseComposeFragment() {
     @Composable
     override fun ComposeUi() {
         ComposeTheme {
-            LoginScreen(::navigateToConnectionFragment)
+            LoginScreen()
         }
     }
 
     override fun observeStates() {
         super.observeStates()
-        observeEvent(viewModel.loginState) {
-            if (it == LoginState.LOGIN_SUCCESSFUL) {
-                navigateToConnectionFragment()
-            }
+        observeEvent(viewModel.userId) { id ->
+            if (id != 0) navigateToConnectionFragment(id)
         }
     }
 
-    private fun navigateToConnectionFragment() {
+    private fun navigateToConnectionFragment(userId: Int) {
         findNavController().navigate(
-            LoginFragmentDirections.actionLoginFragmentToConnectionFragment()
+            LoginFragmentDirections.actionLoginFragmentToConnectionFragment(userId)
         )
     }
 }

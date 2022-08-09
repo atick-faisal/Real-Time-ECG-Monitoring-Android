@@ -15,10 +15,10 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class NetworkUtilsImpl @Inject constructor(
     private val connectivityManager: ConnectivityManager
-): NetworkUtils {
+) : NetworkUtils {
     override val currentState: Flow<NetworkState>
         get() = callbackFlow {
-            val callback = object: ConnectivityManager.NetworkCallback() {
+            val callback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
                     trySend(NetworkState.CONNECTED)

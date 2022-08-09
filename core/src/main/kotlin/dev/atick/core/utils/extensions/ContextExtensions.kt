@@ -4,7 +4,6 @@ import android.app.Notification
 import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

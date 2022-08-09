@@ -7,7 +7,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.observeEvent
-import dev.atick.core.utils.extensions.showToast
 
 @AndroidEntryPoint
 class LoginFragment : BaseComposeFragment() {

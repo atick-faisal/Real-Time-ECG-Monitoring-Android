@@ -2,7 +2,6 @@ package dev.atick.compose.ui.connection
 
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels

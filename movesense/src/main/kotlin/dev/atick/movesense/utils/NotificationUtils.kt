@@ -2,7 +2,6 @@ package dev.atick.movesense.utils
 
 import dev.atick.movesense.data.ConnectionStatus
 import dev.atick.network.utils.NetworkState
-import java.lang.StringBuilder
 
 fun getNotificationTitle(
     connectionStatus: ConnectionStatus,

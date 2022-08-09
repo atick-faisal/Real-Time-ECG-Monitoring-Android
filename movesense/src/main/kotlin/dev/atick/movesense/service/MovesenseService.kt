@@ -35,6 +35,7 @@ class MovesenseService : BaseLifecycleService() {
         const val PERSISTENT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.persistent"
         const val ALERT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.alert"
         const val BT_DEVICE_ADDRESS_KEY = "dev.atick.c.zone.device.key"
+        const val USER_ID_KEY = "dev.atick.c.zone.user.id"
         const val NOTIFICATION_INTENT_REQUEST_CODE = 1101
         const val ALERT_NOTIFICATION_ID = 121
     }
@@ -65,6 +66,7 @@ class MovesenseService : BaseLifecycleService() {
     private var networkState = NetworkState.UNAVAILABLE
 
     private var ecgUpdateCount = 0
+    private var userId = 0
 
     @DrawableRes
     private var smallIcon = R.drawable.ic_alert
@@ -100,10 +102,11 @@ class MovesenseService : BaseLifecycleService() {
             ecgUpdateCount += 1
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
                 val time = dataFormatter.format(Date())
+                Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
                     ecgData = it,
                     time = listOf(time),
-                    userId = 2
+                    userId = userId
                 )
                 Logger.w("SENDING ECG DATA TO SERVER: $time ")
                 lifecycleScope.launchWhenStarted {
@@ -227,6 +230,7 @@ class MovesenseService : BaseLifecycleService() {
 
     override fun onStartService(intent: Intent?) {
         val address = intent?.getStringExtra(BT_DEVICE_ADDRESS_KEY)
+        userId = intent?.getIntExtra(USER_ID_KEY, 0) ?: 0
         address?.let { connect(it) }
         STARTED = true
     }

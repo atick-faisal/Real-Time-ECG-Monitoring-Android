@@ -14,13 +14,17 @@ import java.io.IOException
 class UserPreferencesImpl @Inject constructor(
     private val datastore: DataStore<Preferences>
 ) : UserPreferences {
-    override suspend fun saveUserId(key: String, userId: Int) {
+    companion object {
+        const val USER_ID_KEY = "dev.atick.c.zone.user.id"
+    }
+
+    override suspend fun saveUserId(userId: Int) {
         datastore.edit { preferences ->
-            preferences[stringPreferencesKey(key)] = userId.toString()
+            preferences[stringPreferencesKey(USER_ID_KEY)] = userId.toString()
         }
     }
 
-    override fun getUserId(key: String): Flow<Int> {
+    override fun getUserId(): Flow<Int> {
         return datastore.data.catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -28,7 +32,7 @@ class UserPreferencesImpl @Inject constructor(
                 throw exception
             }
         }.map { preferences ->
-            preferences[stringPreferencesKey(key)]?.toInt() ?: 0
+            preferences[stringPreferencesKey(USER_ID_KEY)]?.toInt() ?: 0
         }
     }
 }

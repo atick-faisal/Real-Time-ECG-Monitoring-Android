@@ -3,8 +3,8 @@ buildscript {
         compile_sdk_version = 32
         min_sdk_version = 24
         target_sdk_version = 32
-        version_code = 13
-        version_name = "2.0.0"
+        version_code = 14
+        version_name = "2.1.0"
 
         agp_version = "7.1.3"
         kotlin_version = "1.6.10"
@@ -18,6 +18,8 @@ buildscript {
     dependencies {
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
+        classpath("com.google.gms:google-services:4.3.13")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.1")
     }
 }
 

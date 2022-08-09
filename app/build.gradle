@@ -2,8 +2,10 @@ plugins {
     id("kotlin-android")
     id("com.android.application")
     id("dagger.hilt.android.plugin")
-    id("androidx.navigation.safeargs.kotlin")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -78,6 +80,11 @@ dependencies {
 
     // ... Chart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // ... Google Analytics
+    implementation platform("com.google.firebase:firebase-bom:30.3.1")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     // ... Dagger Hilt
     implementation("com.google.dagger:hilt-android:$hilt_version")

@@ -2,7 +2,6 @@ package dev.atick.core.service
 
 import android.app.Notification
 import android.content.Intent
-import android.os.Build
 import androidx.lifecycle.LifecycleService
 
 abstract class BaseLifecycleService : LifecycleService() {

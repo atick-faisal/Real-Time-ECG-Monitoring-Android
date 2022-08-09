@@ -7,7 +7,7 @@ fun UUID.toShortString(): String {
 }
 
 fun UUID.getName(): String {
-    return when(this.toString().lowercase()) {
+    return when (this.toString().lowercase()) {
         "00000000-78fc-48fe-8e23-433b3a1942d0" -> "Music Service"
         "00010000-78fc-48fe-8e23-433b3a1942d0" -> "Navigation Service"
         "00030000-78fc-48fe-8e23-433b3a1942d0" -> "Motion Service"

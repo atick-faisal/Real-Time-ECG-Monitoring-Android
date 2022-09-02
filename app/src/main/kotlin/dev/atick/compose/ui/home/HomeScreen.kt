@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.ScatterDataSet
 import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.common.components.TopBar
 import dev.atick.compose.ui.home.components.EcgCard
@@ -25,6 +26,10 @@ fun HomeScreen(
     val rrInterval by viewModel.rrInterval.observeAsState(initial = 0)
     val ecgDataset by viewModel.ecgDataset.observeAsState(
         LineDataSet(listOf(), "ECG")
+    )
+
+    val rPeakDataset by viewModel.rPeakDataset.observeAsState(
+        ScatterDataSet(listOf(), "R_PEAK")
     )
 
     return Box(
@@ -54,7 +59,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            EcgCard(ecgDataset = ecgDataset)
+            EcgCard(ecgDataset = ecgDataset, rPeakDataset=rPeakDataset)
         }
     }
 }

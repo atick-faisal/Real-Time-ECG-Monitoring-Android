@@ -5,6 +5,7 @@ import dev.atick.network.api.CardiacZoneApi
 import dev.atick.network.data.EcgRequest
 import dev.atick.network.data.LoginRequest
 import dev.atick.network.data.LoginResponse
+import dev.atick.network.data.PushEcgResponse
 import javax.inject.Inject
 
 class CardiacZoneRepositoryImpl @Inject constructor(
@@ -23,11 +24,12 @@ class CardiacZoneRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun pushEcg(request: EcgRequest) {
-        try {
+    override suspend fun pushEcg(request: EcgRequest): PushEcgResponse {
+        return try {
             cardiacZoneAPi.pushEcg(request)
         } catch (e: Exception) {
             Logger.e("ECG DATA NOT SENT! ${e.message}")
+            PushEcgResponse(false)
         }
     }
 }

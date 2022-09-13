@@ -106,7 +106,7 @@ class MovesenseService : BaseLifecycleService() {
                 val time = dataFormatter.format(Date())
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
-                    Ecg(
+                    ecg = Ecg(
                         ecgData = ecg.signal,
                         rPeaks = ecg.rPeaks.map { rPeak ->
                             RPeak(

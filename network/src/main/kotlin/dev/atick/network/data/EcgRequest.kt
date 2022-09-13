@@ -1,6 +1,7 @@
 package dev.atick.network.data
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 
 data class RPeak(
@@ -11,7 +12,8 @@ data class RPeak(
 )
 
 data class Ecg(
-    val id: String = "atick",
+    @SerializedName("id")
+    val id: Long = Date().time,
     @SerializedName("signal")
     val ecgData: List<Int>,
     @SerializedName("r_peaks")

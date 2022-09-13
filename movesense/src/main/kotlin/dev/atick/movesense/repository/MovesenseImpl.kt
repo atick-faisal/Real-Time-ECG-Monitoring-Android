@@ -64,6 +64,10 @@ class MovesenseImpl @Inject constructor(
     override val rPeakData: LiveData<List<RPeakData>>
         get() = _rPeakData
 
+    private val _ecg = MutableLiveData<Ecg>()
+    override val ecg: LiveData<Ecg>
+        get() = _ecg
+
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
         scanDisposable = rxBleClient?.scanBleDevices(
@@ -247,6 +251,13 @@ class MovesenseImpl @Inject constructor(
                                 }.toMutableList()
                             rPeakBuffer = rPeakBuffer.filter { it.location >= 0 }.toMutableList()
                             _rPeakData.postValue(rPeakBuffer)
+
+                            _ecg.postValue(
+                                Ecg(
+                                    signal = ecgBuffer,
+                                    rPeaks = rPeakBuffer
+                                )
+                            )
 
                             // Logger.i("ECG: $it")
                         }

@@ -100,20 +100,20 @@ class MovesenseService : BaseLifecycleService() {
             }
         }
 
-        observe(movesense.ecgData) {
+        observe(movesense.ecg) { ecg ->
             ecgUpdateCount += 1
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
                 val time = dataFormatter.format(Date())
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
                     Ecg(
-                        ecgData = it,
-                        rPeaks = movesense.rPeakData.value?.map { rPeak ->
+                        ecgData = ecg.signal,
+                        rPeaks = ecg.rPeaks.map { rPeak ->
                             RPeak(
-                                rPeak.location,
-                                rPeak.amplitude
+                                x = rPeak.location,
+                                y = rPeak.amplitude
                             )
-                        } ?: listOf()
+                        }
                     )
                 )
                 Logger.w("SENDING ECG DATA TO SERVER: $time ")

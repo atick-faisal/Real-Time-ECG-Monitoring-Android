@@ -18,7 +18,9 @@ import dev.atick.movesense.config.MovesenseConfig.NETWORK_UPDATE_CYCLE
 import dev.atick.movesense.data.ConnectionStatus
 import dev.atick.movesense.repository.Movesense
 import dev.atick.movesense.utils.getNotificationTitle
+import dev.atick.network.data.Ecg
 import dev.atick.network.data.EcgRequest
+import dev.atick.network.data.RPeak
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.network.utils.NetworkState
 import dev.atick.network.utils.NetworkUtils
@@ -104,9 +106,15 @@ class MovesenseService : BaseLifecycleService() {
                 val time = dataFormatter.format(Date())
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
-                    ecgData = it,
-                    time = listOf(time),
-                    userId = userId
+                    Ecg(
+                        ecgData = it,
+                        rPeaks = movesense.rPeakData.value?.map { rPeak ->
+                            RPeak(
+                                rPeak.location,
+                                rPeak.amplitude
+                            )
+                        } ?: listOf()
+                    )
                 )
                 Logger.w("SENDING ECG DATA TO SERVER: $time ")
                 lifecycleScope.launchWhenStarted {

@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.ScatterDataSet
 
 @Composable
 fun EcgCard(
     ecgDataset: LineDataSet,
+    rPeakDataset: ScatterDataSet,
     modifier: Modifier = Modifier
 ) {
     return Card(
@@ -36,7 +38,8 @@ fun EcgCard(
         ) {
             Text(text = "ECG")
             LinePlot(
-                dataset = ecgDataset,
+                dataset1 = ecgDataset,
+                dataset2 = rPeakDataset,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)

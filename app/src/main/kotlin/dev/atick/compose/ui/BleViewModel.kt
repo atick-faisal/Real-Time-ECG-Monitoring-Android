@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.map
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.ScatterDataSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.movesense.data.BtDevice
@@ -27,13 +28,26 @@ class BleViewModel @Inject constructor(
     val rrInterval = movesense.rrInterval
     var ecgDataset = movesense.ecgData.map { ecgBuffer ->
         LineDataSet(
-            ecgBuffer.subList(
-                ecgBuffer.size - N_DATA_POINTS,
-                ecgBuffer.size
-            ).mapIndexed { index, value ->
+//            ecgBuffer.subList(
+//                ecgBuffer.size - N_DATA_POINTS,
+//                ecgBuffer.size
+//            )
+            ecgBuffer.mapIndexed { index, value ->
                 Entry(index.toFloat(), value.toFloat())
             },
             "ECG"
+        )
+    }
+
+    var rPeakDataset = movesense.rPeakData.map { rPeakData ->
+        ScatterDataSet(
+            rPeakData.map { rPeak ->
+                Entry(
+                    rPeak.location.toFloat(),
+                    rPeak.amplitude.toFloat()
+                )
+            },
+            "R-PEAK"
         )
     }
 

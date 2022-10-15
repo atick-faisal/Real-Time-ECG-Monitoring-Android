@@ -11,9 +11,9 @@ interface CardiacZoneApi {
 
     companion object {
         // const val BASE_URL = "https://stark-lowlands-43915.herokuapp.com"
-        const val BASE_URL = "http://192.168.1.102:5000"
+        // const val BASE_URL = "http://192.168.1.102:5000"
         // const val BASE_URL = "http://18.222.190.174:8080"
-        // const val BASE_URL = "https://c3bb-45-248-151-146.ngrok.io"
+         const val BASE_URL = "http://34.170.139.48/"
     }
 
     @POST("/user_login")

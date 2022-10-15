@@ -37,7 +37,7 @@ class MovesenseImpl @Inject constructor(
     private var ecgSubscription: MdsSubscription? = null
 
     private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
-    private val ecgBuffer = MutableList(ECG_SEGMENT_LEN) { 0 }
+    private val ecgBuffer = MutableList(ECG_SEGMENT_LEN + DEFAULT_ECG_BUFFER_LEN * 5) { 0 }
     private var rPeakBuffer = mutableListOf<RPeakData>()
 
     private val _isConnected = MutableLiveData(false)
@@ -63,6 +63,10 @@ class MovesenseImpl @Inject constructor(
     private val _rPeakData = MutableLiveData<List<RPeakData>>()
     override val rPeakData: LiveData<List<RPeakData>>
         get() = _rPeakData
+
+    private val _ecg = MutableLiveData<Ecg>()
+    override val ecg: LiveData<Ecg>
+        get() = _ecg
 
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
@@ -178,7 +182,7 @@ class MovesenseImpl @Inject constructor(
                                 // ... R-peak is present in the second previous ECG buffer
                                 // ... Adjust R-peak location for ECG_SEGMENT_LEN
                                 val rPeakLocation = previousEcgBuffer.argmax() +
-                                    ECG_SEGMENT_LEN - 5 * DEFAULT_ECG_BUFFER_LEN
+                                    ECG_SEGMENT_LEN // - 5 * DEFAULT_ECG_BUFFER_LEN
                                 rPeakBuffer.add(
                                     RPeakData(
                                         rPeakLocation,
@@ -247,6 +251,13 @@ class MovesenseImpl @Inject constructor(
                                 }.toMutableList()
                             rPeakBuffer = rPeakBuffer.filter { it.location >= 0 }.toMutableList()
                             _rPeakData.postValue(rPeakBuffer)
+
+                            _ecg.postValue(
+                                Ecg(
+                                    signal = ecgBuffer.subList(0, ECG_SEGMENT_LEN),
+                                    rPeaks = rPeakBuffer
+                                )
+                            )
 
                             // Logger.i("ECG: $it")
                         }

@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(
 
             //val response = cardiacZoneRepository.login(request)
             delay(3000L)
-            val response = LoginResponse(true, 0, "Atick Faisal")
+            val response = LoginResponse(true, 1, "Atick Faisal")
 
             Logger.w("LOGIN RESPONSE: $response")
             _userId.postValue(Event(response.patientId))

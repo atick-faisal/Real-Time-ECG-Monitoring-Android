@@ -10,8 +10,10 @@ import dev.atick.core.ui.BaseViewModel
 import dev.atick.core.utils.Event
 import dev.atick.core.utils.Property
 import dev.atick.network.data.LoginRequest
+import dev.atick.network.data.LoginResponse
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.storage.preferences.UserPreferences
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,7 +47,11 @@ class LoginViewModel @Inject constructor(
                 username = username.state.value,
                 password = password.state.value
             )
-            val response = cardiacZoneRepository.login(request)
+
+            //val response = cardiacZoneRepository.login(request)
+            delay(3000L)
+            val response = LoginResponse(true, 0, "Atick Faisal")
+
             Logger.w("LOGIN RESPONSE: $response")
             _userId.postValue(Event(response.patientId))
 

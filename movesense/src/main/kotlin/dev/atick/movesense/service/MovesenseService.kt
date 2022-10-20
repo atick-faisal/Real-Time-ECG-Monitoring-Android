@@ -24,8 +24,6 @@ import dev.atick.network.data.RPeak
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.network.utils.NetworkState
 import dev.atick.network.utils.NetworkUtils
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 
@@ -50,11 +48,6 @@ class MovesenseService : BaseLifecycleService() {
 
     @Inject
     lateinit var cardiacZoneRepository: CardiacZoneRepository
-
-    private val dataFormatter = SimpleDateFormat(
-        "yyyy-MM-dd kk:mm:ss",
-        Locale.getDefault()
-    )
 
     private val persistentNotificationBuilder = NotificationCompat.Builder(
         this, PERSISTENT_NOTIFICATION_CHANNEL_ID
@@ -103,20 +96,23 @@ class MovesenseService : BaseLifecycleService() {
         observe(movesense.ecg) { ecg ->
             ecgUpdateCount += 1
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
-                val time = dataFormatter.format(Date())
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
                     ecg = Ecg(
                         ecgData = ecg.signal,
-                        rPeaks = ecg.rPeaks.map { rPeak ->
-                            RPeak(
-                                x = rPeak.location,
-                                y = rPeak.amplitude
-                            )
-                        }
+                        rPeaks = ecg.rPeaks
+                            .filter { rPeak ->
+                                rPeak.location < ecg.signal.size
+                            }
+                            .map { rPeak ->
+                                RPeak(
+                                    x = rPeak.location,
+                                    y = rPeak.amplitude
+                                )
+                            }
                     )
                 )
-                Logger.w("SENDING ECG DATA TO SERVER: $time ")
+                Logger.i("SENDING ECG ... ")
                 lifecycleScope.launchWhenStarted {
                     cardiacZoneRepository.pushEcg(requestBody)
                 }

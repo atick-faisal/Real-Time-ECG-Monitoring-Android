@@ -70,7 +70,7 @@ fun HomeScreen(
 
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.8F)
+                    .fillMaxWidth()
                     .height(48.dp),
                 shape = RoundedCornerShape(16.dp),
                 onClick = { viewModel.record() }

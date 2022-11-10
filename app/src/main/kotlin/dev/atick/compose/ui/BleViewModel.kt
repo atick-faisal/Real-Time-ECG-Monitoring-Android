@@ -1,16 +1,25 @@
 package dev.atick.compose.ui
 
+import android.os.Environment
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.map
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.ScatterDataSet
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.movesense.data.BtDevice
+import dev.atick.movesense.data.EcgSignal
+import dev.atick.movesense.data.toCsv
 import dev.atick.movesense.repository.Movesense
 import dev.atick.movesense.service.MovesenseService
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,8 +60,18 @@ class BleViewModel @Inject constructor(
         )
     }
 
+    val ecgSignal = movesense.ecgSignal
+
     val isScanning = mutableStateOf(false)
     val devices = mutableStateListOf<BtDevice>()
+
+    val recordState = mutableStateOf<RecordState>(RecordState.NotRecording)
+    private val recording = mutableListOf<EcgSignal>()
+
+    sealed class RecordState(val description: String) {
+        object Recording : RecordState("STOP RECORDING")
+        object NotRecording : RecordState("RECORD")
+    }
 
     fun startScan() {
         if (!isScanning.value) {
@@ -88,5 +107,40 @@ class BleViewModel @Inject constructor(
             movesense.clear()
         }
         super.onCleared()
+    }
+
+    fun updateRecording(ecgSignal: EcgSignal) {
+        if (recordState.value == RecordState.Recording) {
+            recording.add(ecgSignal)
+        }
+    }
+
+    fun record() {
+        if (recordState.value == RecordState.NotRecording) {
+            Logger.d("STARTING TO RECORD ... ")
+            recordState.value = RecordState.Recording
+        } else {
+            Logger.d("SAVING DATA ... ")
+            saveRecording()
+            recordState.value = RecordState.NotRecording
+            recording.clear()
+        }
+    }
+
+    private fun saveRecording() {
+        val timestamp = SimpleDateFormat("dd_M_yyyy_hh_mm_ss", Locale.US).format(Date())
+        val csvData = recording.toCsv()
+        val myExternalFile = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+            "${timestamp}.csv"
+        )
+
+        try {
+            val fos = FileOutputStream(myExternalFile)
+            fos.write(csvData.toByteArray())
+            fos.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 }

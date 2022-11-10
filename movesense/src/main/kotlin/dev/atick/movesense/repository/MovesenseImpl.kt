@@ -21,6 +21,7 @@ import dev.atick.movesense.config.MovesenseConfig.URI_EVENT_LISTENER
 import dev.atick.movesense.config.MovesenseConfig.URI_MEAS_HR
 import dev.atick.movesense.data.*
 import io.reactivex.disposables.Disposable
+import java.util.Date
 import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
@@ -67,6 +68,10 @@ class MovesenseImpl @Inject constructor(
     private val _ecg = MutableLiveData<Ecg>()
     override val ecg: LiveData<Ecg>
         get() = _ecg
+
+    private val _ecgSignal = MutableLiveData<EcgSignal>()
+    override val ecgSignal: LiveData<EcgSignal>
+        get() = _ecgSignal
 
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
@@ -231,6 +236,12 @@ class MovesenseImpl @Inject constructor(
                             data, EcgResponse::class.java
                         )
                         ecgResponse?.body?.samples?.let { ecgSamples ->
+                            _ecgSignal.postValue(
+                                EcgSignal(
+                                    timestamp = Date().time,
+                                    values = ecgSamples
+                                )
+                            )
                             ecgBuffer.subList(0, bufferLen).clear()
                             ecgBuffer.addAll(ecgSamples)
                             _ecgData.postValue(ecgBuffer)

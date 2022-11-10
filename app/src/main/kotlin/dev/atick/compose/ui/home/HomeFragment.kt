@@ -11,6 +11,7 @@ import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.service.BaseLifecycleService.Companion.ACTION_STOP_SERVICE
 import dev.atick.core.ui.BaseComposeFragment
+import dev.atick.core.utils.extensions.observe
 import dev.atick.core.utils.extensions.showAlertDialog
 import dev.atick.movesense.service.MovesenseService
 
@@ -23,6 +24,13 @@ class HomeFragment : BaseComposeFragment() {
     override fun ComposeUi() {
         ComposeTheme {
             HomeScreen(::onExitClick)
+        }
+    }
+
+    override fun observeStates() {
+        super.observeStates()
+        observe(viewModel.ecgSignal) {
+            viewModel.updateRecording(it)
         }
     }
 

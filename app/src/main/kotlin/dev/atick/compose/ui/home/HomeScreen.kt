@@ -2,7 +2,10 @@ package dev.atick.compose.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -32,6 +35,8 @@ fun HomeScreen(
         ScatterDataSet(listOf(), "R_PEAK")
     )
 
+    val recordState by viewModel.recordState
+
     return Box(
         Modifier
             .fillMaxSize()
@@ -59,7 +64,19 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            EcgCard(ecgDataset = ecgDataset, rPeakDataset=rPeakDataset)
+            EcgCard(ecgDataset = ecgDataset, rPeakDataset = rPeakDataset)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(16.dp),
+                onClick = { viewModel.record() }
+            ) {
+                Text(text = recordState.description)
+            }
         }
     }
 }

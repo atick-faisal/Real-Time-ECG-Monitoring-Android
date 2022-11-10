@@ -1,10 +1,7 @@
 package dev.atick.movesense.repository
 
 import androidx.lifecycle.LiveData
-import dev.atick.movesense.data.BtDevice
-import dev.atick.movesense.data.ConnectionStatus
-import dev.atick.movesense.data.Ecg
-import dev.atick.movesense.data.RPeakData
+import dev.atick.movesense.data.*
 
 interface Movesense {
     val isConnected: LiveData<Boolean>
@@ -14,6 +11,7 @@ interface Movesense {
     val ecgData: LiveData<List<Int>>
     val rPeakData: LiveData<List<RPeakData>>
     val ecg: LiveData<Ecg>
+    val ecgSignal: LiveData<EcgSignal>
     fun startScan(onDeviceFound: (BtDevice) -> Unit)
     fun connect(address: String, onConnect: () -> Unit)
     fun stopScan()

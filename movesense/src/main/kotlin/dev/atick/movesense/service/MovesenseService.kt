@@ -61,7 +61,7 @@ class MovesenseService : BaseLifecycleService() {
     private var networkState = NetworkState.UNAVAILABLE
 
     private var ecgUpdateCount = 0
-    private var userId = 0
+    private var userId = "-1"
 
     @DrawableRes
     private var smallIcon = R.drawable.ic_alert
@@ -98,6 +98,7 @@ class MovesenseService : BaseLifecycleService() {
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
+                    patientId = userId,
                     ecg = Ecg(
                         ecgData = ecg.signal,
                         rPeaks = ecg.rPeaks
@@ -234,7 +235,7 @@ class MovesenseService : BaseLifecycleService() {
 
     override fun onStartService(intent: Intent?) {
         val address = intent?.getStringExtra(BT_DEVICE_ADDRESS_KEY)
-        userId = intent?.getIntExtra(USER_ID_KEY, 0) ?: 0
+        userId = intent?.getStringExtra(USER_ID_KEY) ?: "-1"
         address?.let { connect(it) }
         STARTED = true
     }

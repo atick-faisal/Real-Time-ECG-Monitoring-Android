@@ -10,10 +10,8 @@ import dev.atick.core.ui.BaseViewModel
 import dev.atick.core.utils.Event
 import dev.atick.core.utils.Property
 import dev.atick.network.data.LoginRequest
-import dev.atick.network.data.LoginResponse
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.storage.preferences.UserPreferences
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,8 +25,8 @@ class LoginViewModel @Inject constructor(
     val password = Property(mutableStateOf(""))
     val loginState = mutableStateOf(LoginState.LOGGED_OUT)
 
-    private val _userId = MutableLiveData(Event(0))
-    val userId: LiveData<Event<Int>>
+    private val _userId = MutableLiveData(Event("-1"))
+    val userId: LiveData<Event<String>>
         get() = _userId
 
     init {
@@ -48,19 +46,15 @@ class LoginViewModel @Inject constructor(
                 password = password.state.value
             )
 
-            //val response = cardiacZoneRepository.login(request)
-            delay(3000L)
-            val response = LoginResponse(true, 1, "Atick Faisal")
+            val response = cardiacZoneRepository.login(request)
 
             Logger.w("LOGIN RESPONSE: $response")
-            _userId.postValue(Event(response.patientId))
 
-            if (response.success) {
-                loginState.value = LoginState.LOGIN_SUCCESSFUL
-                userPreferences.saveUserId(response.patientId)
-            } else {
-                loginState.value = LoginState.LOGGED_OUT
-            }
+            loginState.value = response?.let {
+                _userId.postValue(Event(it.patient.patientId))
+                userPreferences.saveUserId(it.patient.patientId)
+                LoginState.LOGIN_SUCCESSFUL
+            } ?: LoginState.LOGGED_OUT
         }
     }
 }

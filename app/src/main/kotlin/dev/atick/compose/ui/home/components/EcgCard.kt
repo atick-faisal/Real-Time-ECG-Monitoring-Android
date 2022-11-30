@@ -1,10 +1,7 @@
 package dev.atick.compose.ui.home.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -42,7 +39,7 @@ fun EcgCard(
                 dataset2 = rPeakDataset,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .aspectRatio((16.0F / 10.0F))
                     .padding(8.dp)
             )
         }

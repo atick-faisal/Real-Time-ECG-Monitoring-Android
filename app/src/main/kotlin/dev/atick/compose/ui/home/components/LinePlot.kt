@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.CombinedChart
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.ScatterChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.utils.Utils
@@ -63,13 +63,19 @@ fun LinePlot(
             }
             dataset1.apply {
                 color = if (isDarkThemeEnabled)
-                    context.getColor(R.color.primaryVariant)
-                else context.getColor(R.color.primary)
+                    context.getColor(R.color.white)
+                else context.getColor(R.color.dark_blue_gray)
                 setDrawValues(false)
                 setDrawFilled(false)
                 setDrawCircleHole(false)
                 setDrawCircles(false)
                 lineWidth = 2.0F
+            }
+
+            dataset2.apply {
+                setScatterShape(ScatterChart.ScatterShape.CIRCLE)
+                color = context.getColor(R.color.r_peak)
+                scatterShapeSize = 20.0F
             }
 
             val lineData = LineData(dataset1)

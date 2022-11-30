@@ -23,5 +23,7 @@
     <string name="movesense_connected">Movesense is Connected</string>
     <string name="movesense_connection_failed">Connection Failed</string>
     <string name="movesense_disconnected">Movesense is Disconnected</string>
+    <string name="heart_rate_warning">Heart-Rate Warning</string>
+    <string name="hear_rate_warning_description">Your Heart-Rate is CRITICAL (%d bpm)</string>
 
 </resources>

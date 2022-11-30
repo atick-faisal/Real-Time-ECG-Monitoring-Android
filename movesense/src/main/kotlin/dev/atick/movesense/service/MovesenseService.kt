@@ -38,6 +38,8 @@ class MovesenseService : BaseLifecycleService() {
         const val USER_ID_KEY = "dev.atick.c.zone.user.id"
         const val NOTIFICATION_INTENT_REQUEST_CODE = 1101
         const val ALERT_NOTIFICATION_ID = 121
+        const val HEART_RATE_LOW = 40
+        const val HEART_RATE_HIGH = 120
     }
 
     @Inject
@@ -90,6 +92,22 @@ class MovesenseService : BaseLifecycleService() {
                     PERSISTENT_NOTIFICATION_ID,
                     persistentNotificationBuilder.build()
                 )
+            }
+
+            // ... Critical heart-rate warning
+            if (it < HEART_RATE_LOW || it > HEART_RATE_HIGH) {
+                alertNotificationBuilder.apply {
+                    setContentTitle(getString(R.string.heart_rate_warning))
+                    setContentText(getString(R.string.hear_rate_warning_description, it.toInt()))
+                    setSmallIcon(R.drawable.ic_alert)
+                }
+
+                if (STARTED) {
+                    showNotification(
+                        ALERT_NOTIFICATION_ID,
+                        alertNotificationBuilder.build()
+                    )
+                }
             }
         }
 

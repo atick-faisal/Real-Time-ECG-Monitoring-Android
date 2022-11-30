@@ -25,6 +25,8 @@ data class Ecg(
 )
 
 data class EcgRequest(
+    @SerializedName("patient_id")
+    val patientId: String,
     @SerializedName("ecg")
     val ecg: Ecg
 )

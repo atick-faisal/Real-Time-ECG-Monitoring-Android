@@ -3,9 +3,9 @@ package dev.atick.network.data
 import com.google.gson.annotations.SerializedName
 
 data class LoginRequest(
-    @SerializedName("UserID")
+    @SerializedName("email")
     val username: String,
 
-    @SerializedName("Password")
+    @SerializedName("password")
     val password: String
 )

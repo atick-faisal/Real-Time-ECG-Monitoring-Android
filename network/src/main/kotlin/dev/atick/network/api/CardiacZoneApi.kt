@@ -16,7 +16,7 @@ interface CardiacZoneApi {
          const val BASE_URL = "http://34.133.239.54"
     }
 
-    @POST("/user_login")
+    @POST("/patient_login")
     suspend fun login(@Body request: LoginRequest): LoginResponse
 
     @POST("/push_ecg")

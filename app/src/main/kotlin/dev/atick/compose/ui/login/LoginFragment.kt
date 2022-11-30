@@ -23,11 +23,11 @@ class LoginFragment : BaseComposeFragment() {
     override fun observeStates() {
         super.observeStates()
         observeEvent(viewModel.userId) { id ->
-            if (id != 0) navigateToConnectionFragment(id)
+            if (id.length > 8) navigateToConnectionFragment(id)
         }
     }
 
-    private fun navigateToConnectionFragment(userId: Int) {
+    private fun navigateToConnectionFragment(userId: String) {
         findNavController().navigate(
             LoginFragmentDirections.actionLoginFragmentToConnectionFragment(userId)
         )

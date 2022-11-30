@@ -18,6 +18,7 @@ import dev.atick.movesense.service.MovesenseService
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -26,10 +27,6 @@ import javax.inject.Inject
 class BleViewModel @Inject constructor(
     private val movesense: Movesense
 ) : BaseViewModel() {
-
-    companion object {
-        const val N_DATA_POINTS = 300
-    }
 
     val isConnected = movesense.isConnected
     val connectionStatus = movesense.connectionStatus
@@ -129,10 +126,14 @@ class BleViewModel @Inject constructor(
 
     private fun saveRecording() {
         val timestamp = SimpleDateFormat("dd_M_yyyy_hh_mm_ss", Locale.US).format(Date())
+        val savePath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        Files.createDirectories(savePath.toPath())
         val csvData = recording.toCsv()
+
         val myExternalFile = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-            "${timestamp}.csv"
+            "movesense_${timestamp}.csv"
         )
 
         try {

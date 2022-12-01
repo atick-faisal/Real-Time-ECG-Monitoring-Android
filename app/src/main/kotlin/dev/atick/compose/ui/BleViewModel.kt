@@ -9,12 +9,15 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.ScatterDataSet
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.atick.compose.ui.home.data.toEcgPlotData
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.movesense.data.BtDevice
 import dev.atick.movesense.data.EcgSignal
 import dev.atick.movesense.data.toCsv
 import dev.atick.movesense.repository.Movesense
 import dev.atick.movesense.service.MovesenseService
+import dev.atick.network.repository.CardiacZoneRepository
+import kotlinx.coroutines.flow.map
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -25,7 +28,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BleViewModel @Inject constructor(
-    private val movesense: Movesense
+    private val movesense: Movesense,
+    cardiacZoneRepository: CardiacZoneRepository
 ) : BaseViewModel() {
 
     val isConnected = movesense.isConnected
@@ -64,6 +68,7 @@ class BleViewModel @Inject constructor(
 
     val recordState = mutableStateOf<RecordState>(RecordState.NotRecording)
     private val recording = mutableListOf<EcgSignal>()
+    val abnormalEcgList = cardiacZoneRepository.abnormalEcg.map { x -> x.toEcgPlotData() }
 
     sealed class RecordState(val description: String) {
         object Recording : RecordState("STOP RECORDING")
@@ -144,4 +149,7 @@ class BleViewModel @Inject constructor(
             e.printStackTrace()
         }
     }
+
+
 }
+

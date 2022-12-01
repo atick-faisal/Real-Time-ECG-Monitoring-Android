@@ -2,11 +2,14 @@ package dev.atick.compose.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -19,6 +22,7 @@ import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.common.components.TopBar
 import dev.atick.compose.ui.home.components.EcgCard
 import dev.atick.compose.ui.home.components.HrCard
+import dev.atick.compose.ui.home.data.EcgPlotData
 
 @Composable
 fun HomeScreen(
@@ -36,6 +40,7 @@ fun HomeScreen(
     )
 
     val recordState by viewModel.recordState
+    val abnormalEcgList by viewModel.abnormalEcgList.collectAsState(listOf())
 
     return Box(
         Modifier
@@ -56,6 +61,7 @@ fun HomeScreen(
                     end = 16.dp,
                     bottom = 16.dp
                 )
+                .verticalScroll(rememberScrollState())
         ) {
             HrCard(
                 averageHeartRate = averageHeartRate,
@@ -64,7 +70,14 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            EcgCard(ecgDataset = ecgDataset, rPeakDataset = rPeakDataset)
+            EcgCard(
+                title = "Live ECG Signal",
+                data = EcgPlotData(
+                    id = 0L,
+                    ecg = ecgDataset,
+                    rPeaks = rPeakDataset
+                )
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -76,6 +89,13 @@ fun HomeScreen(
                 onClick = { viewModel.record() }
             ) {
                 Text(text = recordState.description)
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            abnormalEcgList.forEach { ecgPlotData ->
+                EcgCard(title = ecgPlotData.getTimestamp(), data = ecgPlotData)
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

@@ -17,8 +17,8 @@ interface CardiacZoneApi {
     }
 
     @POST("/patient_login")
-    suspend fun login(@Body request: LoginRequest): LoginResponse
+    suspend fun login(@Body request: LoginRequest): LoginResponse?
 
     @POST("/push_ecg")
-    suspend fun pushEcg(@Body ecgRequest: EcgRequest): PushEcgResponse
+    suspend fun pushEcg(@Body ecgRequest: EcgRequest): PushEcgResponse?
 }

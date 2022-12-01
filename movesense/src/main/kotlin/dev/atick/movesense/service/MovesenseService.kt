@@ -139,7 +139,8 @@ class MovesenseService : BaseLifecycleService() {
                 )
                 Logger.i("SENDING ECG ... ")
                 lifecycleScope.launchWhenStarted {
-                    cardiacZoneRepository.pushEcg(requestBody)
+                    val response = cardiacZoneRepository.pushEcg(requestBody)
+                    Logger.i("PUSH ECG RESPONSE $response")
                 }
                 ecgUpdateCount = 0
             }

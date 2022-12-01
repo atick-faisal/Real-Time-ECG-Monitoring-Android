@@ -40,6 +40,7 @@ class MovesenseService : BaseLifecycleService() {
         const val ALERT_NOTIFICATION_ID = 121
         const val HEART_RATE_LOW = 40
         const val HEART_RATE_HIGH = 120
+        const val HR_UPDATE_PATIENCE = 30_000L
     }
 
     @Inject
@@ -64,6 +65,8 @@ class MovesenseService : BaseLifecycleService() {
 
     private var ecgUpdateCount = 0
     private var userId = "-1"
+
+    private var lastHrUpdateTime = 0L
 
     @DrawableRes
     private var smallIcon = R.drawable.ic_alert
@@ -109,6 +112,9 @@ class MovesenseService : BaseLifecycleService() {
                     )
                 }
             }
+
+            // ... HR updated
+            lastHrUpdateTime = System.currentTimeMillis()
         }
 
         observe(movesense.ecg) { ecg ->
@@ -136,6 +142,15 @@ class MovesenseService : BaseLifecycleService() {
                     cardiacZoneRepository.pushEcg(requestBody)
                 }
                 ecgUpdateCount = 0
+            }
+
+            // ... Auto-Kill Service
+            if (
+                lastHrUpdateTime != 0L &&
+                System.currentTimeMillis() > lastHrUpdateTime + HR_UPDATE_PATIENCE
+            ) {
+                Logger.w("STOPPING MOVESENSE SERVICE ... ")
+                stopService()
             }
         }
 

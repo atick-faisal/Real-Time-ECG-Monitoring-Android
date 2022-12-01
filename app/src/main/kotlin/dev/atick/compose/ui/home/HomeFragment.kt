@@ -32,6 +32,10 @@ class HomeFragment : BaseComposeFragment() {
         observe(viewModel.ecgSignal) {
             viewModel.updateRecording(it)
         }
+
+        observe(viewModel.isConnected) {
+            if (!it) navigateToConnectionFragment()
+        }
     }
 
     private fun onExitClick() {
@@ -44,7 +48,6 @@ class HomeFragment : BaseComposeFragment() {
             onCancel = {
                 viewModel.disconnect()
                 stopMovesenseService()
-                navigateToConnectionFragment()
             }
         )
     }

@@ -46,4 +46,14 @@ class CardiacZoneRepositoryImpl @Inject constructor(
             null
         }
     }
+
+    override suspend fun connectDoctor(connectDoctorRequest: ConnectDoctorRequest): Boolean {
+        return try {
+            val response = cardiacZoneAPi.connectDoctor(connectDoctorRequest)
+            return response?.success ?: false
+        } catch (e: Exception) {
+            Logger.e("ERROR ADDING DOCTOR! ${e.message}")
+            false
+        }
+    }
 }

@@ -59,10 +59,16 @@ fun HomeScreen(
             scanner.process(image).addOnSuccessListener { qrCodes ->
                 val qrCode = qrCodes.firstOrNull()
                 qrCode?.let { code ->
-                    val rawValue = code.rawValue ?: "NULL"
-                    Toast.makeText(
+                    code.rawValue?.let { doctorId ->
+                        Toast.makeText(
+                            context,
+                            "Connecting to Doctor ID: $doctorId",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.connectDoctor(doctorId)
+                    } ?: Toast.makeText(
                         context,
-                        "QR CODE: $rawValue",
+                        "QR Scan Failed!",
                         Toast.LENGTH_LONG
                     ).show()
                 }

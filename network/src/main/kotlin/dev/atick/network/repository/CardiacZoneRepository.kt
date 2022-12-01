@@ -7,4 +7,5 @@ interface CardiacZoneRepository {
     val abnormalEcg: StateFlow<List<Ecg>>
     suspend fun login(request: LoginRequest): LoginResponse?
     suspend fun pushEcg(request: EcgRequest): PushEcgResponse?
+    suspend fun connectDoctor(connectDoctorRequest: ConnectDoctorRequest): Boolean
 }

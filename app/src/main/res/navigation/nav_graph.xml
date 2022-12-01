@@ -13,10 +13,6 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
-        <argument
-            android:name="userId"
-            app:argType="string"
-            android:defaultValue='-1' />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"

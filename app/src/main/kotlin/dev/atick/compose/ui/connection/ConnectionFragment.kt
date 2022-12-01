@@ -6,7 +6,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.theme.ComposeTheme
@@ -21,7 +20,6 @@ import dev.atick.movesense.service.MovesenseService
 class ConnectionFragment : BaseComposeFragment() {
 
     private val viewModel: BleViewModel by viewModels()
-    private val navArgs: ConnectionFragmentArgs by navArgs()
 
     @Composable
     override fun ComposeUi() {
@@ -52,7 +50,7 @@ class ConnectionFragment : BaseComposeFragment() {
             .apply {
                 action = ACTION_START_SERVICE
                 putExtra(MovesenseService.BT_DEVICE_ADDRESS_KEY, address)
-                putExtra(MovesenseService.USER_ID_KEY, navArgs.userId)
+                putExtra(MovesenseService.USER_ID_KEY, viewModel.patientId)
             }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             requireContext().startForegroundService(intent)

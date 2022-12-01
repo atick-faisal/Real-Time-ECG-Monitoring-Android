@@ -88,7 +88,7 @@ class BleViewModel @Inject constructor(
         object NotRecording : RecordState("RECORD")
     }
 
-    private var patientId = "-1"
+    var patientId = "-1"
 
     init {
         viewModelScope.launch {

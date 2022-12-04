@@ -48,7 +48,7 @@ fun DashboardScreen(
                         val (name, id) = doctor.split(",")
                         Toast.makeText(
                             context,
-                            "Connecting to Dr. : $name",
+                            "Connecting to Dr. $name",
                             Toast.LENGTH_LONG
                         ).show()
                         viewModel.connectDoctor(id)
@@ -85,6 +85,7 @@ fun DashboardScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(it)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

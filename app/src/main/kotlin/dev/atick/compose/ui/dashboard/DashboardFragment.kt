@@ -1,15 +1,14 @@
 package dev.atick.compose.ui.dashboard
 
 import android.content.Intent
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.R
+import dev.atick.compose.base.BaseLifecycleService
 import dev.atick.compose.service.CardiacZoneService
 import dev.atick.compose.ui.theme.ComposeTheme
-import dev.atick.compose.base.BaseLifecycleService
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.collectWithLifecycle
 import dev.atick.core.utils.extensions.observeEvent
@@ -30,7 +29,7 @@ class DashboardFragment : BaseComposeFragment() {
     @Composable
     override fun ComposeUi() {
         ComposeTheme {
-            DashboardScreen(::showExitDialog)
+            DashboardScreen(::showExitDialog, ::showLogoutDialog)
         }
     }
 
@@ -64,21 +63,37 @@ class DashboardFragment : BaseComposeFragment() {
         )
     }
 
+    private fun showLogoutDialog() {
+        requireContext().showAlertDialog(
+            title = getString(R.string.logout),
+            message = getString(R.string.logout_warning),
+            positiveText = getString(R.string.yes),
+            negativeText = getString(R.string.cancel),
+            onApprove = {
+                stopMovesenseService()
+                navigateToLoginFragment()
+            },
+            onCancel = { }
+        )
+    }
+
     private fun stopMovesenseService() {
         val intent = Intent(requireContext(), CardiacZoneService::class.java)
             .apply {
                 action = BaseLifecycleService.ACTION_STOP_SERVICE
             }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireContext().startForegroundService(intent)
-        } else {
-            requireContext().startService(intent)
-        }
+        requireContext().startForegroundService(intent)
     }
 
     private fun navigateToConnectionFragment() {
         findNavController().navigate(
-            DashboardFragmentDirections.actionDashboardFragmentToConnectionFragment2()
+            DashboardFragmentDirections.actionDashboardFragmentToConnectionFragment()
+        )
+    }
+
+    private fun navigateToLoginFragment() {
+        findNavController().navigate(
+            DashboardFragmentDirections.actionDashboardFragmentToLoginFragment()
         )
     }
 

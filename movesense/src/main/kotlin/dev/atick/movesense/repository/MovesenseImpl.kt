@@ -45,8 +45,8 @@ class MovesenseImpl @Inject constructor(
     override val isConnected: LiveData<Boolean>
         get() = _isConnected
 
-    private val _connectionStatus = MutableLiveData(ConnectionStatus.NOT_CONNECTED)
-    override val connectionStatus: LiveData<ConnectionStatus>
+    private val _connectionStatus = MutableLiveData(ConnectionState.NOT_CONNECTED)
+    override val connectionStatus: LiveData<ConnectionState>
         get() = _connectionStatus
 
     private val _averageHeartRate = MutableLiveData(0.0F)
@@ -102,17 +102,40 @@ class MovesenseImpl @Inject constructor(
         )
     }
 
+    override fun scanForMovesenseDevice(onDeviceFound: (String) -> Unit) {
+        Logger.i("SCANNING ... ")
+        scanDisposable = rxBleClient?.scanBleDevices(
+            ScanSettings.Builder()
+                // .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                // .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                .build()
+        )?.subscribe(
+            { scanResult ->
+                scanResult?.bleDevice?.let { device ->
+                    if (device.name?.contains("Movesense") == true) {
+                        Logger.i("DEVICE FOUND: ${device.name}")
+                        onDeviceFound(device.macAddress)
+                        stopScan()
+                    }
+                }
+            },
+            { throwable ->
+                Logger.e("SCAN ERROR: $throwable")
+            }
+        )
+    }
+
     override fun connect(address: String, onConnect: () -> Unit) {
         mds?.connect(address, object : MdsConnectionListener {
             override fun onConnect(address: String?) {
-                _connectionStatus.postValue(ConnectionStatus.CONNECTING)
+                _connectionStatus.postValue(ConnectionState.CONNECTING)
                 Logger.i("CONNECTION TO $address")
             }
 
             override fun onConnectionComplete(address: String?, serial: String?) {
                 connectedMac = address
                 _isConnected.postValue(true)
-                _connectionStatus.postValue(ConnectionStatus.CONNECTED)
+                _connectionStatus.postValue(ConnectionState.CONNECTED)
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
                 onConnect.invoke()
@@ -120,13 +143,13 @@ class MovesenseImpl @Inject constructor(
 
             override fun onError(e: MdsException?) {
                 _isConnected.postValue(false)
-                _connectionStatus.postValue(ConnectionStatus.CONNECTION_FAILED)
+                _connectionStatus.postValue(ConnectionState.CONNECTION_FAILED)
                 Logger.e("CONNECTION ERROR: $e")
             }
 
             override fun onDisconnect(address: String?) {
                 _isConnected.postValue(false)
-                _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
+                _connectionStatus.postValue(ConnectionState.DISCONNECTED)
                 Logger.w("DISCONNECTED FROM $address")
             }
         })
@@ -290,7 +313,7 @@ class MovesenseImpl @Inject constructor(
         connectedMac?.let {
             mds?.disconnect(it)
             connectedMac = null
-            _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
+            _connectionStatus.postValue(ConnectionState.DISCONNECTED)
             _isConnected.postValue(false)
         }
     }

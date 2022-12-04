@@ -17,4 +17,10 @@ abstract class MovesenseModule {
     abstract fun bindMovesenseModule(
         movesenseImpl: MovesenseImpl
     ): Movesense
+
+    @Binds
+    @Singleton
+    abstract fun bindMovesenseModuleAlt(
+        movesenseImpl: dev.atick.movesense.MovesenseImpl
+    ): dev.atick.movesense.Movesense
 }

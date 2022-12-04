@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.data.ScatterDataSet
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.atick.compose.ui.home.data.toEcgPlotData
+import dev.atick.compose.ui.dashboard.data.toEcgPlotData
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.core.utils.Event
 import dev.atick.movesense.data.BtDevice

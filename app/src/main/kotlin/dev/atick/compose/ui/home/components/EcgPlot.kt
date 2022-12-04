@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.ScatterData
 import com.github.mikephil.charting.utils.Utils
 import dev.atick.compose.R
-import dev.atick.compose.ui.home.data.EcgPlotData
+import dev.atick.compose.ui.dashboard.data.EcgPlotData
 
 @Composable
 fun EcgPlot(

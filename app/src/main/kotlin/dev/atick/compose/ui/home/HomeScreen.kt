@@ -26,9 +26,9 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import dev.atick.compose.ui.BleViewModel
 import dev.atick.compose.ui.common.components.TopBar
+import dev.atick.compose.ui.dashboard.data.EcgPlotData
 import dev.atick.compose.ui.home.components.EcgCard
 import dev.atick.compose.ui.home.components.HrCard
-import dev.atick.compose.ui.home.data.EcgPlotData
 
 @Composable
 fun HomeScreen(

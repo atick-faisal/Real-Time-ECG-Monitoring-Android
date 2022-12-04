@@ -6,8 +6,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineDataSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.compose.ui.dashboard.data.DashboardUiState
-import dev.atick.compose.ui.home.data.EcgPlotData
-import dev.atick.compose.ui.home.data.toEcgPlotData
+import dev.atick.compose.ui.dashboard.data.EcgPlotData
+import dev.atick.compose.ui.dashboard.data.toEcgPlotData
 import dev.atick.movesense.Movesense
 import dev.atick.network.repository.CardiacZoneRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,12 +30,6 @@ class DashboardViewModel @Inject constructor(
     private val ecgBuffer = MutableList(300) { 0 }
 
     init {
-        viewModelScope.launch {
-            movesense.connectionState.collect {
-                _uiState.update { state -> state.copy(connectionState = it) }
-            }
-        }
-
         viewModelScope.launch {
             movesense.heartRate.collect {
                 _uiState.update { state -> state.copy(heartRate = it) }

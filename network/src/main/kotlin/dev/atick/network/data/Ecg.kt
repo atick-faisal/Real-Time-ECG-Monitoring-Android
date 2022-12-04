@@ -12,11 +12,11 @@ data class RPeak(
 
 data class Ecg(
     @SerializedName("id")
-    val id: Long = Date().time,
+    val id: Long,
     @SerializedName("signal")
     val ecgData: List<Int>,
     @SerializedName("r_peaks")
-    val rPeaks: List<RPeak>,
+    val rPeaks: List<RPeak> = listOf(),
     @SerializedName("v_beats")
     val vBeats: List<RPeak> = listOf(),
     @SerializedName("s_beats")

@@ -13,7 +13,7 @@ import javax.inject.Singleton
 object FormatStrategyModule {
 
     private const val LOG_TAG = "SKYNET_LOG"
-    private const val LOG_METHOD_COUNT = 2
+    private const val LOG_METHOD_COUNT = 0
     private const val LOG_METHOD_OFFSET = 7
 
     @Provides

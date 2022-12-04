@@ -22,11 +22,6 @@ class CardiacZoneRepositoryImpl @Inject constructor(
             cardiacZoneAPi.login(request)
         } catch (e: Exception) {
             Logger.e("LOGIN ATTEMPT UNSUCCESSFUL! ${e.message}")
-//            LoginResponse(
-//                success = false,
-//                patientId = 0,
-//                patientName = "Unknown"
-//            )
             null
         }
     }

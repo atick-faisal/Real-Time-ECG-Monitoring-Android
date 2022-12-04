@@ -4,8 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.atick.movesense.repository.Movesense
-import dev.atick.movesense.repository.MovesenseImpl
+import dev.atick.movesense.MovesenseImpl
 import javax.inject.Singleton
 
 @Module
@@ -16,5 +15,5 @@ abstract class MovesenseModule {
     @Singleton
     abstract fun bindMovesenseModule(
         movesenseImpl: MovesenseImpl
-    ): Movesense
+    ): dev.atick.movesense.Movesense
 }

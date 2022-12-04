@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatastoreModule {
 
-    private const val PREFERENCES_DATA_STORE_NAME = "dev.atick.czone.preferences"
+    private const val PREFERENCES_DATA_STORE_NAME = "dev.atick.c.zone.preferences"
 
     @Singleton
     @Provides

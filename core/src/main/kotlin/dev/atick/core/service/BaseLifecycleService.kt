@@ -39,12 +39,8 @@ abstract class BaseLifecycleService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onDestroy() {
-        collectGarbage()
-        super.onDestroy()
-    }
-
     open fun stopService() {
+        collectGarbage()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }

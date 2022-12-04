@@ -1,4 +1,4 @@
-package dev.atick.compose.ui.login
+package dev.atick.compose.ui.login.data
 
 enum class LoginState(val text: String) {
     LOGGED_OUT("Login"),

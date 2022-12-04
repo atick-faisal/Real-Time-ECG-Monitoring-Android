@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.atick.compose.ui.login.data.LoginState
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.core.utils.Event
 import dev.atick.core.utils.Property

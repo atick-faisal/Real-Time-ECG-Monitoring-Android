@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.R
 import dev.atick.compose.service.CardiacZoneService
 import dev.atick.compose.ui.theme.ComposeTheme
-import dev.atick.core.service.BaseLifecycleService
+import dev.atick.compose.base.BaseLifecycleService
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.collectWithLifecycle
 import dev.atick.core.utils.extensions.observeEvent

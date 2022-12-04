@@ -1,4 +1,4 @@
-package dev.atick.core.utils
+package dev.atick.compose.ui.utils
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.lifecycleScope
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
-import dev.atick.core.service.BaseLifecycleService
+import dev.atick.compose.base.BaseLifecycleService
 import dev.atick.core.utils.extensions.collectWithLifecycle
 import dev.atick.core.utils.extensions.showNotification
 import dev.atick.movesense.Movesense

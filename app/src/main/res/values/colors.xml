@@ -2,6 +2,7 @@
 <resources>
     <color name="primary">#3F51B5</color>
     <color name="primaryVariant">#7986CB</color>
+    <color name="surface_light">#fefcf6</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
@@ -14,4 +15,5 @@
     <color name="r_peak">#1b5e20</color>
     <color name="v_beat">#8429F6</color>
     <color name="s_beat">#f44336</color>
+    <color name="live_signal">#a13f28</color>
 </resources>

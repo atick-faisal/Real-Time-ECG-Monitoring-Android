@@ -30,16 +30,16 @@ fun EcgPlot(
             CombinedChart(ctx).apply {
                 description.text = ""
                 axisLeft.setDrawLabels(false)
-                axisLeft.isEnabled = true
+                axisLeft.isEnabled = false
                 axisLeft.setDrawGridLines(false)
                 axisLeft.axisLineWidth = 2.0F
                 axisLeft.setDrawLabels(false)
                 axisLeft.labelCount = 5
                 axisRight.setDrawLabels(false)
-                axisRight.isEnabled = true
+                axisRight.isEnabled = false
                 axisRight.axisLineWidth = 2.0F
                 axisRight.setDrawGridLines(false)
-                xAxis.isEnabled = true
+                xAxis.isEnabled = false
                 xAxis.position = XAxis.XAxisPosition.BOTH_SIDED
                 xAxis.setDrawLabels(false)
                 xAxis.setDrawGridLines(false)

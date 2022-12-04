@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class EcgPlotData(
-    val id: Long,
-    val ecg: LineDataSet,
+    val id: Long = 0L,
+    val ecg: LineDataSet = LineDataSet(listOf(), "ECG"),
     val rPeaks: ScatterDataSet = ScatterDataSet(listOf(), "R-PEAK"),
     val vBeats: ScatterDataSet = ScatterDataSet(listOf(), "V-BEAT"),
     val sBeats: ScatterDataSet = ScatterDataSet(listOf(), "S-BEAT")

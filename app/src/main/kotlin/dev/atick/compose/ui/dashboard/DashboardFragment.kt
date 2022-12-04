@@ -3,6 +3,7 @@ package dev.atick.compose.ui.dashboard
 import android.content.Intent
 import android.os.Build
 import androidx.compose.runtime.Composable
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.R
@@ -10,6 +11,7 @@ import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.collectWithLifecycle
+import dev.atick.core.utils.extensions.observeEvent
 import dev.atick.core.utils.extensions.showAlertDialog
 import dev.atick.core.utils.extensions.showToast
 import dev.atick.movesense.Movesense
@@ -22,6 +24,8 @@ class DashboardFragment : BaseComposeFragment() {
 
     @Inject
     lateinit var movesense: Movesense
+
+    private val viewModel: DashboardViewModel by viewModels()
 
     @Composable
     override fun ComposeUi() {
@@ -40,6 +44,10 @@ class DashboardFragment : BaseComposeFragment() {
                     navigateToConnectionFragment()
                 else -> Unit
             }
+        }
+
+        observeEvent(viewModel.connectDoctorStatus) {
+            requireContext().showToast(it)
         }
     }
 

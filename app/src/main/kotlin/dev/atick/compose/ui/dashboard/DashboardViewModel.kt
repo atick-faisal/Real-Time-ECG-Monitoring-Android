@@ -1,6 +1,8 @@
 package dev.atick.compose.ui.dashboard
 
 import android.os.Environment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.Entry
@@ -11,10 +13,13 @@ import dev.atick.compose.ui.dashboard.data.DashboardUiState
 import dev.atick.compose.ui.dashboard.data.EcgPlotData
 import dev.atick.compose.ui.dashboard.data.RecordingState
 import dev.atick.compose.ui.dashboard.data.toEcgPlotData
+import dev.atick.core.utils.Event
 import dev.atick.movesense.Movesense
 import dev.atick.movesense.data.EcgSignal
 import dev.atick.movesense.data.toCsv
+import dev.atick.network.data.ConnectDoctorRequest
 import dev.atick.network.repository.CardiacZoneRepository
+import dev.atick.storage.preferences.UserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -31,15 +36,21 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     movesense: Movesense,
-    cardiacZoneRepository: CardiacZoneRepository
+    userPreferences: UserPreferences,
+    private val cardiacZoneRepository: CardiacZoneRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DashboardUiState())
     val uiState: StateFlow<DashboardUiState>
         get() = _uiState
 
+    private val _connectDoctorStatus = MutableLiveData<Event<String>>()
+    val connectDoctorStatus: LiveData<Event<String>>
+        get() = _connectDoctorStatus
+
     private val ecgBuffer = MutableList(300) { 0 }
     private val recording = mutableListOf<EcgSignal>()
+    private var patientId = "-1"
 
     init {
         viewModelScope.launch {
@@ -66,6 +77,13 @@ class DashboardViewModel @Inject constructor(
                         abnormalEcgPlotData = abnormalEcgList.toEcgPlotData()
                     )
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.getUserId().collect { id ->
+                Logger.w("USER ID: $id")
+                patientId = id
             }
         }
     }
@@ -121,6 +139,22 @@ class DashboardViewModel @Inject constructor(
             fos.close()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    fun connectDoctor(doctorId: String) {
+        viewModelScope.launch {
+            val success = cardiacZoneRepository.connectDoctor(
+                ConnectDoctorRequest(
+                    patientId = patientId,
+                    doctorId = doctorId
+                )
+            )
+            if (success) {
+                _connectDoctorStatus.postValue(Event("Doctor Added Successfully"))
+            } else {
+                _connectDoctorStatus.postValue(Event("Error Adding Doctor"))
+            }
         }
     }
 }

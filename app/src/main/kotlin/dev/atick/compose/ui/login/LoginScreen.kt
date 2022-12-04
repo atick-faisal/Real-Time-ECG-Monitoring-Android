@@ -55,7 +55,7 @@ fun LoginScreen(
             Text(
                 text = "Login to your Account",
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colors.onBackground
             )
 
             Spacer(modifier = Modifier.height(16.dp))

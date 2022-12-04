@@ -22,8 +22,7 @@ fun AbnormalEcgHeaderCard(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        backgroundColor = Color(0xFFf9f0f3)
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
             modifier = Modifier.padding(32.dp),

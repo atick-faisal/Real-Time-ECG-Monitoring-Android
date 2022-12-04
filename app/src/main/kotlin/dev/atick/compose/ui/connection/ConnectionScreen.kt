@@ -44,7 +44,8 @@ fun ConnectionScreen(
         Text(
             text = "Connect",
             fontSize = 28.sp,
-            fontWeight = FontWeight.Light
+            fontWeight = FontWeight.Light,
+            color = MaterialTheme.colors.onBackground
         )
         Spacer(modifier = Modifier.height(16.dp))
         Image(
@@ -86,7 +87,7 @@ fun ConnectionScreen(
             }
         }
 
-        Text(text = uiState.description)
+        Text(text = uiState.description, color = MaterialTheme.colors.onBackground)
 
         Spacer(modifier = Modifier.height(64.dp))
 

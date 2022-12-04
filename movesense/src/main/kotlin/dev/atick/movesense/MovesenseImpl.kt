@@ -134,8 +134,12 @@ class MovesenseImpl @Inject constructor(
             // ... Auto Stop Scan
             val cancellationHandler = Handler(Looper.getMainLooper())
             cancellationHandler.postDelayed({
-                stopScan()
-                continuation.resume(null)
+                try {
+                    stopScan()
+                    continuation.resume(null)
+                } catch (e: java.lang.IllegalStateException) {
+                    Logger.e("ALREADY RESUMED ERROR")
+                }
             }, MovesenseConfig.SCAN_TIMEOUT)
 
             scanDisposable = rxBleClient?.scanBleDevices(

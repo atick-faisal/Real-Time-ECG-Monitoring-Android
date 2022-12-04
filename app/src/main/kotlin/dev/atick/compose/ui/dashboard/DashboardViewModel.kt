@@ -22,7 +22,6 @@ import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.storage.preferences.UserPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
@@ -36,7 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     movesense: Movesense,
-    userPreferences: UserPreferences,
+    private val userPreferences: UserPreferences,
     private val cardiacZoneRepository: CardiacZoneRepository
 ) : ViewModel() {
 
@@ -156,5 +155,9 @@ class DashboardViewModel @Inject constructor(
                 _connectDoctorStatus.postValue(Event("Error Adding Doctor"))
             }
         }
+    }
+
+    suspend fun logout() {
+        userPreferences.saveUserId("-1")
     }
 }

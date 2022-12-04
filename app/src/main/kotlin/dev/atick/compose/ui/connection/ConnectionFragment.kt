@@ -1,14 +1,13 @@
 package dev.atick.compose.ui.connection
 
 import android.content.Intent
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.atick.compose.base.BaseLifecycleService
 import dev.atick.compose.service.CardiacZoneService
 import dev.atick.compose.ui.theme.ComposeTheme
-import dev.atick.compose.base.BaseLifecycleService
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.collectWithLifecycle
 import dev.atick.core.utils.extensions.showToast
@@ -51,16 +50,12 @@ class ConnectionFragment : BaseComposeFragment() {
                 action = BaseLifecycleService.ACTION_START_SERVICE
                 putExtra(CardiacZoneService.BT_DEVICE_ADDRESS_KEY, address)
             }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireContext().startForegroundService(intent)
-        } else {
-            requireContext().startService(intent)
-        }
+        requireContext().startForegroundService(intent)
     }
 
     private fun navigateToDashboardFragment() {
         findNavController().navigate(
-            ConnectionFragmentDirections.actionConnectionFragment2ToDashboardFragment()
+            ConnectionFragmentDirections.actionConnectionFragmentToDashboardFragment()
         )
     }
 }

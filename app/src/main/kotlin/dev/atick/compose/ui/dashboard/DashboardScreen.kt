@@ -10,10 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCode
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -24,16 +21,18 @@ import dev.atick.compose.ui.common.components.TopBar
 import dev.atick.compose.ui.dashboard.components.AbnormalEcgHeaderCard
 import dev.atick.compose.ui.dashboard.components.EcgCard
 import dev.atick.compose.ui.dashboard.components.HeartRateCard
+import kotlinx.coroutines.launch
 
 @Composable
 fun DashboardScreen(
     onExitClick: () -> Unit,
+    onLogoutClick: () -> Unit,
     viewModel: DashboardViewModel = viewModel()
 ) {
-
     val uiState by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val scanner = remember { BarcodeScanning.getClient() }
 
     val launcher = rememberLauncherForActivityResult(
@@ -70,7 +69,13 @@ fun DashboardScreen(
         topBar = {
             TopBar(
                 title = "Dashboard",
-                onExitClick = onExitClick
+                onExitClick = onExitClick,
+                onLogoutClick = {
+                    coroutineScope.launch {
+                        viewModel.logout()
+                        onLogoutClick.invoke()
+                    }
+                }
             )
         },
         floatingActionButton = {

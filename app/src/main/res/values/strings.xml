@@ -11,4 +11,8 @@
     <string name="password_toggle">Toggle Visibility</string>
     <string name="password">Password</string>
     <string name="username">Username</string>
+    <string name="logout">Logout</string>
+    <string name="logout_warning">Are you sure that you want to Logout?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

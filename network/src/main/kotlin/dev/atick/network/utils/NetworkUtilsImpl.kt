@@ -5,14 +5,12 @@ import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 
-@ExperimentalCoroutinesApi
 class NetworkUtilsImpl @Inject constructor(
     private val connectivityManager: ConnectivityManager
 ) : NetworkUtils {

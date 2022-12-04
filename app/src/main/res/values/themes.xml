@@ -13,15 +13,15 @@
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/dark_blue_gray</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/surface_light</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- Navigation bar color. -->
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/surface_light</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
         <!-- Customize your theme here. -->
-        <item name="materialAlertDialogTheme">
-            @style/ThemeOverlay.MaterialAlertDialog.Rounded
-        </item>
+<!--        <item name="materialAlertDialogTheme">-->
+<!--            @style/ThemeOverlay.MaterialAlertDialog.Rounded-->
+<!--        </item>-->
     </style>
 
     <style name="Theme.JetpackComposeStarter.NoActionBar">
@@ -40,21 +40,21 @@
     </style>
 
 
-    <style name="ThemeOverlay.MaterialAlertDialog.Rounded" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="alertDialogStyle">@style/MaterialAlertDialog.Rounded</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-    </style>
+<!--    <style name="ThemeOverlay.MaterialAlertDialog.Rounded" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">-->
+<!--        <item name="alertDialogStyle">@style/MaterialAlertDialog.Rounded</item>-->
+<!--        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>-->
+<!--    </style>-->
 
-    <style name="MaterialAlertDialog.Rounded" parent="MaterialAlertDialog.MaterialComponents">
-        <item name="shapeAppearance">@style/ShapeAppearance.MaterialAlertDialog.Rounded</item>
-    </style>
+<!--    <style name="MaterialAlertDialog.Rounded" parent="MaterialAlertDialog.MaterialComponents">-->
+<!--        <item name="shapeAppearance">@style/ShapeAppearance.MaterialAlertDialog.Rounded</item>-->
+<!--    </style>-->
 
-    <style name="ShapeAppearance.MaterialAlertDialog.Rounded" parent="">
-        <item name="cornerSize">16dp</item>
-    </style>
+<!--    <style name="ShapeAppearance.MaterialAlertDialog.Rounded" parent="">-->
+<!--        <item name="cornerSize">16dp</item>-->
+<!--    </style>-->
 
-    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button">
-        <item name="cornerRadius">16dp</item>
-    </style>
+<!--    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button">-->
+<!--        <item name="cornerRadius">16dp</item>-->
+<!--    </style>-->
 
 </resources>

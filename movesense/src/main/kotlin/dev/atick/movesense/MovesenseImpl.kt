@@ -11,6 +11,7 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import dev.atick.movesense.config.MovesenseConfig
 import dev.atick.movesense.data.ConnectionState
 import dev.atick.movesense.data.EcgResponse
+import dev.atick.movesense.data.EcgSignal
 import dev.atick.movesense.data.HrResponse
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
@@ -41,8 +42,8 @@ class MovesenseImpl @Inject constructor(
     override val heartRate: SharedFlow<Float>
         get() = _heartRate
 
-    private val _ecgSignal = MutableSharedFlow<List<Int>>()
-    override val ecgSignal: SharedFlow<List<Int>>
+    private val _ecgSignal = MutableSharedFlow<EcgSignal>()
+    override val ecgSignal: SharedFlow<EcgSignal>
         get() = _ecgSignal
 
     private val connectionListener = object : MdsConnectionListener {
@@ -113,7 +114,7 @@ class MovesenseImpl @Inject constructor(
                 ecgResponse?.body?.samples?.let { ecgSamples ->
                     // Logger.i("ECG: $ecgSamples")
                     CoroutineScope(Dispatchers.Default).launch {
-                        _ecgSignal.emit(ecgSamples)
+                        _ecgSignal.emit(EcgSignal(ecgSamples))
                     }
                 }
             } catch (e: JsonSyntaxException) {

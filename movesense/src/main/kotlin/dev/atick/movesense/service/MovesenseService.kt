@@ -120,16 +120,16 @@ class MovesenseService : BaseLifecycleService() {
             lastHrUpdateTime = System.currentTimeMillis()
         }
 
-        collectWithLifecycle(movesense.ecgSignal) { signal ->
+        collectWithLifecycle(movesense.ecgSignal) { ecgSignal ->
             ecgUpdateCount += 1
-            ecgBuffer.subList(0, signal.size).clear()
-            ecgBuffer.addAll(signal)
+            ecgBuffer.subList(0, ecgSignal.values.size).clear()
+            ecgBuffer.addAll(ecgSignal.values)
 
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
                     patientId = userId,
-                    ecg = Ecg(ecgData = ecgBuffer)
+                    ecg = Ecg(id = ecgSignal.timestamp, ecgData = ecgBuffer)
                 )
                 Logger.i("SENDING ECG ... ")
                 lifecycleScope.launchWhenStarted {

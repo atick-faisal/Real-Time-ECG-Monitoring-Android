@@ -1,8 +1,10 @@
 package dev.atick.movesense.data
 
+import java.util.*
+
 data class EcgSignal(
-    val timestamp: Long,
-    val values: List<Int>
+    val values: List<Int>,
+    val timestamp: Long = Date().time
 ) {
     override fun toString(): String {
         return "$timestamp,${values.joinToString(separator = ",")}"

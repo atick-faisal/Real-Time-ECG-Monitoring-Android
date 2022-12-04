@@ -1,116 +1,129 @@
 package dev.atick.compose.ui.connection
 
-import android.annotation.SuppressLint
+import ai.atick.material.MaterialColor
+import android.animation.ValueAnimator
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.airbnb.lottie.LottieAnimationView
 import dev.atick.compose.R
-import dev.atick.compose.ui.BleViewModel
-import dev.atick.compose.ui.common.components.TopBar
-import dev.atick.compose.ui.connection.components.DeviceList
+import dev.atick.compose.ui.connection.data.ConnectionUiState
 
 @Composable
-@ExperimentalMaterialApi
-@SuppressLint("MissingPermission")
 fun ConnectionScreen(
-    onDeviceClick: (String) -> Unit,
-    viewModel: BleViewModel = viewModel()
+    onConnectClick: (String) -> Unit,
+    viewModel: ConnectionViewModel = viewModel()
 ) {
-    val isScanning by viewModel.isScanning
-    val devices = viewModel.devices
+    val uiState by viewModel.uiState.collectAsState()
 
-    return Box(
-        Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+    return Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(
-            modifier = Modifier.align(Alignment.TopCenter),
-            title = "Available Devices",
-            onSearchClick = {},
-            onMenuClick = {}
+        Text(
+            text = "Connect",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Light
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Image(
+            modifier = Modifier.width(200.dp),
+            painter = painterResource(id = R.drawable.movesense_logo),
+            contentDescription = "Movesense Logo"
         )
 
-        AnimatedVisibility(
-            visible = devices.size > 0
+        Box(
+            modifier = Modifier.size(300.dp),
+            contentAlignment = Alignment.Center
         ) {
-            DeviceList(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = 64.dp,
-                        start = 16.dp,
-                        end = 16.dp,
-                        bottom = 80.dp
-                    ),
-                deviceList = devices,
-                onDeviceClick = onDeviceClick
+            if (uiState == ConnectionUiState.DEVICE_FOUND) {
+                Box(
+                    Modifier
+                        .size(200.dp)
+                        .background(MaterialColor.Green50, shape = CircleShape)
+                )
+            }
+
+            Image(
+                modifier = Modifier.size(80.dp),
+                painter = painterResource(id = R.drawable.ic_movesense),
+                contentDescription = "Movesense Icon",
+                contentScale = ContentScale.FillBounds
             )
+
+            if ((uiState == ConnectionUiState.SCANNING || uiState == ConnectionUiState.CONNECTING)) {
+                AndroidView(
+                    factory = { ctx ->
+                        LottieAnimationView(ctx).apply {
+                            setAnimation(R.raw.circular_lines)
+                            repeatCount = ValueAnimator.INFINITE
+                            playAnimation()
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
+
+        Text(text = uiState.description)
+
+        Spacer(modifier = Modifier.height(64.dp))
 
         AnimatedVisibility(
-            modifier = Modifier.align(Alignment.Center),
-            visible = devices.size == 0
+            visible = uiState != ConnectionUiState.SCANNING
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    modifier = Modifier.fillMaxWidth(),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_empty),
-                    contentDescription = "No Device Found"
-                )
-                Text(
-                    text = "No Device Available",
-                    color = MaterialTheme.colors.onSurface,
-                    fontSize = 20.sp
-                )
-                Text(
-                    text = "Please Scan for Devices",
-                    color = MaterialTheme.colors.onSurface,
-                    fontSize = 14.sp
-                )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.BottomCenter)
-        ) {
-            AnimatedVisibility(visible = isScanning) {
-                OutlinedButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = { viewModel.stopScan() }
-                ) {
-                    Text(text = "Stop Scan")
-                }
-            }
-
-            AnimatedVisibility(visible = !isScanning) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = { viewModel.startScan() }
-                ) {
-                    Text(text = "Start Scan")
+            Button(
+                onClick = {
+                    when (uiState) {
+                        ConnectionUiState.DEVICE_FOUND,
+                        ConnectionUiState.CONNECTION_FAILED ->
+                            onConnectClick(viewModel.movesenseMacAddress)
+                        ConnectionUiState.SCAN_FAILED ->
+                            viewModel.scan()
+                        else -> Unit
+                    }
+                },
+                modifier = Modifier.size(72.dp),
+                shape = CircleShape,
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                when (uiState) {
+                    ConnectionUiState.CONNECTING ->
+                        CircularProgressIndicator(color = MaterialTheme.colors.onPrimary)
+                    ConnectionUiState.SCAN_FAILED ->
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Scan Again"
+                        )
+                    else ->
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = "Connect"
+                        )
                 }
             }
         }
+
     }
 }

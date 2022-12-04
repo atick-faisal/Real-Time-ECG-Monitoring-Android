@@ -1,4 +1,4 @@
-package dev.atick.compose.ui.connection.components
+package dev.atick.compose.ui.setup.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme

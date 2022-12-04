@@ -39,7 +39,7 @@ fun TopBar(
             bottomEnd = 16.dp
         ),
         elevation = if (isSystemInDarkTheme()) 0.dp else 4.dp,
-        backgroundColor = MaterialTheme.colors.surface
+        backgroundColor = MaterialTheme.colors.background
     ) {
         Row(
             modifier = Modifier

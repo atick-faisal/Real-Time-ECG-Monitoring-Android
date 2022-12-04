@@ -19,8 +19,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
-                    'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
         }
     }
     compileOptions {
@@ -28,7 +28,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "1.8"
         freeCompilerArgs = freeCompilerArgs + [
                 "-opt-in=kotlin.RequiresOptIn",
                 // Enable experimental coroutines APIs, including Flow
@@ -37,34 +37,26 @@ android {
                 "-opt-in=kotlin.Experimental",
         ]
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-    }
     packagingOptions {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
 
 dependencies {
     implementation project(path: ":core")
-    implementation project(path: ":network")
-    implementation project(path: ":storage")
     implementation project(path: ":mdslib")
 
     // ... RxJava & RxAndroid
-    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.19")
+    implementation("io.reactivex.rxjava2:rxjava:$rx_java_version")
+    implementation("io.reactivex.rxjava2:rxandroid:$rx_android_version")
 
     // ... RxBLE
-    implementation("com.polidea.rxandroidble2:rxandroidble:1.10.2")
+    implementation("com.polidea.rxandroidble2:rxandroidble:$rx_android_ble_version")
 
     // ... Gson
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:$gson_version")
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")

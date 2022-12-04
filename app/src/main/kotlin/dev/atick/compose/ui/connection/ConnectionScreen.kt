@@ -35,14 +35,17 @@ fun ConnectionScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     return Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Connect",
             fontSize = 28.sp,
-            fontWeight = FontWeight.Light
+            fontWeight = FontWeight.Light,
+            color = MaterialTheme.colors.onBackground
         )
         Spacer(modifier = Modifier.height(16.dp))
         Image(
@@ -84,7 +87,7 @@ fun ConnectionScreen(
             }
         }
 
-        Text(text = uiState.description)
+        Text(text = uiState.description, color = MaterialTheme.colors.onBackground)
 
         Spacer(modifier = Modifier.height(64.dp))
 

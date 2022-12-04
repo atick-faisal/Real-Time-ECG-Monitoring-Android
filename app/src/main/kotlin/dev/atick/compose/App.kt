@@ -7,7 +7,7 @@ import android.os.Build
 import com.orhanobut.logger.LogAdapter
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.HiltAndroidApp
-import dev.atick.movesense.service.MovesenseService
+import dev.atick.compose.service.CardiacZoneService
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -26,7 +26,7 @@ class App : Application() {
     private fun createPersistentNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
-                MovesenseService.PERSISTENT_NOTIFICATION_CHANNEL_ID,
+                CardiacZoneService.PERSISTENT_NOTIFICATION_CHANNEL_ID,
                 getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
@@ -41,7 +41,7 @@ class App : Application() {
     private fun createAlertNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
-                MovesenseService.ALERT_NOTIFICATION_CHANNEL_ID,
+                CardiacZoneService.ALERT_NOTIFICATION_CHANNEL_ID,
                 getString(R.string.alert_notification_channel_name),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {

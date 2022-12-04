@@ -6,13 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.atick.compose.ui.login.data.LoginState
 import dev.atick.core.ui.BaseViewModel
 import dev.atick.core.utils.Event
-import dev.atick.core.utils.Property
+import dev.atick.compose.ui.utils.Property
 import dev.atick.network.data.LoginRequest
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.storage.preferences.UserPreferences
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

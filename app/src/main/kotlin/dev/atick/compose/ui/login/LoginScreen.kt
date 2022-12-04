@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.atick.compose.R
 import dev.atick.compose.ui.common.components.InputField
+import dev.atick.compose.ui.login.data.LoginState
 
 @Composable
 fun LoginScreen(
@@ -55,7 +56,7 @@ fun LoginScreen(
             Text(
                 text = "Login to your Account",
                 style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onSurface
+                color = MaterialTheme.colors.onBackground
             )
 
             Spacer(modifier = Modifier.height(16.dp))

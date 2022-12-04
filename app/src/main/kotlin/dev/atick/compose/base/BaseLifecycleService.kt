@@ -1,4 +1,4 @@
-package dev.atick.core.service
+package dev.atick.compose.base
 
 import android.app.Notification
 import android.content.Intent

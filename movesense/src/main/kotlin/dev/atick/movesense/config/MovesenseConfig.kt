@@ -1,6 +1,7 @@
 package dev.atick.movesense.config
 
 object MovesenseConfig {
+    const val SCAN_TIMEOUT = 10_000L
     const val URI_EVENT_LISTENER = "suunto://MDS/EventListener"
     const val SCHEME_PREFIX = "suunto://"
 

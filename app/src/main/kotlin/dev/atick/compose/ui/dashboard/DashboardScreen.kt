@@ -3,15 +3,13 @@ package dev.atick.compose.ui.dashboard
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QrCode
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -65,6 +63,9 @@ fun DashboardScreen(
     }
 
     return Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
         scaffoldState = rememberScaffoldState(),
         topBar = {
             TopBar(
@@ -89,7 +90,7 @@ fun DashboardScreen(
         ) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -116,11 +117,11 @@ fun DashboardScreen(
             items(uiState.abnormalEcgPlotData) { ecgPlotData ->
                 EcgCard(
                     Modifier.fillMaxWidth(),
-                    title = "Live ECG Signal",
+                    title = ecgPlotData.getTimestamp(),
                     ecgPlotData = ecgPlotData,
                 )
             }
-            
+
             item {
                 Spacer(modifier = Modifier.height(80.dp))
             }

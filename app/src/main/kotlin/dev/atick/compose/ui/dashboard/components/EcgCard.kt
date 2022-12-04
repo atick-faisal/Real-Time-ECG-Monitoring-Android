@@ -29,7 +29,8 @@ fun EcgCard(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        backgroundColor = MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

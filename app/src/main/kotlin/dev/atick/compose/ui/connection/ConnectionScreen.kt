@@ -35,7 +35,9 @@ fun ConnectionScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     return Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

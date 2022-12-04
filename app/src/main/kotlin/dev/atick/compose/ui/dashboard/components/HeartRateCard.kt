@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,12 +21,12 @@ import dev.atick.compose.R
 @Composable
 fun HeartRateCard(
     modifier: Modifier = Modifier,
-    heartRate: Float
+    heartRate: Float = 0.0F
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        backgroundColor = Color(0xFFf5f5eb)
+        backgroundColor = MaterialTheme.colors.surface
     ) {
         Box {
             Image(

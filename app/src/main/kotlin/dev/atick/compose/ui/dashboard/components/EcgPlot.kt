@@ -64,8 +64,8 @@ fun EcgPlot(
             }
             data.ecg.apply {
                 color = if (isDarkThemeEnabled)
-                    context.getColor(R.color.white)
-                else context.getColor(R.color.dark_blue_gray)
+                    context.getColor(R.color.backgroundLight)
+                else context.getColor(R.color.backgroundDark)
                 setDrawValues(false)
                 setDrawFilled(false)
                 setDrawCircleHole(false)

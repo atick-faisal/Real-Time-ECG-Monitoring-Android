@@ -11,19 +11,18 @@ import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.utils.extensions.collectWithLifecycle
-import dev.atick.core.utils.extensions.observe
 import dev.atick.core.utils.extensions.showNotification
+import dev.atick.movesense.Movesense
 import dev.atick.movesense.R
 import dev.atick.movesense.config.MovesenseConfig.NETWORK_UPDATE_CYCLE
-import dev.atick.movesense.data.ConnectionStatus
-import dev.atick.movesense.repository.Movesense
+import dev.atick.movesense.data.ConnectionState
 import dev.atick.movesense.utils.getNotificationTitle
 import dev.atick.network.data.Ecg
 import dev.atick.network.data.EcgRequest
-import dev.atick.network.data.RPeak
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.network.utils.NetworkState
 import dev.atick.network.utils.NetworkUtils
+import dev.atick.storage.preferences.UserPreferences
 import javax.inject.Inject
 
 
@@ -52,6 +51,9 @@ class MovesenseService : BaseLifecycleService() {
     @Inject
     lateinit var cardiacZoneRepository: CardiacZoneRepository
 
+    @Inject
+    lateinit var userPreferences: UserPreferences
+
     private val persistentNotificationBuilder = NotificationCompat.Builder(
         this, PERSISTENT_NOTIFICATION_CHANNEL_ID
     )
@@ -60,9 +62,10 @@ class MovesenseService : BaseLifecycleService() {
     )
 
     private var notificationIntent: Intent? = null
-    private var connectionStatus = ConnectionStatus.NOT_CONNECTED
+    private var connectionStatus = ConnectionState.NOT_CONNECTED
     private var networkState = NetworkState.UNAVAILABLE
 
+    private val ecgBuffer = MutableList(640) { 0 }
     private var ecgUpdateCount = 0
     private var userId = "-1"
 
@@ -76,7 +79,7 @@ class MovesenseService : BaseLifecycleService() {
 
     override fun onCreateService() {
         super.onCreateService()
-        observe(movesense.averageHeartRate) {
+        collectWithLifecycle(movesense.heartRate) {
             persistentNotificationBuilder.apply {
                 setContentTitle(
                     getNotificationTitle(
@@ -117,25 +120,16 @@ class MovesenseService : BaseLifecycleService() {
             lastHrUpdateTime = System.currentTimeMillis()
         }
 
-        observe(movesense.ecg) { ecg ->
+        collectWithLifecycle(movesense.ecgSignal) { signal ->
             ecgUpdateCount += 1
+            ecgBuffer.subList(0, signal.size).clear()
+            ecgBuffer.addAll(signal)
+
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
                 Logger.w("USER ID: $userId")
                 val requestBody = EcgRequest(
                     patientId = userId,
-                    ecg = Ecg(
-                        ecgData = ecg.signal,
-                        rPeaks = ecg.rPeaks
-                            .filter { rPeak ->
-                                rPeak.location < ecg.signal.size
-                            }
-                            .map { rPeak ->
-                                RPeak(
-                                    x = rPeak.location,
-                                    y = rPeak.amplitude
-                                )
-                            }
-                    )
+                    ecg = Ecg(ecgData = ecgBuffer)
                 )
                 Logger.i("SENDING ECG ... ")
                 lifecycleScope.launchWhenStarted {
@@ -155,33 +149,34 @@ class MovesenseService : BaseLifecycleService() {
             }
         }
 
-        observe(movesense.connectionStatus) { status ->
+        collectWithLifecycle(movesense.connectionState) { status ->
+//            Logger.w("FROM SERVICE: ${status.name}")
             when (status) {
-                ConnectionStatus.NOT_CONNECTED -> {
+                ConnectionState.NOT_CONNECTED -> {
                     smallIcon = R.drawable.ic_alert
                     contentText = R.string.persistent_notification_not_connected_text
-                    connectionStatus = ConnectionStatus.NOT_CONNECTED
+                    connectionStatus = ConnectionState.NOT_CONNECTED
                 }
-                ConnectionStatus.CONNECTING -> {
+                ConnectionState.CONNECTING -> {
                     smallIcon = R.drawable.ic_connecting
                     contentText = R.string.persistent_notification_connecting_text
-                    connectionStatus = ConnectionStatus.CONNECTING
+                    connectionStatus = ConnectionState.CONNECTING
                 }
-                ConnectionStatus.CONNECTED -> {
+                ConnectionState.CONNECTED -> {
                     if (networkState == NetworkState.CONNECTED)
                         smallIcon = R.drawable.ic_connected
                     contentText = R.string.persistent_notification_connected_text
-                    connectionStatus = ConnectionStatus.CONNECTED
+                    connectionStatus = ConnectionState.CONNECTED
                 }
-                ConnectionStatus.CONNECTION_FAILED -> {
+                ConnectionState.CONNECTION_FAILED -> {
                     smallIcon = R.drawable.ic_alert
                     contentText = R.string.persistent_notification_connection_failed
-                    connectionStatus = ConnectionStatus.CONNECTION_FAILED
+                    connectionStatus = ConnectionState.CONNECTION_FAILED
                 }
-                ConnectionStatus.DISCONNECTED -> {
+                ConnectionState.DISCONNECTED -> {
                     smallIcon = R.drawable.ic_alert
                     contentText = R.string.persistent_notification_disconnected
-                    connectionStatus = ConnectionStatus.DISCONNECTED
+                    connectionStatus = ConnectionState.DISCONNECTED
                 }
             }
 
@@ -214,7 +209,7 @@ class MovesenseService : BaseLifecycleService() {
             when (state) {
                 NetworkState.CONNECTED -> {
                     networkState = NetworkState.CONNECTED
-                    if (connectionStatus == ConnectionStatus.CONNECTED)
+                    if (connectionStatus == ConnectionState.CONNECTED)
                         smallIcon = R.drawable.ic_connected
                     contentText = R.string.network_established
                 }
@@ -264,44 +259,59 @@ class MovesenseService : BaseLifecycleService() {
                 )
             }
         }
+
+        collectWithLifecycle(userPreferences.getUserId()) { userId = it }
     }
 
 
     override fun onStartService(intent: Intent?) {
         val address = intent?.getStringExtra(BT_DEVICE_ADDRESS_KEY)
-        userId = intent?.getStringExtra(USER_ID_KEY) ?: "-1"
+        // userId = intent?.getStringExtra(USER_ID_KEY) ?: "-1"
         address?.let { connect(it) }
         STARTED = true
     }
 
     override fun setupNotification(): Notification {
         persistentNotificationBuilder.apply {
-            if (movesense.isConnected.value == true) {
-                setSmallIcon(R.drawable.ic_connected)
-                setContentTitle(
-                    getString(
-                        R.string.movesense_connected
-                    )
+            setSmallIcon(R.drawable.ic_warning)
+            setContentTitle(
+                getString(
+                    R.string.movesense_disconnected
                 )
-                setContentText(
-                    getString(
-                        R.string.persistent_notification_text, 0.0F
-                    )
+            )
+            setContentText(
+                getString(
+                    R.string.persistent_notification_text, 0.0F
                 )
-            } else {
-                setSmallIcon(R.drawable.ic_warning)
-                setContentTitle(
-                    getString(
-                        R.string.persistent_notification_warning_title
-                    )
-                )
-                setContentText(
-                    getString(
-                        R.string.persistent_notification_warning_text
-                    )
-                )
-            }
+            )
         }
+//        persistentNotificationBuilder.apply {
+//            if (movesense.connectionState.value == ConnectionState.CONNECTED) {
+//                setSmallIcon(R.drawable.ic_connected)
+//                setContentTitle(
+//                    getString(
+//                        R.string.movesense_connected
+//                    )
+//                )
+//                setContentText(
+//                    getString(
+//                        R.string.persistent_notification_text, 0.0F
+//                    )
+//                )
+//            } else {
+//                setSmallIcon(R.drawable.ic_warning)
+//                setContentTitle(
+//                    getString(
+//                        R.string.persistent_notification_warning_title
+//                    )
+//                )
+//                setContentText(
+//                    getString(
+//                        R.string.persistent_notification_warning_text
+//                    )
+//                )
+//            }
+//        }
 
         val pendingIntent = getMainActivityPendingIntent()
 
@@ -339,13 +349,11 @@ class MovesenseService : BaseLifecycleService() {
     }
 
     private fun connect(address: String) {
-        movesense.connect(address) {
-            movesense.stopScan()
-        }
+        movesense.initiateConnection(address)
     }
 
     override fun collectGarbage() {
-        movesense.clear()
+        movesense.freeResources()
         STARTED = false
     }
 }

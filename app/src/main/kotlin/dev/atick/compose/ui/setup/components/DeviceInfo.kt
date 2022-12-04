@@ -1,4 +1,4 @@
-package dev.atick.compose.ui.connection.components
+package dev.atick.compose.ui.setup.components
 
 import ai.atick.material.MaterialColor
 import android.annotation.SuppressLint

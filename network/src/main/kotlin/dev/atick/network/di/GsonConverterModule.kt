@@ -1,5 +1,7 @@
 package dev.atick.network.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +16,10 @@ object GsonConverterModule {
     @Singleton
     @Provides
     fun provideGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create()
+        val gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
+        return GsonConverterFactory.create(gson)
     }
 
 }

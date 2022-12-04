@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "dev.atick.czone",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 20,
+      "versionName": "2.2.0",
+      "outputFile": "app_release_v2.2.0_10.11.2022 11.20 AM.apk"
+    }
+  ],
+  "elementType": "File"
+}

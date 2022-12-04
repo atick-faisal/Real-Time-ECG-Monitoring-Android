@@ -6,16 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.CombinedChart
+import com.github.mikephil.charting.charts.ScatterChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.utils.Utils
 import dev.atick.compose.R
 
 @Composable
 fun LinePlot(
-    dataset: LineDataSet,
+    dataset1: LineDataSet,
+    dataset2: ScatterDataSet,
     modifier: Modifier = Modifier
 ) {
 
@@ -25,21 +26,22 @@ fun LinePlot(
     AndroidView(
         factory = { ctx ->
             Utils.init(ctx)
-            LineChart(ctx).apply {
+            CombinedChart(ctx).apply {
                 description.text = ""
                 axisLeft.setDrawLabels(false)
                 axisLeft.isEnabled = true
-                axisLeft.setDrawGridLines(true)
+                axisLeft.setDrawGridLines(false)
                 axisLeft.axisLineWidth = 2.0F
                 axisLeft.setDrawLabels(false)
                 axisLeft.labelCount = 5
                 axisRight.setDrawLabels(false)
                 axisRight.isEnabled = true
                 axisRight.axisLineWidth = 2.0F
+                axisRight.setDrawGridLines(false)
                 xAxis.isEnabled = true
                 xAxis.position = XAxis.XAxisPosition.BOTH_SIDED
                 xAxis.setDrawLabels(false)
-                xAxis.setDrawGridLines(true)
+                xAxis.setDrawGridLines(false)
                 xAxis.labelCount = 8
                 xAxis.axisLineWidth = 2.0F
                 legend.isEnabled = false
@@ -59,19 +61,30 @@ fun LinePlot(
             } else {
                 Color.DKGRAY
             }
-            dataset.apply {
+            dataset1.apply {
                 color = if (isDarkThemeEnabled)
-                    context.getColor(R.color.primaryVariant)
-                else context.getColor(R.color.primary)
+                    context.getColor(R.color.white)
+                else context.getColor(R.color.dark_blue_gray)
                 setDrawValues(false)
                 setDrawFilled(false)
                 setDrawCircleHole(false)
                 setDrawCircles(false)
                 lineWidth = 2.0F
             }
-            val lineData = LineData(dataset)
+
+            dataset2.apply {
+                setScatterShape(ScatterChart.ScatterShape.CIRCLE)
+                color = context.getColor(R.color.r_peak)
+                scatterShapeSize = 20.0F
+            }
+
+            val lineData = LineData(dataset1)
+            val scatterData = ScatterData(dataset2)
+            val combinedData = CombinedData()
+            combinedData.setData(lineData)
+            combinedData.setData(scatterData)
             lineData.notifyDataChanged()
-            lineChart.data = lineData
+            lineChart.data = combinedData
             lineChart.invalidate()
         },
         modifier = modifier

@@ -18,13 +18,13 @@ class UserPreferencesImpl @Inject constructor(
         const val USER_ID_KEY = "dev.atick.c.zone.user.id"
     }
 
-    override suspend fun saveUserId(userId: Int) {
+    override suspend fun saveUserId(userId: String) {
         datastore.edit { preferences ->
-            preferences[stringPreferencesKey(USER_ID_KEY)] = userId.toString()
+            preferences[stringPreferencesKey(USER_ID_KEY)] = userId
         }
     }
 
-    override fun getUserId(): Flow<Int> {
+    override fun getUserId(): Flow<String> {
         return datastore.data.catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -32,7 +32,7 @@ class UserPreferencesImpl @Inject constructor(
                 throw exception
             }
         }.map { preferences ->
-            preferences[stringPreferencesKey(USER_ID_KEY)]?.toInt() ?: 0
+            preferences[stringPreferencesKey(USER_ID_KEY)] ?: "-1"
         }
     }
 }

@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dev.atick.network.api.CardiacZoneApi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,8 +18,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
-    private const val BASE_URL = "http://18.222.190.174:8080"
-
     @Singleton
     @Provides
     fun provideRetrofitClient(
@@ -26,7 +25,7 @@ object RetrofitModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(CardiacZoneApi.BASE_URL)
             .addConverterFactory(converterFactory)
             .client(okHttpClient)
             .build()

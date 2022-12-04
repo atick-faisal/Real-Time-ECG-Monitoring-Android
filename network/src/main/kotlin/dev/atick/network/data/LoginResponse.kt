@@ -3,12 +3,16 @@ package dev.atick.network.data
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
-    @SerializedName("success")
-    val success: Boolean,
 
+    @SerializedName("patient")
+    val patient: Patient
+
+)
+
+data class Patient(
     @SerializedName("patient_id")
-    val patientId: Int,
+    val patientId: String,
 
-    @SerializedName("patient_name")
+    @SerializedName("name")
     val patientName: String
 )

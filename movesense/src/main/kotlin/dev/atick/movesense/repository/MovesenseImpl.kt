@@ -10,6 +10,7 @@ import com.movesense.mds.*
 import com.orhanobut.logger.Logger
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.scan.ScanSettings
+import dev.atick.core.utils.extensions.argmax
 import dev.atick.movesense.config.MovesenseConfig.DEFAULT_ECG_BUFFER_LEN
 import dev.atick.movesense.config.MovesenseConfig.DEFAULT_ECG_SAMPLE_RATE
 import dev.atick.movesense.config.MovesenseConfig.ECG_SEGMENT_LEN
@@ -20,6 +21,7 @@ import dev.atick.movesense.config.MovesenseConfig.URI_EVENT_LISTENER
 import dev.atick.movesense.config.MovesenseConfig.URI_MEAS_HR
 import dev.atick.movesense.data.*
 import io.reactivex.disposables.Disposable
+import java.util.Date
 import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
@@ -27,20 +29,24 @@ class MovesenseImpl @Inject constructor(
     private val mds: Mds?,
     private val rxBleClient: RxBleClient?
 ) : Movesense {
+    private var rPeakFlag = false
+    private var previousEcgBuffer = MutableList(DEFAULT_ECG_BUFFER_LEN * 5) { 0 }
+
     private var connectedMac: String? = null
     private var scanDisposable: Disposable? = null
     private var hrSubscription: MdsSubscription? = null
     private var ecgSubscription: MdsSubscription? = null
 
     private var bufferLen: Int = DEFAULT_ECG_BUFFER_LEN
-    private val ecgBuffer = MutableList(ECG_SEGMENT_LEN) { 0 }
+    private val ecgBuffer = MutableList(ECG_SEGMENT_LEN + DEFAULT_ECG_BUFFER_LEN * 5) { 0 }
+    private var rPeakBuffer = mutableListOf<RPeakData>()
 
     private val _isConnected = MutableLiveData(false)
     override val isConnected: LiveData<Boolean>
         get() = _isConnected
 
-    private val _connectionStatus = MutableLiveData(ConnectionStatus.NOT_CONNECTED)
-    override val connectionStatus: LiveData<ConnectionStatus>
+    private val _connectionStatus = MutableLiveData(ConnectionState.NOT_CONNECTED)
+    override val connectionStatus: LiveData<ConnectionState>
         get() = _connectionStatus
 
     private val _averageHeartRate = MutableLiveData(0.0F)
@@ -54,6 +60,18 @@ class MovesenseImpl @Inject constructor(
     private val _ecgData = MutableLiveData<List<Int>>(ecgBuffer)
     override val ecgData: LiveData<List<Int>>
         get() = _ecgData
+
+    private val _rPeakData = MutableLiveData<List<RPeakData>>()
+    override val rPeakData: LiveData<List<RPeakData>>
+        get() = _rPeakData
+
+    private val _ecg = MutableLiveData<Ecg>()
+    override val ecg: LiveData<Ecg>
+        get() = _ecg
+
+    private val _ecgSignal = MutableLiveData<EcgSignal>()
+    override val ecgSignal: LiveData<EcgSignal>
+        get() = _ecgSignal
 
     override fun startScan(onDeviceFound: (BtDevice) -> Unit) {
         Logger.i("SCANNING ... ")
@@ -84,17 +102,40 @@ class MovesenseImpl @Inject constructor(
         )
     }
 
+    override fun scanForMovesenseDevice(onDeviceFound: (String) -> Unit) {
+        Logger.i("SCANNING ... ")
+        scanDisposable = rxBleClient?.scanBleDevices(
+            ScanSettings.Builder()
+                // .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                // .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                .build()
+        )?.subscribe(
+            { scanResult ->
+                scanResult?.bleDevice?.let { device ->
+                    if (device.name?.contains("Movesense") == true) {
+                        Logger.i("DEVICE FOUND: ${device.name}")
+                        onDeviceFound(device.macAddress)
+                        stopScan()
+                    }
+                }
+            },
+            { throwable ->
+                Logger.e("SCAN ERROR: $throwable")
+            }
+        )
+    }
+
     override fun connect(address: String, onConnect: () -> Unit) {
         mds?.connect(address, object : MdsConnectionListener {
             override fun onConnect(address: String?) {
-                _connectionStatus.postValue(ConnectionStatus.CONNECTING)
+                _connectionStatus.postValue(ConnectionState.CONNECTING)
                 Logger.i("CONNECTION TO $address")
             }
 
             override fun onConnectionComplete(address: String?, serial: String?) {
                 connectedMac = address
                 _isConnected.postValue(true)
-                _connectionStatus.postValue(ConnectionStatus.CONNECTED)
+                _connectionStatus.postValue(ConnectionState.CONNECTED)
                 Logger.i("CONNECTED TO: $address")
                 fetchEcgInfo(serial)
                 onConnect.invoke()
@@ -102,13 +143,13 @@ class MovesenseImpl @Inject constructor(
 
             override fun onError(e: MdsException?) {
                 _isConnected.postValue(false)
-                _connectionStatus.postValue(ConnectionStatus.CONNECTION_FAILED)
+                _connectionStatus.postValue(ConnectionState.CONNECTION_FAILED)
                 Logger.e("CONNECTION ERROR: $e")
             }
 
             override fun onDisconnect(address: String?) {
                 _isConnected.postValue(false)
-                _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
+                _connectionStatus.postValue(ConnectionState.DISCONNECTED)
                 Logger.w("DISCONNECTED FROM $address")
             }
         })
@@ -165,12 +206,24 @@ class MovesenseImpl @Inject constructor(
                         hrResponse?.body?.let { body ->
                             body.average.let { hr ->
                                 _averageHeartRate.postValue(hr)
+
+                                // ... R-peak is present in the second previous ECG buffer
+                                // ... Adjust R-peak location for ECG_SEGMENT_LEN
+                                val rPeakLocation = previousEcgBuffer.argmax() +
+                                    ECG_SEGMENT_LEN // - 5 * DEFAULT_ECG_BUFFER_LEN
+                                rPeakBuffer.add(
+                                    RPeakData(
+                                        rPeakLocation,
+                                        previousEcgBuffer.maxOrNull() ?: 0
+                                    )
+                                )
+                                // Logger.w("$rPeakBuffer")
                             }
                             body.rrData.let { rrIntervals ->
                                 _rrInterval.postValue(rrIntervals[0])
                             }
+
                         }
-                        // Logger.i("HR: ${hrResponse?.body?.rrData}")
                     } catch (e: JsonSyntaxException) {
                         Logger.e("HR PARSING ERROR: $e")
                     } catch (e: ArrayIndexOutOfBoundsException) {
@@ -205,11 +258,42 @@ class MovesenseImpl @Inject constructor(
                         val ecgResponse = Gson().fromJson(
                             data, EcgResponse::class.java
                         )
-                        ecgResponse?.body?.samples?.let {
+                        ecgResponse?.body?.samples?.let { ecgSamples ->
+                            _ecgSignal.postValue(
+                                EcgSignal(
+                                    timestamp = Date().time,
+                                    values = ecgSamples
+                                )
+                            )
                             ecgBuffer.subList(0, bufferLen).clear()
-                            ecgBuffer.addAll(it)
+                            ecgBuffer.addAll(ecgSamples)
                             _ecgData.postValue(ecgBuffer)
-                            // Logger.i("ECG LEN: ${ecgData.size}")
+
+                            if (rPeakFlag) {
+                                Logger.w("$previousEcgBuffer PEAK: ${previousEcgBuffer.maxOrNull()}")
+                                rPeakFlag = false
+                            }
+
+                            previousEcgBuffer.subList(0, bufferLen).clear()
+                            previousEcgBuffer.addAll(ecgSamples)
+                            rPeakBuffer =
+                                rPeakBuffer.map {
+                                    RPeakData(
+                                        it.location - DEFAULT_ECG_BUFFER_LEN,
+                                        it.amplitude
+                                    )
+                                }.toMutableList()
+                            rPeakBuffer = rPeakBuffer.filter { it.location >= 0 }.toMutableList()
+                            _rPeakData.postValue(rPeakBuffer)
+
+                            _ecg.postValue(
+                                Ecg(
+                                    signal = ecgBuffer.subList(0, ECG_SEGMENT_LEN),
+                                    rPeaks = rPeakBuffer
+                                )
+                            )
+
+                            // Logger.i("ECG: $it")
                         }
                     } catch (e: JsonSyntaxException) {
                         Logger.e("ECG PARSING ERROR: $e")
@@ -229,7 +313,7 @@ class MovesenseImpl @Inject constructor(
         connectedMac?.let {
             mds?.disconnect(it)
             connectedMac = null
-            _connectionStatus.postValue(ConnectionStatus.DISCONNECTED)
+            _connectionStatus.postValue(ConnectionState.DISCONNECTED)
             _isConnected.postValue(false)
         }
     }
@@ -254,8 +338,8 @@ class MovesenseImpl @Inject constructor(
 
     override fun clear() {
         stopScan()
-        disconnect()
         unsubscribeHr()
         unsubscribeEcg()
+        disconnect()
     }
 }

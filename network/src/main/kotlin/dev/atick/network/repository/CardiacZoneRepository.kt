@@ -1,10 +1,11 @@
 package dev.atick.network.repository
 
-import dev.atick.network.data.EcgRequest
-import dev.atick.network.data.LoginRequest
-import dev.atick.network.data.LoginResponse
+import dev.atick.network.data.*
+import kotlinx.coroutines.flow.StateFlow
 
 interface CardiacZoneRepository {
-    suspend fun login(request: LoginRequest): LoginResponse
-    suspend fun pushEcg(request: EcgRequest)
+    val abnormalEcg: StateFlow<List<Ecg>>
+    suspend fun login(request: LoginRequest): LoginResponse?
+    suspend fun pushEcg(request: EcgRequest): PushEcgResponse?
+    suspend fun connectDoctor(connectDoctorRequest: ConnectDoctorRequest): Boolean
 }

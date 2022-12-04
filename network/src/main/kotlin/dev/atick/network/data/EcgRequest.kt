@@ -1,12 +1,12 @@
 package dev.atick.network.data
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
+
 
 data class EcgRequest(
-    @SerializedName("EcgData")
-    val ecgData: List<Int>,
-    @SerializedName("Time")
-    val time: List<String>,
-    @SerializedName("UserId")
-    val userId: Int
+    @SerializedName("patient_id")
+    val patientId: String,
+    @SerializedName("ecg")
+    val ecg: Ecg
 )

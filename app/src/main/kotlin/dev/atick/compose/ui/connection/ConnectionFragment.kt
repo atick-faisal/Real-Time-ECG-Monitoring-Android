@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.atick.compose.service.CardiacZoneService
 import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.ui.BaseComposeFragment
 import dev.atick.core.utils.extensions.collectWithLifecycle
 import dev.atick.core.utils.extensions.showToast
 import dev.atick.movesense.data.ConnectionState
-import dev.atick.movesense.service.MovesenseService
 
 
 @AndroidEntryPoint
@@ -46,10 +46,10 @@ class ConnectionFragment : BaseComposeFragment() {
     }
 
     private fun startMovesenseService(address: String) {
-        val intent = Intent(requireContext(), MovesenseService::class.java)
+        val intent = Intent(requireContext(), CardiacZoneService::class.java)
             .apply {
                 action = BaseLifecycleService.ACTION_START_SERVICE
-                putExtra(MovesenseService.BT_DEVICE_ADDRESS_KEY, address)
+                putExtra(CardiacZoneService.BT_DEVICE_ADDRESS_KEY, address)
             }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             requireContext().startForegroundService(intent)

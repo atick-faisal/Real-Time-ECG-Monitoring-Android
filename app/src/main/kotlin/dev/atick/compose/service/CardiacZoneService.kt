@@ -1,4 +1,4 @@
-package dev.atick.movesense.service
+package dev.atick.compose.service
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -16,7 +16,7 @@ import dev.atick.movesense.Movesense
 import dev.atick.movesense.R
 import dev.atick.movesense.config.MovesenseConfig.NETWORK_UPDATE_CYCLE
 import dev.atick.movesense.data.ConnectionState
-import dev.atick.movesense.utils.getNotificationTitle
+import dev.atick.compose.utils.getNotificationTitle
 import dev.atick.network.data.Ecg
 import dev.atick.network.data.EcgRequest
 import dev.atick.network.repository.CardiacZoneRepository
@@ -27,14 +27,13 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MovesenseService : BaseLifecycleService() {
+class CardiacZoneService : BaseLifecycleService() {
 
     companion object {
         var STARTED = false
         const val PERSISTENT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.persistent"
         const val ALERT_NOTIFICATION_CHANNEL_ID = "dev.atick.c.zone.alert"
         const val BT_DEVICE_ADDRESS_KEY = "dev.atick.c.zone.device.key"
-        const val USER_ID_KEY = "dev.atick.c.zone.user.id"
         const val NOTIFICATION_INTENT_REQUEST_CODE = 1101
         const val ALERT_NOTIFICATION_ID = 121
         const val HEART_RATE_LOW = 40
@@ -340,7 +339,7 @@ class MovesenseService : BaseLifecycleService() {
         }
 
         return PendingIntent.getActivity(
-            this@MovesenseService,
+            this@CardiacZoneService,
             NOTIFICATION_INTENT_REQUEST_CODE,
             notificationIntent,
             PendingIntent.FLAG_IMMUTABLE

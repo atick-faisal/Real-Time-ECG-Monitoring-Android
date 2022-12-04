@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.R
+import dev.atick.compose.service.CardiacZoneService
 import dev.atick.compose.ui.theme.ComposeTheme
 import dev.atick.core.service.BaseLifecycleService
 import dev.atick.core.ui.BaseComposeFragment
@@ -16,7 +17,6 @@ import dev.atick.core.utils.extensions.showAlertDialog
 import dev.atick.core.utils.extensions.showToast
 import dev.atick.movesense.Movesense
 import dev.atick.movesense.data.ConnectionState
-import dev.atick.movesense.service.MovesenseService
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,7 +65,7 @@ class DashboardFragment : BaseComposeFragment() {
     }
 
     private fun stopMovesenseService() {
-        val intent = Intent(requireContext(), MovesenseService::class.java)
+        val intent = Intent(requireContext(), CardiacZoneService::class.java)
             .apply {
                 action = BaseLifecycleService.ACTION_STOP_SERVICE
             }

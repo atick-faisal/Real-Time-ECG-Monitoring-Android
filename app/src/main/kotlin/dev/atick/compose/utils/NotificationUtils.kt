@@ -1,4 +1,4 @@
-package dev.atick.movesense.utils
+package dev.atick.compose.utils
 
 import dev.atick.movesense.data.ConnectionState
 import dev.atick.network.utils.NetworkState

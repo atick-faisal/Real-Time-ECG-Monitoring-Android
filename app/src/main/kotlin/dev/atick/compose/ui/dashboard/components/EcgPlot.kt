@@ -1,4 +1,4 @@
-package dev.atick.compose.ui.home.components
+package dev.atick.compose.ui.dashboard.components
 
 import android.graphics.Color
 import androidx.compose.foundation.isSystemInDarkTheme

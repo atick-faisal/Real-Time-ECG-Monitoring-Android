@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import dev.atick.compose.R
 import dev.atick.compose.ui.dashboard.data.EcgPlotData
 import dev.atick.compose.ui.dashboard.data.RecordingState
-import dev.atick.compose.ui.home.components.EcgPlot
 
 @Composable
 fun EcgCard(

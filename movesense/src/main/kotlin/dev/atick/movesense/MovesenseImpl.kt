@@ -17,7 +17,9 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -34,8 +36,8 @@ class MovesenseImpl @Inject constructor(
     private var hrSubscription: MdsSubscription? = null
     private var ecgSubscription: MdsSubscription? = null
 
-    private val _connectionState = MutableSharedFlow<ConnectionState>()
-    override val connectionState: SharedFlow<ConnectionState>
+    private val _connectionState = MutableStateFlow(ConnectionState.NOT_CONNECTED)
+    override val connectionState: StateFlow<ConnectionState>
         get() = _connectionState
 
     private val _heartRate = MutableSharedFlow<Float>()

@@ -1,4 +1,4 @@
-package dev.atick.core.di.logger
+package dev.atick.compose.di.logger
 
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.FormatStrategy
@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.atick.core.BuildConfig
+import dev.atick.compose.BuildConfig
 import javax.inject.Singleton
 
 @Module(

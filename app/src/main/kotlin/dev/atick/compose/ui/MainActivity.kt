@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.R
+import dev.atick.core.utils.extensions.setupAppNotification
 import dev.atick.movesense.utils.BleUtils
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_JetpackComposeStarter)
         setContentView(R.layout.activity_main)
 
+        setupAppNotification()
         bleUtils.initialize(this) {
             Logger.i("BLUETOOTH IS READY")
         }

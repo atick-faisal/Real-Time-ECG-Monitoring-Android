@@ -16,6 +16,7 @@ import dev.atick.core.utils.extensions.showAlertDialog
 import dev.atick.core.utils.extensions.showToast
 import dev.atick.movesense.Movesense
 import dev.atick.movesense.data.ConnectionState
+import dev.atick.network.repository.CardiacZoneRepository
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,6 +24,9 @@ class DashboardFragment : BaseComposeFragment() {
 
     @Inject
     lateinit var movesense: Movesense
+
+    @Inject
+    lateinit var cardiacZoneRepository: CardiacZoneRepository
 
     private val viewModel: DashboardViewModel by viewModels()
 
@@ -47,6 +51,12 @@ class DashboardFragment : BaseComposeFragment() {
 
         observeEvent(viewModel.connectDoctorStatus) {
             requireContext().showToast(it)
+        }
+
+        collectWithLifecycle(cardiacZoneRepository.error) { error ->
+            error?.message?.let {
+                requireContext().showToast(it)
+            }
         }
     }
 

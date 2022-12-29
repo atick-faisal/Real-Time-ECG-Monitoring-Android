@@ -50,9 +50,9 @@ class LoginViewModel @Inject constructor(
 
             Logger.w("LOGIN RESPONSE: $response")
 
-            loginState.value = response?.let {
-                _userId.postValue(Event(it.patient.patientId))
-                userPreferences.saveUserId(it.patient.patientId)
+            loginState.value = response?.patient?.patientId?.let { id ->
+                _userId.postValue(Event(id))
+                userPreferences.saveUserId(id)
                 LoginState.LOGIN_SUCCESSFUL
             } ?: LoginState.LOGGED_OUT
         }

@@ -17,8 +17,8 @@ class CardiacZoneRepositoryImpl @Inject constructor(
     override val abnormalEcg: StateFlow<List<Ecg>>
         get() = _abnormalEcg.asStateFlow()
 
-    private val _error = MutableStateFlow<Exception?>(null)
-    override val error: StateFlow<Exception?>
+    private val _error = MutableStateFlow("")
+    override val error: StateFlow<String>
         get() = _error.asStateFlow()
 
     override suspend fun login(request: LoginRequest): LoginResponse? {
@@ -26,7 +26,7 @@ class CardiacZoneRepositoryImpl @Inject constructor(
             cardiacZoneAPi.login(request)
         } catch (e: Exception) {
             Logger.e("LOGIN ATTEMPT UNSUCCESSFUL! ${e.message}")
-            _error.value = e
+            _error.value = "LOGIN UNSUCCESSFUL! " + "${e.message}"
             null
         }
     }
@@ -34,6 +34,7 @@ class CardiacZoneRepositoryImpl @Inject constructor(
     override suspend fun pushEcg(request: EcgRequest): PushEcgResponse? {
         return try {
             val response = cardiacZoneAPi.pushEcg(request)
+            _error.value = response.toString()
             response?.ecg?.let { ecg ->
                 if (ecg.vBeats.isNotEmpty() || ecg.sBeats.isNotEmpty()) {
                     abnormalEcgList.add(0, ecg)
@@ -43,7 +44,7 @@ class CardiacZoneRepositoryImpl @Inject constructor(
             response
         } catch (e: Exception) {
             Logger.e("ECG DATA NOT SENT! ${e.message}")
-            _error.value = e
+            _error.value = "ECG DATA NOT SENT! " + "${e.message}"
             null
         }
     }
@@ -54,7 +55,7 @@ class CardiacZoneRepositoryImpl @Inject constructor(
             return response?.success ?: false
         } catch (e: Exception) {
             Logger.e("ERROR ADDING DOCTOR! ${e.message}")
-            _error.value = e
+            _error.value = "ERROR ADDING DOCTOR! " + "${e.message}"
             false
         }
     }

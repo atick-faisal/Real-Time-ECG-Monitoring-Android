@@ -4,7 +4,7 @@ import dev.atick.network.data.*
 import kotlinx.coroutines.flow.StateFlow
 
 interface CardiacZoneRepository {
-    val error: StateFlow<Exception?>
+    val error: StateFlow<String>
     val abnormalEcg: StateFlow<List<Ecg>>
     suspend fun login(request: LoginRequest): LoginResponse?
     suspend fun pushEcg(request: EcgRequest): PushEcgResponse?

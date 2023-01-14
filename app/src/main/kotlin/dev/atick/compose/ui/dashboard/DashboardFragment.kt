@@ -54,9 +54,7 @@ class DashboardFragment : BaseComposeFragment() {
         }
 
         collectWithLifecycle(cardiacZoneRepository.error) { error ->
-            error?.message?.let {
-                requireContext().showToast(it)
-            }
+            requireContext().showToast(error)
         }
     }
 

@@ -34,7 +34,7 @@ class CardiacZoneRepositoryImpl @Inject constructor(
     override suspend fun pushEcg(request: EcgRequest): PushEcgResponse? {
         return try {
             val response = cardiacZoneAPi.pushEcg(request)
-            _error.value = response.toString()
+            // _error.value = response.toString()
             response?.ecg?.let { ecg ->
                 if (ecg.vBeats.isNotEmpty() || ecg.sBeats.isNotEmpty()) {
                     abnormalEcgList.add(0, ecg)

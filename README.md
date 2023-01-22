@@ -13,6 +13,16 @@
   <img src="diagram.svg"/>
 </p>
 
+<br>
+
+<p align="center">
+  <a href="https://github.com/atick-faisal/Cardiac-Zone-Android/releases/download/v3.1.3/cardiac_zone_release_v3.1.3_29.12.2022.08.33.PM.apk">
+    <img src="download_apk.png" width="300"/>
+  </a>
+</p>
+
+<br>
+
 ## [Web Application](https://czone.netlify.app/)
 
 <p align="center">

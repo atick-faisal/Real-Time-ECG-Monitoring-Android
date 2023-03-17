@@ -1,0 +1,59 @@
+# https://github.com/marketplace/actions/sign-android-release
+# https://proandroiddev.com/how-to-securely-build-and-sign-your-android-app-with-github-actions-ad5323452ce
+
+name: Release APK
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    name: Generate Signed APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Make gradlew Executable
+        run: chmod +x ./gradlew
+
+      - name: Build Release APK
+        run: ./gradlew app:assembleRelease
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "33.0.1"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build Artifacts
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: ${{ github.workspace }}/CHANGELOG.md
+          files: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+# https://github.com/softprops/action-gh-release/issues/236
+permissions:
+  contents: write

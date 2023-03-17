@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "311684855114",
+    "project_id": "cardia-zone-android",
+    "storage_bucket": "cardia-zone-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311684855114:android:e3d6c6ae65cf8f8699fdb3",
+        "android_client_info": {
+          "package_name": "dev.atick.czone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311684855114-frq0s780hf63141qao6oe9koj3rnetg3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1P9-FFKFbAR_hgYvkXHAZaIjilrn7gXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311684855114-frq0s780hf63141qao6oe9koj3rnetg3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

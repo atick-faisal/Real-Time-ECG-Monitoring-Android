@@ -34,7 +34,7 @@ buildscript {
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
         rx_android_ble_version = "1.17.2"
-        gson_version = "2.10"
+        gson_version = "2.10.1"
     }
 
     dependencies {

@@ -8,7 +8,7 @@ buildscript {
 
         agp_version = "7.4.2"
         kotlin_version = "1.8.10"
-        google_services_version = "4.3.14"
+        google_services_version = "4.3.15"
         crashlytics_version = "2.9.4"
 
         core_ktx_version = "1.9.0"

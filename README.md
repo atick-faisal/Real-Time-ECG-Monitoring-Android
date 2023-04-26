@@ -1,12 +1,16 @@
 <h1 align="center">Cardiac Zone</h1>
-<h3 align="center">Real-Time ECG Anomaly Detection</h3>
-
+<p align="center">Real-Time ECG Anomaly Detection</p>
+</p>
 <p align="center">
-  <img src="https://img.shields.io/badge/Android_Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white"/> <img src="https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white"/>
+<img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/palette/macchiato.png" width="400" />
 </p>
 
-<br>
-<br>
+<p align="center">
+    <a href="https://github.com/atick-faisal/Cardiac-Zone-Android/releases"><img src="https://img.shields.io/github/release/atick-faisal/Cardiac-Zone-Android?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
+    <a href="https://github.com/atick-faisal/Cardiac-Zone-Android/issues"><img src="https://img.shields.io/github/issues/atick-faisal/Cardiac-Zone-Android?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
+    <a href="https://github.com/atick-faisal/Cardiac-Zone-Android/contributors"><img src="https://img.shields.io/github/contributors/atick-faisal/Cardiac-Zone-Android?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
+</p>
+
 <br>
 
 <p align="center">

@@ -22,9 +22,11 @@
 ![CardiacZoneAndroidDemo (3)](https://user-images.githubusercontent.com/38709932/234545664-e39d7db1-4773-4c79-aee2-88819e54cd14.svg)
 ![CardiacZoneAndroidDemo](https://user-images.githubusercontent.com/38709932/234545697-23c06af4-cc4d-45ea-bccb-a3f53e4ba556.svg)
 
+<br>
+
 <p align="center">
   <a href="https://github.com/atick-faisal/Cardiac-Zone-Android/releases">
-    <img src="download_apk.png" width="300"/>
+    <img src="https://user-images.githubusercontent.com/38709932/234548794-b2e74550-af8f-4593-affb-5a00679e90f2.png" width="400"/>
   </a>
 </p>
 

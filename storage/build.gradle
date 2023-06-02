@@ -29,6 +29,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    namespace = "dev.atick.storage"
 }
 
 dependencies {

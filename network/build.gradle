@@ -36,6 +36,7 @@ android {
                 "-opt-in=kotlin.Experimental",
         ]
     }
+    namespace = "dev.atick.network"
 }
 
 dependencies {

@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
@@ -131,7 +132,7 @@ class CardiacZoneService : BaseLifecycleService() {
                     ecg = Ecg(id = ecgSignal.timestamp, ecgData = ecgBuffer)
                 )
                 Logger.i("SENDING ECG ... ")
-                lifecycleScope.launchWhenStarted {
+                lifecycleScope.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     val response = cardiacZoneRepository.pushEcg(requestBody)
                     Logger.i("PUSH ECG RESPONSE $response")
                 }

@@ -58,12 +58,12 @@ dependencies {
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    // kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
     // ... Logger
     api("com.orhanobut:logger:$logger_version")
 }
 
-kapt {
-    correctErrorTypes = true
-}
+// kapt {
+//     correctErrorTypes = true
+// }

@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import dev.atick.compose.base.BaseLifecycleService
@@ -24,6 +25,7 @@ import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.network.utils.NetworkState
 import dev.atick.network.utils.NetworkUtils
 import dev.atick.storage.preferences.UserPreferences
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 

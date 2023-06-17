@@ -135,7 +135,7 @@ class CardiacZoneService : BaseLifecycleService() {
                 )
                 Logger.i("SENDING ECG ... ")
                 lifecycleScope.launch {
-                    lifecycleScope.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         val response = cardiacZoneRepository.pushEcg(requestBody)
                         Logger.i("PUSH ECG RESPONSE $response")
                     }

@@ -1,5 +1,7 @@
 package dev.atick.core.utils.extensions
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Context
 import android.content.pm.PackageManager
@@ -48,11 +50,14 @@ fun Context.showAlertDialog(
     builder.show()
 }
 
+@SuppressLint("MissingPermission")
 fun Context.showNotification(
     notificationId: Int,
     notification: Notification
 ) {
-    with(NotificationManagerCompat.from(this)) {
-        notify(notificationId, notification)
+    if (hasPermission(Manifest.permission.POST_NOTIFICATIONS)) {
+        with(NotificationManagerCompat.from(this)) {
+            notify(notificationId, notification)
+        }
     }
 }

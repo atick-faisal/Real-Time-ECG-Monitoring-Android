@@ -132,9 +132,11 @@ class CardiacZoneService : BaseLifecycleService() {
                     ecg = Ecg(id = ecgSignal.timestamp, ecgData = ecgBuffer)
                 )
                 Logger.i("SENDING ECG ... ")
-                lifecycleScope.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    val response = cardiacZoneRepository.pushEcg(requestBody)
-                    Logger.i("PUSH ECG RESPONSE $response")
+                lifecycleScope.launch {
+                    lifecycleScope.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        val response = cardiacZoneRepository.pushEcg(requestBody)
+                        Logger.i("PUSH ECG RESPONSE $response")
+                    }
                 }
                 ecgUpdateCount = 0
             }

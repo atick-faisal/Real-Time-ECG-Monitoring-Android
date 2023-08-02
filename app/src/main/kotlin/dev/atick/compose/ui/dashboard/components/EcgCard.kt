@@ -30,7 +30,8 @@ fun EcgCard(
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = if (ecgPlotData.af == 1) MaterialTheme.colors.error
+        else MaterialTheme.colors.surface,
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

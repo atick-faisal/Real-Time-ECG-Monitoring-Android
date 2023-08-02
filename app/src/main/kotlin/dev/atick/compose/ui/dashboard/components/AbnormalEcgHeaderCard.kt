@@ -8,6 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Rectangle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ fun AbnormalEcgHeaderCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Abnormal Beats",
+                text = "Anomalies",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colors.onBackground
@@ -54,6 +55,18 @@ fun AbnormalEcgHeaderCard(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "S-BEAT")
                 Spacer(modifier = Modifier.width(16.dp))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row {
+                Icon(
+                    imageVector = Icons.Default.Rectangle,
+                    contentDescription = "AF",
+                    tint = Color(0xFF_FFEBEE)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "ATRIAL FIBRILLATION")
             }
         }
     }

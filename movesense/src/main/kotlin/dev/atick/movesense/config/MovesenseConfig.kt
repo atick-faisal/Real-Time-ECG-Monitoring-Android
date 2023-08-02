@@ -8,7 +8,9 @@ object MovesenseConfig {
     const val URI_MEAS_HR = "/Meas/HR"
 
     private const val DEFAULT_ECG_BUFFER_LEN = 16
+    private const val NETWORK_UPDATE_PERIOD = 19.5
     const val DEFAULT_ECG_SAMPLE_RATE = 128
     const val NETWORK_UPDATE_CYCLE =
-        (DEFAULT_ECG_SAMPLE_RATE / DEFAULT_ECG_BUFFER_LEN) * 5
+        ((DEFAULT_ECG_SAMPLE_RATE / DEFAULT_ECG_BUFFER_LEN) * NETWORK_UPDATE_PERIOD).toInt()
+    const val NETWORK_BUFFER_LEN = (DEFAULT_ECG_SAMPLE_RATE * NETWORK_UPDATE_PERIOD).toInt()
 }

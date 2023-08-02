@@ -35,7 +35,7 @@ class CardiacZoneRepositoryImpl @Inject constructor(
         return try {
             val response = cardiacZoneAPi.pushEcg(request)
             response?.ecg?.let { ecg ->
-                if (ecg.vBeats.isNotEmpty() || ecg.sBeats.isNotEmpty()) {
+                if (ecg.vBeats.isNotEmpty() || ecg.sBeats.isNotEmpty() || ecg.af == 1) {
                     abnormalEcgList.add(0, ecg)
                     _abnormalEcg.value = abnormalEcgList.toList()
                 }

@@ -19,6 +19,7 @@ import dev.atick.movesense.R
 import dev.atick.movesense.config.MovesenseConfig.NETWORK_UPDATE_CYCLE
 import dev.atick.movesense.data.ConnectionState
 import dev.atick.compose.utils.getNotificationTitle
+import dev.atick.movesense.config.MovesenseConfig.NETWORK_BUFFER_LEN
 import dev.atick.network.data.Ecg
 import dev.atick.network.data.EcgRequest
 import dev.atick.network.repository.CardiacZoneRepository
@@ -41,7 +42,7 @@ class CardiacZoneService : BaseLifecycleService() {
         const val ALERT_NOTIFICATION_ID = 121
         const val HEART_RATE_LOW = 40
         const val HEART_RATE_HIGH = 120
-        const val HR_UPDATE_PATIENCE = 30_000L
+        // const val HR_UPDATE_PATIENCE = 30_000L
     }
 
     @Inject
@@ -67,11 +68,13 @@ class CardiacZoneService : BaseLifecycleService() {
     private var connectionStatus = ConnectionState.NOT_CONNECTED
     private var networkState = NetworkState.UNAVAILABLE
 
-    private val ecgBuffer = MutableList(640) { 0 }
+    private val ecgBuffer = MutableList(NETWORK_BUFFER_LEN) { 0 }
     private var ecgUpdateCount = 0
     private var userId = "-1"
 
     private var lastHrUpdateTime = 0L
+
+    private var heartRate: Float = 80.0F
 
     @DrawableRes
     private var smallIcon = R.drawable.ic_alert
@@ -82,6 +85,7 @@ class CardiacZoneService : BaseLifecycleService() {
     override fun onCreateService() {
         super.onCreateService()
         collectWithLifecycle(movesense.heartRate) {
+            heartRate = it
             persistentNotificationBuilder.apply {
                 setContentTitle(
                     getNotificationTitle(
@@ -129,9 +133,10 @@ class CardiacZoneService : BaseLifecycleService() {
 
             if (ecgUpdateCount == NETWORK_UPDATE_CYCLE) {
                 Logger.w("USER ID: $userId")
+                Logger.i("NETWORK: $NETWORK_UPDATE_CYCLE BUFFER LENGTH: ${ecgBuffer.size}")
                 val requestBody = EcgRequest(
                     patientId = userId,
-                    ecg = Ecg(id = ecgSignal.timestamp, ecgData = ecgBuffer)
+                    ecg = Ecg(id = ecgSignal.timestamp, ecgData = ecgBuffer, heartRate = heartRate)
                 )
                 Logger.i("SENDING ECG ... ")
                 lifecycleScope.launch {
@@ -144,13 +149,13 @@ class CardiacZoneService : BaseLifecycleService() {
             }
 
             // ... Auto-Kill Service
-            if (
-                lastHrUpdateTime != 0L &&
-                System.currentTimeMillis() > lastHrUpdateTime + HR_UPDATE_PATIENCE
-            ) {
-                Logger.w("STOPPING MOVESENSE SERVICE ... ")
-                stopService()
-            }
+//            if (
+//                lastHrUpdateTime != 0L &&
+//                System.currentTimeMillis() > lastHrUpdateTime + HR_UPDATE_PATIENCE
+//            ) {
+//                Logger.w("STOPPING MOVESENSE SERVICE ... ")
+//                stopService()
+//            }
         }
 
         collectWithLifecycle(movesense.connectionState) { status ->

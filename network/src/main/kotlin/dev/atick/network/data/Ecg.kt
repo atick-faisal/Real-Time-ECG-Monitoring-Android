@@ -20,5 +20,11 @@ data class Ecg(
     @SerializedName("v_beats")
     val vBeats: List<RPeak> = listOf(),
     @SerializedName("s_beats")
-    val sBeats: List<RPeak> = listOf()
+    val sBeats: List<RPeak> = listOf(),
+    @SerializedName("af")
+    val af: Int = 1,
+    @SerializedName("heart_rate")
+    val heartRate: Float = 80.0F,
+    @SerializedName("rr_intervals")
+    val rrIntervals: List<Int> = listOf()
 )

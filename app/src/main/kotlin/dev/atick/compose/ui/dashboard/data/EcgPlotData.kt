@@ -12,11 +12,12 @@ data class EcgPlotData(
     val ecg: LineDataSet = LineDataSet(listOf(), "ECG"),
     val rPeaks: ScatterDataSet = ScatterDataSet(listOf(), "R-PEAK"),
     val vBeats: ScatterDataSet = ScatterDataSet(listOf(), "V-BEAT"),
-    val sBeats: ScatterDataSet = ScatterDataSet(listOf(), "S-BEAT")
+    val sBeats: ScatterDataSet = ScatterDataSet(listOf(), "S-BEAT"),
+    val af: Int = 0
 ) {
     fun getTimestamp(): String {
         return try {
-            val sdf = SimpleDateFormat("MM/dd/yyyy hh:mm:ss a")
+            val sdf = SimpleDateFormat("MM/dd/yyyy hh:mm:ss a", Locale.US)
             val netDate = Date(id)
             sdf.format(netDate)
         } catch (e: Exception) {
@@ -61,7 +62,8 @@ fun List<Ecg>.toEcgPlotData(): List<EcgPlotData> {
                     )
                 },
                 "S-BEAT"
-            )
+            ),
+            af = ecg.af
         )
     }
 }

@@ -26,6 +26,10 @@ fun Context.hasPermission(permissionType: String): Boolean {
         PackageManager.PERMISSION_GRANTED
 }
 
+fun Context.isAllPermissionsGranted(permissions: List<String>): Boolean {
+    return permissions.all { hasPermission(it) }
+}
+
 fun Context.showAlertDialog(
     title: String,
     message: String,

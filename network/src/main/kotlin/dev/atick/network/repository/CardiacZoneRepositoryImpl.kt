@@ -6,6 +6,10 @@ import dev.atick.network.data.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import javax.inject.Inject
 
 class CardiacZoneRepositoryImpl @Inject constructor(
@@ -45,6 +49,22 @@ class CardiacZoneRepositoryImpl @Inject constructor(
             Logger.e("ECG DATA NOT SENT! ${e.message}")
             _error.value = e
             null
+        }
+    }
+
+    override suspend fun pushAudio(patientId: String, file: File): Boolean {
+        return try {
+            val audio = MultipartBody.Part.createFormData(
+                name = "file",
+                filename = file.name,
+                body = file.asRequestBody("audio/*".toMediaTypeOrNull()),
+            )
+            val response = cardiacZoneAPi.pushAudio(patientId, audio)
+            response.success
+        } catch (e: Exception) {
+            Logger.e("AUDIO NOT SENT! ${e.message}")
+            _error.value = e
+            false
         }
     }
 

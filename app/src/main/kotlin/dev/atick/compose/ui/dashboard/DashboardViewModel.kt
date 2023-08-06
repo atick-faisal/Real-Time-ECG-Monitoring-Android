@@ -20,10 +20,12 @@ import dev.atick.movesense.data.toCsv
 import dev.atick.network.data.ConnectDoctorRequest
 import dev.atick.network.repository.CardiacZoneRepository
 import dev.atick.storage.preferences.UserPreferences
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -138,6 +140,22 @@ class DashboardViewModel @Inject constructor(
             fos.close()
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    fun pushAudio(audio: File) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val success = cardiacZoneRepository.pushAudio(
+                    patientId = patientId,
+                    file = audio
+                )
+                if (success) {
+                    _connectDoctorStatus.postValue(Event("Audio Sent Successfully"))
+                } else {
+                    _connectDoctorStatus.postValue(Event("Error Sending Audio"))
+                }
+            }
         }
     }
 

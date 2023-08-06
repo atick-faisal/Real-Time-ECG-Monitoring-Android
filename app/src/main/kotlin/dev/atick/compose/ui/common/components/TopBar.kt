@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 fun TopBar(
     modifier: Modifier = Modifier,
     title: String,
+    onScanClick: (() -> Unit)? = null,
     onSearchClick: (() -> Unit)? = null,
     onRefreshClick: (() -> Unit)? = null,
     onMenuClick: (() -> Unit)? = null,
@@ -72,6 +73,15 @@ fun TopBar(
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = "Menu"
+                        )
+                    }
+                }
+
+                onScanClick?.let {
+                    IconButton(onClick = onScanClick) {
+                        Icon(
+                            imageVector = Icons.Default.QrCode,
+                            contentDescription = "Scan"
                         )
                     }
                 }

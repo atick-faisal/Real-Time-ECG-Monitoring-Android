@@ -22,7 +22,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.airbnb.lottie.LottieAnimationView
 import dev.atick.compose.R
 import java.io.File
-import java.nio.file.Files
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,9 +42,7 @@ fun AudioRecordDialog(
         }
 
         val timestamp = SimpleDateFormat("dd_M_yyyy_hh_mm_ss", Locale.US).format(Date())
-        val savePath =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        Files.createDirectories(savePath.toPath())
+        val savePath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
         val myExternalFile = File(savePath, "cardiac_zone_${timestamp}.mp3")
 
         recorder.apply {

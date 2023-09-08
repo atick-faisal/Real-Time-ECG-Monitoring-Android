@@ -1,0 +1,65 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    name: Generate Signed APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Google Services
+        run: |
+          touch app/google-services.json
+          echo "${CONTENT// /}" | base64 --decode > app/google-services.json
+        env:
+          CONTENT: ${{ secrets.GOOGLE_SERVICES }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Set up Signing Key
+        run: |
+          touch app/key.jks
+          echo "${KEYSTORE// /}" | base64 --decode > app/key.jks
+          touch keystore.properties
+          echo "${KEYSTORE_PROPERTIES// /}" | base64 --decode > keystore.properties
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+
+      - name: Clean
+        run: ./gradlew clean
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ github.workspace }}/app/build/outputs/apk/release/*.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: CHANGELOG.md
+          files: app/build/outputs/apk/release/*.apk
+
+# https://github.com/softprops/action-gh-release/issues/236
+permissions:
+  contents: write

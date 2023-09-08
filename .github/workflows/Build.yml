@@ -1,19 +1,23 @@
-name: Release APK
+name: Build
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+  pull_request:
 
 jobs:
   build:
-    name: Generate Signed APK
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set up Google Services
         run: |
@@ -45,21 +49,5 @@ jobs:
       - name: Clean
         run: ./gradlew clean
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          path: ${{ github.workspace }}/app/build/outputs/apk/release/*.apk
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          body_path: CHANGELOG.md
-          files: app/build/outputs/apk/release/*.apk
-
-# https://github.com/softprops/action-gh-release/issues/236
-permissions:
-  contents: write
+      - name: Build
+        run: ./gradlew build

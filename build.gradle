@@ -21,7 +21,7 @@ buildscript {
         lifecycle_version = "2.6.2"
         nav_version = "2.7.3"
         preferences_version = "1.0.0"
-        hilt_version = "2.48"
+        hilt_version = "2.48.1"
         analytics_version = "32.3.1"
         mlkit_version = "18.3.0"
 

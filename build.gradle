@@ -30,7 +30,7 @@ buildscript {
         okhttp_version = "5.0.0-alpha.11"
         lottie_version = "6.1.0"
         mp_android_chart_version = "3.1.0"
-        material_color_version = "4.1.1"
+        material_color_version = "5.0.0"
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
         rx_android_ble_version = "1.17.2"

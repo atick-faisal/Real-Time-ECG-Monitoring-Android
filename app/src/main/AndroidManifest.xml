@@ -3,6 +3,11 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
         android:name=".App"
@@ -32,6 +37,7 @@
             android:name=".service.CardiacZoneService"
             android:enabled="true"
             android:exported="false"
+            android:foregroundServiceType="connectedDevice"
             android:isolatedProcess="false"
             android:label="MQTT Connection Service"
             android:permission="android.permission.INTERNET" />

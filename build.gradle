@@ -6,8 +6,8 @@ buildscript {
         version_code = 41
         version_name = "3.3.1"
 
-        agp_version = "8.2.0"
-        kotlin_version = "1.9.21"
+        agp_version = "8.2.1"
+        kotlin_version = "1.9.22"
         google_services_version = "4.4.0"
         crashlytics_version = "2.9.9"
 
@@ -15,10 +15,10 @@ buildscript {
         app_compat_version = "1.6.1"
         coroutines_version = "1.7.3"
         compose_version = "1.5.4"
-        compose_compiler_version = "1.5.7"
+        compose_compiler_version = "1.5.8"
         activity_compose_version = "1.8.2"
         material_version = "1.11.0"
-        lifecycle_version = "2.6.2"
+        lifecycle_version = "2.7.0"
         nav_version = "2.7.6"
         preferences_version = "1.0.0"
         hilt_version = "2.50"
@@ -28,12 +28,12 @@ buildscript {
         logger_version = "2.2.0"
         retrofit_version = "2.9.0"
         okhttp_version = "5.0.0-alpha.12"
-        lottie_version = "6.2.0"
+        lottie_version = "6.3.0"
         mp_android_chart_version = "3.1.0"
         material_color_version = "5.0.0"
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
-        rx_android_ble_version = "1.17.2"
+        rx_android_ble_version = "1.18.0"
         gson_version = "2.10.1"
     }
 

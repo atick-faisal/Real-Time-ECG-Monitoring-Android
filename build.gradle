@@ -6,7 +6,7 @@ buildscript {
         version_code = 41
         version_name = "3.3.1"
 
-        agp_version = "8.2.1"
+        agp_version = "8.2.2"
         kotlin_version = "1.9.22"
         google_services_version = "4.4.0"
         crashlytics_version = "2.9.9"

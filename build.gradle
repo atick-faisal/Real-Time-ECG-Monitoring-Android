@@ -33,7 +33,7 @@ buildscript {
         material_color_version = "5.0.0"
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
-        rx_android_ble_version = "1.18.0"
+        rx_android_ble_version = "1.18.1"
         gson_version = "2.10.1"
     }
 

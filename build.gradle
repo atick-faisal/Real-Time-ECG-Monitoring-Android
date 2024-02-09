@@ -8,7 +8,7 @@ buildscript {
 
         agp_version = "8.2.2"
         kotlin_version = "1.9.22"
-        google_services_version = "4.4.0"
+        google_services_version = "4.4.1"
         crashlytics_version = "2.9.9"
 
         core_ktx_version = "1.12.0"
@@ -22,7 +22,7 @@ buildscript {
         nav_version = "2.7.7"
         preferences_version = "1.0.0"
         hilt_version = "2.50"
-        analytics_version = "32.7.1"
+        analytics_version = "32.7.2"
         mlkit_version = "18.3.0"
 
         logger_version = "2.2.0"

@@ -6,7 +6,7 @@ buildscript {
         version_code = 41
         version_name = "3.3.1"
 
-        agp_version = "8.2.2"
+        agp_version = "8.3.0"
         kotlin_version = "1.9.22"
         google_services_version = "4.4.1"
         crashlytics_version = "2.9.9"
@@ -22,7 +22,7 @@ buildscript {
         nav_version = "2.7.7"
         preferences_version = "1.0.0"
         hilt_version = "2.51"
-        analytics_version = "32.7.2"
+        analytics_version = "32.7.3"
         mlkit_version = "18.3.0"
 
         logger_version = "2.2.0"

@@ -28,7 +28,7 @@ buildscript {
         logger_version = "2.2.0"
         retrofit_version = "2.9.0"
         okhttp_version = "5.0.0-alpha.12"
-        lottie_version = "6.3.0"
+        lottie_version = "6.4.0"
         mp_android_chart_version = "3.1.0"
         material_color_version = "5.0.0"
         rx_java_version = "2.2.21"

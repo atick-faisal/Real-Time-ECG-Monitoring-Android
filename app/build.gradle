@@ -2,11 +2,11 @@ plugins {
     id("kotlin-android")
     id("com.android.application")
     id("dagger.hilt.android.plugin")
-    id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("kotlin-kapt")
 }
 
 android {

@@ -6,47 +6,44 @@ buildscript {
         version_code = 41
         version_name = "3.3.1"
 
-        agp_version = "8.4.0"
-        kotlin_version = "1.9.24"
-        google_services_version = "4.4.1"
-        crashlytics_version = "3.0.1"
+        agp_version = "8.5.1"
+        kotlin_version = "2.0.0"
+        google_services_version = "4.4.2"
+        crashlytics_version = "3.0.2"
 
         core_ktx_version = "1.13.1"
-        app_compat_version = "1.6.1"
+        app_compat_version = "1.7.0"
         coroutines_version = "1.8.1"
-        compose_version = "1.6.7"
-        compose_compiler_version = "1.5.14"
+        compose_version = "1.6.8"
         activity_compose_version = "1.9.0"
         material_version = "1.12.0"
-        lifecycle_version = "2.8.0"
+        lifecycle_version = "2.8.3"
         nav_version = "2.7.7"
         preferences_version = "1.1.1"
         hilt_version = "2.51.1"
-        analytics_version = "33.0.0"
+        analytics_version = "33.1.2"
         mlkit_version = "18.3.0"
 
         logger_version = "2.2.0"
         retrofit_version = "2.11.0"
         okhttp_version = "5.0.0-alpha.14"
-        lottie_version = "6.4.0"
+        lottie_version = "6.4.1"
         mp_android_chart_version = "3.1.0"
-        material_color_version = "5.0.0"
+        material_color_version = "5.1.1"
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
         rx_android_ble_version = "1.18.1"
         gson_version = "2.11.0"
     }
-
-    dependencies {
-        classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
-        classpath("com.google.gms:google-services:$google_services_version")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:$crashlytics_version")
-    }
 }
 
 plugins {
-    id("com.android.application") version "$agp_version" apply false
     id("com.android.library") version "$agp_version" apply false
+    id("com.android.application") version "$agp_version" apply false
     id("org.jetbrains.kotlin.android") version "$kotlin_version" apply false
+    id("com.google.dagger.hilt.android") version "$hilt_version" apply false
+    id("androidx.navigation.safeargs") version "$nav_version" apply false
+    id("com.google.gms.google-services") version "$google_services_version" apply false
+    id("com.google.firebase.crashlytics") version "$crashlytics_version" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "$kotlin_version" apply false
 }

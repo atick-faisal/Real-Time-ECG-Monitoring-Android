@@ -6,7 +6,7 @@ buildscript {
         version_code = 41
         version_name = "3.3.1"
 
-        agp_version = "8.5.2"
+        agp_version = "8.6.0"
         kotlin_version = "2.0.20"
         google_services_version = "4.4.2"
         crashlytics_version = "3.0.2"
@@ -27,7 +27,7 @@ buildscript {
         logger_version = "2.2.0"
         retrofit_version = "2.11.0"
         okhttp_version = "5.0.0-alpha.14"
-        lottie_version = "6.5.0"
+        lottie_version = "6.5.1"
         mp_android_chart_version = "3.1.0"
         material_color_version = "5.1.1"
         rx_java_version = "2.2.21"

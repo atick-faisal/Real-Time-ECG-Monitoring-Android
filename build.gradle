@@ -14,7 +14,7 @@ buildscript {
         core_ktx_version = "1.13.1"
         app_compat_version = "1.7.0"
         coroutines_version = "1.8.1"
-        compose_version = "1.7.0"
+        compose_version = "1.7.1"
         activity_compose_version = "1.9.2"
         material_version = "1.12.0"
         lifecycle_version = "2.8.5"

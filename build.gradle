@@ -6,7 +6,7 @@ buildscript {
         version_code = 41
         version_name = "3.3.1"
 
-        agp_version = "8.6.0"
+        agp_version = "8.6.1"
         kotlin_version = "2.0.20"
         google_services_version = "4.4.2"
         crashlytics_version = "3.0.2"
@@ -14,11 +14,11 @@ buildscript {
         core_ktx_version = "1.13.1"
         app_compat_version = "1.7.0"
         coroutines_version = "1.9.0"
-        compose_version = "1.7.1"
+        compose_version = "1.7.2"
         activity_compose_version = "1.9.2"
         material_version = "1.12.0"
-        lifecycle_version = "2.8.5"
-        nav_version = "2.8.0"
+        lifecycle_version = "2.8.6"
+        nav_version = "2.8.1"
         preferences_version = "1.1.1"
         hilt_version = "2.52"
         analytics_version = "33.3.0"

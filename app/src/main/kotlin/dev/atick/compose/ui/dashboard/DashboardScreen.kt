@@ -138,9 +138,7 @@ fun DashboardScreen(
                         title = "Live ECG Signal",
                         ecgPlotData = uiState.ecgPlotData,
                         recordingState = uiState.recordingState
-                    ) {
-                        viewModel.record()
-                    }
+                    )
 
                     AbnormalEcgHeaderCard(Modifier.fillMaxWidth())
                 }

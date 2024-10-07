@@ -269,7 +269,10 @@ class CardiacZoneService : BaseLifecycleService() {
             }
         }
 
-        collectWithLifecycle(userPreferences.getUserId()) { userId = it }
+        collectWithLifecycle(userPreferences.getUserId()) {
+            Logger.w("USER ID SERVICE: $it")
+            userId = it
+        }
     }
 
 

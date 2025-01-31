@@ -33,7 +33,7 @@ buildscript {
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
         rx_android_ble_version = "1.19.0"
-        gson_version = "2.12.0"
+        gson_version = "2.12.1"
     }
 }
 

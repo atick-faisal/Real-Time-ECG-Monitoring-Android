@@ -11,7 +11,7 @@ buildscript {
         google_services_version = "4.4.2"
         crashlytics_version = "3.0.3"
 
-        core_ktx_version = "1.15.0"
+        core_ktx_version = "1.16.0"
         app_compat_version = "1.7.0"
         coroutines_version = "1.10.2"
         compose_version = "1.7.8"
@@ -27,13 +27,13 @@ buildscript {
         logger_version = "2.2.0"
         retrofit_version = "2.11.0"
         okhttp_version = "5.0.0-alpha.14"
-        lottie_version = "6.6.4"
+        lottie_version = "6.6.6"
         mp_android_chart_version = "3.1.0"
         material_color_version = "5.1.1"
         rx_java_version = "2.2.21"
         rx_android_version = "2.1.1"
         rx_android_ble_version = "1.19.0"
-        gson_version = "2.12.1"
+        gson_version = "2.13.0"
     }
 }
 

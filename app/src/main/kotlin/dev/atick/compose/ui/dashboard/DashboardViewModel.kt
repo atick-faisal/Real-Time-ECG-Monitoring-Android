@@ -83,7 +83,7 @@ class DashboardViewModel @Inject constructor(
 
         viewModelScope.launch {
             userPreferences.getUserId().collect { id ->
-                Logger.w("USER ID: $id")
+                Logger.w("USER ID DASHBOARD: $id")
                 patientId = id
             }
         }

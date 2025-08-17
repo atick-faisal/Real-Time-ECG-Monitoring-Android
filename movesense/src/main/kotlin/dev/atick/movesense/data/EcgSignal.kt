@@ -4,7 +4,7 @@ import java.util.*
 
 data class EcgSignal(
     val values: List<Int>,
-    val timestamp: Long = Date().time
+    val timestamp: Long = System.currentTimeMillis()
 ) {
     override fun toString(): String {
         return "$timestamp,${values.joinToString(separator = ",")}"

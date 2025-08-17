@@ -32,7 +32,7 @@ class LoginViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             userPreferences.getUserId().collect { id ->
-                Logger.w("USER ID: $id")
+                Logger.w("USER ID LOGIN: $id")
                 _userId.postValue(Event(id))
             }
         }
@@ -51,9 +51,10 @@ class LoginViewModel @Inject constructor(
             Logger.w("LOGIN RESPONSE: $response")
 
             loginState.value = response?.patient?.patientId?.let { id ->
-                _userId.postValue(Event(id))
                 userPreferences.saveUserId(id)
+                _userId.postValue(Event(id))
                 LoginState.LOGIN_SUCCESSFUL
+
             } ?: LoginState.LOGGED_OUT
         }
     }

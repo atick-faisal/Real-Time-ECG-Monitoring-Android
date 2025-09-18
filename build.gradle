@@ -17,11 +17,11 @@ buildscript {
         compose_bom_version = "2025.09.00"
         activity_compose_version = "1.11.0"
         material_version = "1.13.0"
-        lifecycle_version = "2.9.3"
+        lifecycle_version = "2.9.4"
         nav_version = "2.9.4"
         preferences_version = "1.1.7"
         hilt_version = "2.57.1"
-        analytics_version = "34.2.0"
+        analytics_version = "34.3.0"
         mlkit_version = "18.3.1"
 
         logger_version = "2.2.0"

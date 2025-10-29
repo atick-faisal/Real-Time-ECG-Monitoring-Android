@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
 }
 
@@ -32,17 +32,17 @@ android {
     namespace = "dev.atick.storage"
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     implementation(project(":core"))
 
     // ... Preferences Datastore
-    implementation("androidx.datastore:datastore-preferences:$preferences_version")
+    api("androidx.datastore:datastore-preferences:$preferences_version")
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-}
-
-kapt {
-    correctErrorTypes = true
+    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
 }

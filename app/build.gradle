@@ -10,67 +10,69 @@ plugins {
 }
 
 android {
-    def date = new Date()
-    def formattedDate = date.format('dd.MM.yyyy hh.mm a')
-
-    compileSdk rootProject.ext.compile_sdk_version
+    compileSdk = rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "dev.atick.czone"
-        minSdk rootProject.ext.min_sdk_version
-        targetSdk rootProject.ext.target_sdk_version
-        versionCode rootProject.ext.version_code
-        versionName rootProject.ext.version_name
+        applicationId = "dev.atick.czone"
+        minSdk = rootProject.ext.minSdkVersion
+        targetSdk = rootProject.ext.targetSdkVersion
+        versionCode = rootProject.ext.versionCode
+        versionName = rootProject.ext.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
         }
     }
 
     buildTypes {
         debug {
-            applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "${"app_" + variant.buildType.name + "_v" + variant.versionName + "_" + formattedDate}.apk"
-                }
-            }
+            minifyEnabled = false
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "${"app_" + variant.buildType.name + "_v" + variant.versionName + "_" + formattedDate}.apk"
-                }
-            }
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = '17'
-        freeCompilerArgs = freeCompilerArgs + [
+        jvmTarget = "17"
+        freeCompilerArgs += [
                 "-opt-in=kotlin.RequiresOptIn",
-                // Enable experimental coroutines APIs, including Flow
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-opt-in=kotlinx.coroutines.FlowPreview"
         ]
     }
     buildFeatures {
-        compose true
-        buildConfig true
+        compose = true
+        buildConfig = true
     }
-    packagingOptions {
+
+    packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     namespace = "dev.atick.compose"
+}
+
+androidComponents {
+    def date = new Date()
+    def formattedDate = date.format('dd.MM.yyyy hh.mm a')
+
+    onVariants(selector().all()) { variant ->
+        variant.outputs.forEach { output ->
+            def variantName = variant.buildType
+            def versionName = variant.outputs.first().versionName.get()
+            output.outputFileName.set("app_${variantName}_v${versionName}_${formattedDate}.apk")
+        }
+    }
 }
 
 hilt {
@@ -78,13 +80,13 @@ hilt {
 }
 
 dependencies {
-    implementation(project(path: ":core"))
-    implementation(project(path: ":network"))
-    implementation(project(path: ":movesense"))
-    implementation(project(path: ":storage"))
+    implementation(project(":core"))
+    implementation(project(":network"))
+    implementation(project(":movesense"))
+    implementation(project(":storage"))
 
-    // ... Jetpack Compose
-    implementation(platform("androidx.compose:compose-bom:$compose_bom_version"))
+    // Jetpack Compose
+    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.foundation:foundation")
@@ -92,35 +94,35 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata")
-    implementation("androidx.activity:activity-compose:$activity_compose_version")
+    implementation("androidx.activity:activity-compose:$activityComposeVersion")
 
-    // ... Lifecycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-service:$lifecycle_version")
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
 
-    // ... Material Color
-    implementation("com.github.atick-faisal:compose-material-color:$material_color_version")
+    // Material Color
+    implementation("com.github.atick-faisal:compose-material-color:$materialColorVersion")
 
-    // ... Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
-    // ... Chart
-    implementation("com.github.PhilJay:MPAndroidChart:$mp_android_chart_version")
+    // Chart
+    implementation("com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion")
 
-    // ... Google Analytics
-    implementation platform("com.google.firebase:firebase-bom:$analytics_version")
+    // Google Analytics
+    implementation(platform("com.google.firebase:firebase-bom:$analyticsVersion"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
-    // ... QR Scanner
-    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:$mlkit_version")
+    // QR Scanner
+    implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:$mlkitVersion")
 
-    // ... Lottie Animation
-    implementation("com.airbnb.android:lottie:$lottie_version")
+    // Lottie Animation
+    implementation("com.airbnb.android:lottie:$lottieVersion")
 
-    // ... Dagger Hilt
-    implementation("com.google.dagger:hilt-android:$hilt_version")
-    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
+    // Dagger Hilt
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
 }

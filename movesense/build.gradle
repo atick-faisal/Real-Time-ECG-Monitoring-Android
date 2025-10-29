@@ -6,42 +6,44 @@ plugins {
 }
 
 android {
-    compileSdk rootProject.ext.compile_sdk_version
+    compileSdk = rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdk rootProject.ext.min_sdk_version
-        targetSdk rootProject.ext.target_sdk_version
+        minSdk = rootProject.ext.minSdkVersion
+        targetSdk = rootProject.ext.targetSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
-        freeCompilerArgs = freeCompilerArgs + [
+        freeCompilerArgs += [
                 "-opt-in=kotlin.RequiresOptIn",
-                // Enable experimental coroutines APIs, including Flow
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-opt-in=kotlinx.coroutines.FlowPreview",
                 "-Xannotation-default-target=param-property"
         ]
     }
-    packagingOptions {
+
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     namespace = "dev.atick.movesense"
 }
 
@@ -50,20 +52,20 @@ hilt {
 }
 
 dependencies {
-    implementation project(path: ":core")
-    api project(path: ":mdslib")
+    implementation(project(":core"))
+    api(project(":mdslib"))
 
-    // ... RxJava & RxAndroid
-    implementation("io.reactivex.rxjava2:rxjava:$rx_java_version")
-    implementation("io.reactivex.rxjava2:rxandroid:$rx_android_version")
+    // RxJava & RxAndroid
+    implementation("io.reactivex.rxjava2:rxjava:$rxJavaVersion")
+    implementation("io.reactivex.rxjava2:rxandroid:$rxAndroidVersion")
 
-    // ... RxBLE
-    api("com.polidea.rxandroidble2:rxandroidble:$rx_android_ble_version")
+    // RxBLE
+    api("com.polidea.rxandroidble2:rxandroidble:$rxAndroidBleVersion")
 
-    // ... Gson
-    implementation("com.google.code.gson:gson:$gson_version")
+    // Gson
+    implementation("com.google.code.gson:gson:$gsonVersion")
 
-    // ... Dagger Hilt
-    api("com.google.dagger:hilt-android:$hilt_version")
-    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
+    // Dagger Hilt
+    api("com.google.dagger:hilt-android:$hiltVersion")
+    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
 }

@@ -1,8 +1,8 @@
 plugins {
     id("kotlin-android")
     id("com.android.library")
-    // id("dagger.hilt.android.plugin")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -40,6 +40,10 @@ android {
     namespace = "dev.atick.core"
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     // ... Core
     api("androidx.core:core-ktx:$core_ktx_version")
@@ -58,12 +62,8 @@ dependencies {
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")
-    // kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
 
     // ... Logger
     api("com.orhanobut:logger:$logger_version")
 }
-
-// kapt {
-//     correctErrorTypes = true
-// }

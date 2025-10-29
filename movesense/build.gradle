@@ -1,8 +1,8 @@
 plugins {
     id("kotlin-android")
     id("com.android.library")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
-    id("kotlin-kapt")
 }
 
 android {
@@ -45,25 +45,25 @@ android {
     namespace = "dev.atick.movesense"
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     implementation project(path: ":core")
-    implementation project(path: ":mdslib")
+    api project(path: ":mdslib")
 
     // ... RxJava & RxAndroid
     implementation("io.reactivex.rxjava2:rxjava:$rx_java_version")
     implementation("io.reactivex.rxjava2:rxandroid:$rx_android_version")
 
     // ... RxBLE
-    implementation("com.polidea.rxandroidble2:rxandroidble:$rx_android_ble_version")
+    api("com.polidea.rxandroidble2:rxandroidble:$rx_android_ble_version")
 
     // ... Gson
     implementation("com.google.code.gson:gson:$gson_version")
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-}
-
-kapt {
-    correctErrorTypes = true
+    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
 }

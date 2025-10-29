@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
 }
 
@@ -39,19 +39,19 @@ android {
     namespace = "dev.atick.network"
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     implementation(project(":core"))
 
     // ... Retrofit and OkHttp
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
     // ... Dagger Hilt
     api("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-}
-
-kapt {
-    correctErrorTypes = true
+    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
 }

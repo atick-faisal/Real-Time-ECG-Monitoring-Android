@@ -1,12 +1,12 @@
 plugins {
     id("kotlin-android")
     id("com.android.application")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("kotlin-kapt")
 }
 
 android {
@@ -73,6 +73,10 @@ android {
     namespace = "dev.atick.compose"
 }
 
+hilt {
+    enableAggregatingTask = true
+}
+
 dependencies {
     implementation(project(path: ":core"))
     implementation(project(path: ":network"))
@@ -118,5 +122,5 @@ dependencies {
 
     // ... Dagger Hilt
     implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
 }

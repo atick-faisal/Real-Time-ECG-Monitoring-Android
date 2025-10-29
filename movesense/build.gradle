@@ -28,16 +28,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs += [
-                "-opt-in=kotlin.RequiresOptIn",
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-opt-in=kotlinx.coroutines.FlowPreview",
-                "-Xannotation-default-target=param-property"
-        ]
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -45,6 +35,18 @@ android {
     }
 
     namespace = "dev.atick.movesense"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.FlowPreview",
+            "-Xannotation-default-target=param-property"
+        )
+    }
 }
 
 hilt {

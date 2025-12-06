@@ -4,7 +4,8 @@ import android.graphics.Color
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.ScatterChart
@@ -22,7 +23,13 @@ fun EcgPlot(
     modifier: Modifier = Modifier
 ) {
     val isDarkThemeEnabled = isSystemInDarkTheme()
-    val context = LocalContext.current
+    
+    // Get color resources in composable context
+    val backgroundLightColor = colorResource(R.color.backgroundLight).toArgb()
+    val backgroundDarkColor = colorResource(R.color.backgroundDark).toArgb()
+    val rPeakColor = colorResource(R.color.r_peak).toArgb()
+    val vBeatColor = colorResource(R.color.v_beat).toArgb()
+    val sBeatColor = colorResource(R.color.s_beat).toArgb()
 
     AndroidView(
         factory = { ctx ->
@@ -64,8 +71,8 @@ fun EcgPlot(
             }
             data.ecg.apply {
                 color = if (isDarkThemeEnabled)
-                    context.getColor(R.color.backgroundLight)
-                else context.getColor(R.color.backgroundDark)
+                    backgroundLightColor
+                else backgroundDarkColor
                 setDrawValues(false)
                 setDrawFilled(false)
                 setDrawCircleHole(false)
@@ -75,19 +82,19 @@ fun EcgPlot(
 
             data.rPeaks.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
-                color = context.getColor(R.color.r_peak)
+                color = rPeakColor
                 scatterShapeSize = 20.0F
             }
 
             data.vBeats.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
-                color = context.getColor(R.color.v_beat)
+                color = vBeatColor
                 scatterShapeSize = 20.0F
             }
 
             data.sBeats.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
-                color = context.getColor(R.color.s_beat)
+                color = sBeatColor
                 scatterShapeSize = 20.0F
             }
 

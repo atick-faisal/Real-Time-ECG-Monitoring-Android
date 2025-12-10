@@ -23,6 +23,13 @@ fun EcgPlot(
     modifier: Modifier = Modifier
 ) {
     val isDarkThemeEnabled = isSystemInDarkTheme()
+    
+    // Read color resources in composable context
+    val backgroundLightColor = colorResource(R.color.backgroundLight).toArgb()
+    val backgroundDarkColor = colorResource(R.color.backgroundDark).toArgb()
+    val rPeakColor = colorResource(R.color.r_peak).toArgb()
+    val vBeatColor = colorResource(R.color.v_beat).toArgb()
+    val sBeatColor = colorResource(R.color.s_beat).toArgb()
 
     AndroidView(
         factory = { ctx ->
@@ -64,8 +71,8 @@ fun EcgPlot(
             }
             data.ecg.apply {
                 color = if (isDarkThemeEnabled)
-                    colorResource(R.color.backgroundLight).toArgb()
-                else colorResource(R.color.backgroundDark).toArgb()
+                    backgroundLightColor
+                else backgroundDarkColor
                 setDrawValues(false)
                 setDrawFilled(false)
                 setDrawCircleHole(false)
@@ -75,19 +82,19 @@ fun EcgPlot(
 
             data.rPeaks.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
-                color = colorResource(R.color.r_peak).toArgb()
+                color = rPeakColor
                 scatterShapeSize = 20.0F
             }
 
             data.vBeats.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
-                color = colorResource(R.color.v_beat).toArgb()
+                color = vBeatColor
                 scatterShapeSize = 20.0F
             }
 
             data.sBeats.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
-                color = colorResource(R.color.s_beat).toArgb()
+                color = sBeatColor
                 scatterShapeSize = 20.0F
             }
 

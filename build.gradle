@@ -1,13 +1,13 @@
 plugins {
-    id("com.android.library") version "8.13.1" apply false
-    id("com.android.application") version "8.13.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.2.21" apply false
-    id("com.google.devtools.ksp") version "2.3.3" apply false
+    id("com.android.library") version "8.13.2" apply false
+    id("com.android.application") version "8.13.2" apply false
+    id("org.jetbrains.kotlin.android") version "2.3.0" apply false
+    id("com.google.devtools.ksp") version "2.3.4" apply false
     id("com.google.dagger.hilt.android") version "2.57.2" apply false
     id("androidx.navigation.safeargs") version "2.9.6" apply false
     id("com.google.gms.google-services") version "4.4.4" apply false
     id("com.google.firebase.crashlytics") version "3.0.6" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.21" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.0" apply false
 }
 
 // Define shared configuration properties
@@ -21,14 +21,14 @@ ext {
     coreKtxVersion = "1.17.0"
     appCompatVersion = "1.7.1"
     coroutinesVersion = "1.10.2"
-    composeBomVersion = "2025.11.01"
-    activityComposeVersion = "1.12.0"
+    composeBomVersion = "2025.12.01"
+    activityComposeVersion = "1.12.2"
     materialVersion = "1.13.0"
     lifecycleVersion = "2.10.0"
     navVersion = "2.9.6"
     preferencesVersion = "1.2.0"
     hiltVersion = "2.57.2"
-    analyticsVersion = "34.6.0"
+    analyticsVersion = "34.7.0"
     mlkitVersion = "18.3.1"
 
     loggerVersion = "2.2.0"

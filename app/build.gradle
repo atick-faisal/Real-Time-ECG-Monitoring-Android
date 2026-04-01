@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("kotlin-android")
     id("com.android.application")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
@@ -35,6 +34,7 @@ android {
         release {
             minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -67,18 +67,18 @@ kotlin {
     }
 }
 
-androidComponents {
-    def date = new Date()
-    def formattedDate = date.format('dd.MM.yyyy hh.mm a')
-
-    onVariants(selector().all()) { variant ->
-        variant.outputs.forEach { output ->
-            def variantName = variant.buildType
-            def versionName = variant.outputs.first().versionName.get()
-            output.outputFileName.set("app_${variantName}_v${versionName}_${formattedDate}.apk")
-        }
-    }
-}
+//androidComponents {
+//    def date = new Date()
+//    def formattedDate = date.format('dd.MM.yyyy hh.mm a')
+//
+//    onVariants(selector().all()) { variant ->
+//        variant.outputs.forEach { output ->
+//            def variantName = variant.buildType
+//            def versionName = variant.outputs.first().versionName.get()
+//            output.outputFileName.set("app_${variantName}_v${versionName}_${formattedDate}.apk")
+//        }
+//    }
+//}
 
 hilt {
     enableAggregatingTask = true

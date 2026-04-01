@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("kotlin-android")
     id("com.android.library")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")

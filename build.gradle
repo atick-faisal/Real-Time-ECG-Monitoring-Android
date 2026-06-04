@@ -6,7 +6,7 @@ plugins {
     id("androidx.navigation.safeargs") version "2.9.8" apply false
     id("com.google.gms.google-services") version "4.4.4" apply false
     id("com.google.firebase.crashlytics") version "3.0.7" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "2.3.21" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "2.4.0" apply false
 }
 
 // Define shared configuration properties
@@ -17,7 +17,7 @@ ext {
     versionCode = 41
     versionName = "3.3.1"
 
-    coreKtxVersion = "1.18.0"
+    coreKtxVersion = "1.19.0"
     appCompatVersion = "1.7.1"
     coroutinesVersion = "1.11.0"
     composeBomVersion = "2026.05.01"

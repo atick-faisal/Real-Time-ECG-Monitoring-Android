@@ -27,7 +27,7 @@ ext {
     navVersion = "2.9.8"
     preferencesVersion = "1.2.1"
     hiltVersion = "2.60.1"
-    analyticsVersion = "34.16.0"
+    analyticsVersion = "34.17.0"
     mlkitVersion = "18.3.1"
 
     loggerVersion = "2.2.0"

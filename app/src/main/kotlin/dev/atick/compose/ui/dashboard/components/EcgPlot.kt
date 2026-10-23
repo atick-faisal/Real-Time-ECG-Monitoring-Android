@@ -36,24 +36,23 @@ fun EcgPlot(
             Utils.init(ctx)
             CombinedChart(ctx).apply {
                 description.text = ""
-                axisLeft.setDrawLabels(false)
+                axisLeft.isDrawLabelsEnabled = false
                 axisLeft.isEnabled = false
-                axisLeft.setDrawGridLines(false)
+                axisLeft.isDrawGridLinesEnabled = false
                 axisLeft.axisLineWidth = 2.0F
-                axisLeft.setDrawLabels(false)
                 axisLeft.labelCount = 5
-                axisRight.setDrawLabels(false)
+                axisRight.isDrawLabelsEnabled = false
                 axisRight.isEnabled = false
                 axisRight.axisLineWidth = 2.0F
-                axisRight.setDrawGridLines(false)
+                axisRight.isDrawGridLinesEnabled = false
                 xAxis.isEnabled = false
                 xAxis.position = XAxis.XAxisPosition.BOTH_SIDED
-                xAxis.setDrawLabels(false)
-                xAxis.setDrawGridLines(false)
+                xAxis.isDrawLabelsEnabled = false
+                xAxis.isDrawGridLinesEnabled = false
                 xAxis.labelCount = 8
                 xAxis.axisLineWidth = 2.0F
                 legend.isEnabled = false
-                setTouchEnabled(false)
+                isTouchEnabled = false
             }
         },
         update = { lineChart ->
@@ -73,29 +72,32 @@ fun EcgPlot(
                 color = if (isDarkThemeEnabled)
                     backgroundLightColor
                 else backgroundDarkColor
-                setDrawValues(false)
-                setDrawFilled(false)
-                setDrawCircleHole(false)
-                setDrawCircles(false)
+                isDrawValuesEnabled = false
+                isDrawFilledEnabled = false
+                isDrawCircleHoleEnabled = false
+                isDrawCirclesEnabled = false
                 lineWidth = 2.0F
             }
 
+            // MPAndroidChart 4 reads scatterShapeSize in dp (3.x used px), so 10 dp keeps the
+            // old 20 px look on xhdpi screens.
+            // https://github.com/PhilJay/MPAndroidChart/blob/v4.0.1/MIGRATION.md
             data.rPeaks.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
                 color = rPeakColor
-                scatterShapeSize = 20.0F
+                scatterShapeSize = 10.0F
             }
 
             data.vBeats.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
                 color = vBeatColor
-                scatterShapeSize = 20.0F
+                scatterShapeSize = 10.0F
             }
 
             data.sBeats.apply {
                 setScatterShape(ScatterChart.ScatterShape.CIRCLE)
                 color = sBeatColor
-                scatterShapeSize = 20.0F
+                scatterShapeSize = 10.0F
             }
 
             val ecgData = LineData(data.ecg)
@@ -107,8 +109,8 @@ fun EcgPlot(
                 )
             )
             val combinedData = CombinedData()
-            combinedData.setData(ecgData)
-            combinedData.setData(rPeakData)
+            combinedData.lineData = ecgData
+            combinedData.scatterData = rPeakData
             combinedData.notifyDataChanged()
             lineChart.data = combinedData
             lineChart.invalidate()

@@ -114,7 +114,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
     // Chart
-    implementation("com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion")
+    implementation("com.github.PhilJay.MPAndroidChart:MPChartLib:$mpAndroidChartVersion")
 
     // Google Analytics
     implementation(platform("com.google.firebase:firebase-bom:$analyticsVersion"))

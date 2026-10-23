@@ -9,10 +9,11 @@ import java.util.*
 
 data class EcgPlotData(
     val id: Long = 0L,
-    val ecg: LineDataSet = LineDataSet(listOf(), "ECG"),
-    val rPeaks: ScatterDataSet = ScatterDataSet(listOf(), "R-PEAK"),
-    val vBeats: ScatterDataSet = ScatterDataSet(listOf(), "V-BEAT"),
-    val sBeats: ScatterDataSet = ScatterDataSet(listOf(), "S-BEAT"),
+    // MPAndroidChart 4 data sets are typed by entry payload; we attach none, hence Nothing.
+    val ecg: LineDataSet<Nothing> = LineDataSet(emptyList<Entry<Nothing>>(), "ECG"),
+    val rPeaks: ScatterDataSet<Nothing> = ScatterDataSet(emptyList<Entry<Nothing>>(), "R-PEAK"),
+    val vBeats: ScatterDataSet<Nothing> = ScatterDataSet(emptyList<Entry<Nothing>>(), "V-BEAT"),
+    val sBeats: ScatterDataSet<Nothing> = ScatterDataSet(emptyList<Entry<Nothing>>(), "S-BEAT"),
     val af: Int = 0
 ) {
     fun getTimestamp(): String {

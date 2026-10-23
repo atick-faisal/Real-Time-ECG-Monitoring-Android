@@ -34,7 +34,7 @@ ext {
     retrofitVersion = "3.0.0"
     okhttpVersion = "5.5.0"
     lottieVersion = "6.7.1"
-    mpAndroidChartVersion = "3.1.0"
+    mpAndroidChartVersion = "v4.0.1"
     materialColorVersion = "7.0.0"
     rxJavaVersion = "2.2.21"
     rxAndroidVersion = "2.1.1"

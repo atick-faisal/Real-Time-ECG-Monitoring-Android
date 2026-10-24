@@ -39,7 +39,7 @@ ext {
     rxJavaVersion = "2.2.21"
     rxAndroidVersion = "2.1.1"
     rxAndroidBleVersion = "1.19.1"
-    gsonVersion = "2.14.0"
+    gsonVersion = "2.15.0"
 }
 
 allprojects {
